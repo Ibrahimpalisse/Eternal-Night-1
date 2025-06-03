@@ -7,7 +7,6 @@ import {
 import openBookLogo from '../assets/open-book.svg';
 import SearchDialog from './SearchDialog';
 import LogoutConfirmDialog from './LogoutConfirmDialog';
-import CloseButton from './ui/CloseButton';
 import { useAuth } from '../contexts/AuthContext';
 import useSocket from '../hooks/useSocket';
 import useNotifications from '../hooks/useNotifications';
@@ -373,11 +372,7 @@ const Navbar = () => {
                             onClick={toggleMenu}
                         >
                             {isMenuOpen ? (
-                                <CloseButton
-                                    variant="ghost"
-                                    size="sm"
-                                    className="!w-4 !h-4 !bg-transparent !border-0"
-                                />
+                                <X className="w-4 h-4" />
                             ) : (
                                 <Menu className="w-4 h-4" />
                             )}
