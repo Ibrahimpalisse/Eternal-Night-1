@@ -8,6 +8,43 @@ import { useAuth } from '../../contexts/AuthContext';
 import EmailVerificationDialog from '../../components/EmailVerificationDialog';
 import CodeVerificationDialog from '../../components/CodeVerificationDialog';
 
+// Composants pour les icônes d'œil
+const EyeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const EyeSlashIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+  </svg>
+);
+
+// Composant pour les indicateurs de validation en temps réel
+const ValidationIndicator = ({ isValid, hasError, isEmpty, className = '' }) => {
+  if (isEmpty) return null;
+  
+  return (
+    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${className}`}>
+      {hasError ? (
+        <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
+          <svg className="w-3 h-3 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </div>
+      ) : isValid ? (
+        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center animate-bounce">
+          <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -35,14 +72,11 @@ const Login = () => {
       [name]: newValue
     }));
 
-    // Valider le champ modifié
-    if (name === 'email' || name === 'password') {
-      const validation = FormValidation.validateField(name, newValue);
-      setErrors(prev => ({
-        ...prev,
-        [name]: validation.success ? '' : validation.error
-      }));
-    }
+    // Supprimer les erreurs spécifiques de champ en temps réel
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
   };
   
   // Soumission du formulaire
@@ -54,7 +88,8 @@ const Login = () => {
     // Validation complète
     const validation = FormValidation.validateForm('login', formData);
     if (!validation.success) {
-      setErrors(validation.errors);
+      setErrors({ general: "Email ou mot de passe incorrect" });
+      toast.error("Email ou mot de passe incorrect");
         return;
       }
       
@@ -81,8 +116,8 @@ const Login = () => {
           setShowVerificationDialog(true);
           // Le toast est déjà géré dans le dialogue principal
         } else {
-          setErrors({ general: errorMessage });
-          toast.error(errorMessage);
+          setErrors({ general: "Email ou mot de passe incorrect" });
+          toast.error("Email ou mot de passe incorrect");
         }
       }
     } catch (error) {
@@ -96,8 +131,8 @@ const Login = () => {
         setShowVerificationDialog(true);
         // Le toast est déjà géré dans le dialogue principal
       } else {
-        setErrors({ general: errorMessage });
-        toast.error(errorMessage);
+        setErrors({ general: "Email ou mot de passe incorrect" });
+        toast.error("Email ou mot de passe incorrect");
       }
     } finally {
       setIsLoading(false);
@@ -174,6 +209,11 @@ const Login = () => {
           <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/20 shadow-[0_8px_32px_rgb(0_0_0/0.4)] transition-all duration-300 hover:shadow-purple-500/10">
               <form onSubmit={handleSubmit} className="space-y-6">
               
+                {/* General error */}
+                {errors.general && (
+                  <p className="text-red-400 text-sm">{errors.general}</p>
+                )}
+
                 {/* Email */}
               <div className="group">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2 transition-colors group-focus-within:text-purple-400">
@@ -186,15 +226,10 @@ const Login = () => {
                   type="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.general ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 ${formData.email && !errors.email ? '' : ''}`}
                   placeholder="Enter your email"
                       autoComplete="email"
                 />
-                  {errors.email && (
-                    <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                        <p className="text-sm text-red-500 font-medium">{errors.email}</p>
-                    </div>
-                  )}
                 </div>
               </div>
               
@@ -210,40 +245,21 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.password ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-10`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.general ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-20`}
                     placeholder="Enter your password"
                       autoComplete="current-password"
                   />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
-                  >
-                    {showPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    )}
+                      className="text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                    >
+                      {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                   </button>
-                  {errors.password && (
-                    <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                        <p className="text-sm text-red-500 font-medium">{errors.password}</p>
                     </div>
-                  )}
                 </div>
               </div>
-              
-                {/* General error */}
-                {errors.general && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-500 font-medium">{errors.general}</p>
-                </div>
-              )}
               
                 {/* Remember me and forgot password */}
               <div className="flex items-center justify-between">
@@ -284,7 +300,12 @@ const Login = () => {
                       Signing in...
                     </>
                   ) : (
-                    'Sign in'
+                    <>
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                      Sign in
+                    </>
                   )}
                 </span>
               </button>

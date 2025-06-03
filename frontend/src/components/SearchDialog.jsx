@@ -2,7 +2,8 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Search, Book, History, X, Clock, TrendingUp } from 'lucide-react';
+import CloseButton from './ui/CloseButton';
+import { Search, Book, History, Clock, TrendingUp } from 'lucide-react';
 
 const SearchDialog = ({ trigger }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -76,24 +77,24 @@ const SearchDialog = ({ trigger }) => {
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSearch} className="flex items-center space-x-2 mt-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               type="text"
-              placeholder="Search for novels, authors, genres..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 w-full h-12 bg-white/10 border-white/10 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500"
+              placeholder="Rechercher des livres, auteurs, genres..."
+              className="pl-10 pr-10 h-12 bg-white/5 border-white/10 text-white placeholder:text-gray-400 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50"
               autoFocus
             />
             {searchQuery && (
-              <button 
-                type="button" 
+              <CloseButton
+                variant="minimal"
+                size="sm"
                 onClick={clearSearch}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
+                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                ariaLabel="Effacer la recherche"
+              />
             )}
           </div>
           <Button 

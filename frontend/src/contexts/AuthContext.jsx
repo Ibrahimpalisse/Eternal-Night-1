@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success && response.user) {
         setUser(response.user);
-        
+
         // Authenticate socket if connected
         if (socket && socket.connected && response.user.id) {
           authenticateUser(response.user.id);
@@ -93,8 +93,8 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (userData) {
-        setUser(userData);
-        
+      setUser(userData);
+      
         // Setup socket if connected
         if (socket && socket.connected && userData.id) {
           authenticateUser(userData.id);
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       // Clear local state even if API call fails
-      setUser(null);
+    setUser(null);
       setError(null);
       return { success: true, local: true };
     } finally {
@@ -163,11 +163,11 @@ export const AuthProvider = ({ children }) => {
   // Refresh user data
   const refreshUser = async () => {
     try {
-      const response = await UserService.getMe();
-      
-      if (response.success && response.user) {
-        setUser(response.user);
+        const response = await UserService.getMe();
         
+        if (response.success && response.user) {
+          setUser(response.user);
+          
         // Authenticate socket if connected
         if (socket && socket.connected && response.user.id) {
           authenticateUser(response.user.id);
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }) => {
     }
     
     return () => {
-      if (socket) {
+    if (socket) {
         UserService.detachSocketListeners();
       }
     };

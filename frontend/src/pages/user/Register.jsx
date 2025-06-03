@@ -22,6 +22,29 @@ const EyeSlashIcon = () => (
   </svg>
 );
 
+// Composant pour les indicateurs de validation en temps réel
+const ValidationIndicator = ({ isValid, hasError, isEmpty, className = '' }) => {
+  if (isEmpty) return null;
+  
+  return (
+    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${className}`}>
+      {hasError ? (
+        <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
+          <svg className="w-3 h-3 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </div>
+      ) : isValid ? (
+        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center animate-bounce">
+          <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -36,7 +59,8 @@ const Register = () => {
     register, 
     handleSubmit, 
     formState: { errors, isValid, isSubmitting },
-    setError
+    setError,
+    watch
   } = useForm({
     resolver: zodResolver(FormValidation.registerSchema),
     mode: 'onChange',
@@ -48,6 +72,9 @@ const Register = () => {
     terms: false
     }
   });
+
+  // Observer les valeurs des champs pour la validation en temps réel
+  const watchedFields = watch();
   
   // Fonction appelée lorsque le formulaire est valide
   const onSubmit = async (data) => {
@@ -140,11 +167,12 @@ const Register = () => {
         {/* Register form */}
         <div className="w-full max-w-md px-4 animate-fade-in-up">
           <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/20 shadow-[0_8px_32px_rgb(0_0_0/0.4)] transition-all duration-300 hover:shadow-purple-500/10">
+            
+            {/* Instructions de validation */}
+            
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               {errors.root && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <p className="text-sm text-red-500 font-medium">{errors.root.message}</p>
-                </div>
+                <p className="text-red-400 text-sm">{errors.root.message}</p>
               )}
 
               <div className="group">
@@ -155,15 +183,21 @@ const Register = () => {
                   <input
                     id="username"
                     type="text"
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.username ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.username ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 ${watchedFields.username && !errors.username ? 'pr-10' : ''}`}
                     placeholder="Choose a username"
                     {...register('username')}
                   />
+                  <ValidationIndicator 
+                    isValid={watchedFields.username && !errors.username} 
+                    hasError={!!errors.username} 
+                    isEmpty={!watchedFields.username}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  />
                 </div>
-                {errors.username && (
-                  <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-500 font-medium">{errors.username.message}</p>
-                  </div>
+                {errors.username ? (
+                  <p className="text-red-400 text-sm mt-1">{errors.username.message}</p>
+                ) : (
+                  <p className="text-gray-500 text-xs mt-1">Minimum 3 caractères.</p>
                 )}
               </div>
 
@@ -175,15 +209,21 @@ const Register = () => {
                   <input
                     id="email"
                     type="email"
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.email ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 ${watchedFields.email && !errors.email ? 'pr-10' : ''}`}
                     placeholder="your@email.com"
                     {...register('email')}
                   />
+                  <ValidationIndicator 
+                    isValid={watchedFields.email && !errors.email} 
+                    hasError={!!errors.email} 
+                    isEmpty={!watchedFields.email}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  />
                 </div>
-                {errors.email && (
-                  <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-500 font-medium">{errors.email.message}</p>
-                  </div>
+                {errors.email ? (
+                  <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+                ) : (
+                  <p className="text-gray-500 text-xs mt-1">Format email valide requis.</p>
                 )}
               </div>
 
@@ -195,22 +235,30 @@ const Register = () => {
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.password ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-10`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.password ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-20`}
                     placeholder="Create a password"
                     {...register('password')}
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                    <ValidationIndicator 
+                      isValid={watchedFields.password && !errors.password} 
+                      hasError={!!errors.password} 
+                      isEmpty={!watchedFields.password}
                   />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                      className="text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
                     >
                     {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                     </button>
                 </div>
-                {errors.password && (
-                  <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-500 font-medium">{errors.password.message}</p>
                   </div>
+                {errors.password ? (
+                  <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+                ) : (
+                  <p className="text-gray-500 text-xs mt-1">Minimum 8 caractères
+                  , une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
                 )}
               </div>
 
@@ -222,46 +270,55 @@ const Register = () => {
                   <input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.confirmPassword ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-10`}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-20`}
                     placeholder="Confirm your password"
                     {...register('confirmPassword')}
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                    <ValidationIndicator 
+                      isValid={watchedFields.confirmPassword && !errors.confirmPassword && watchedFields.password === watchedFields.confirmPassword} 
+                      hasError={!!errors.confirmPassword} 
+                      isEmpty={!watchedFields.confirmPassword}
                   />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                      className="text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
                     >
                     {showConfirmPassword ? <EyeSlashIcon /> : <EyeIcon />}
                     </button>
                 </div>
-                {errors.confirmPassword && (
-                  <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-500 font-medium">{errors.confirmPassword.message}</p>
                   </div>
+                {errors.confirmPassword ? (
+                  <p className="text-red-400 text-sm mt-1">{errors.confirmPassword.message}</p>
+                ) : (
+                  <p className="text-gray-500 text-xs mt-1">Doit correspondre au mot de passe ci-dessus.</p>
                 )}
               </div>
 
-              <div className="flex items-center">
+              <div className="flex items-start space-x-3">
+                <div className="flex items-center mt-1">
                 <input
                   id="terms"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-600 text-purple-500 focus:ring-purple-500 bg-white/10 transition-colors duration-200"
                   {...register('terms')}
                 />
-                <label htmlFor="terms" className="ml-2 block text-sm text-gray-300 hover:text-white transition-colors duration-200">
-                  J'accepte les <a href="#" className="text-purple-400 hover:text-purple-300 hover:underline">conditions d'utilisation</a>
+                </div>
+                <label htmlFor="terms" className="block text-sm text-gray-300 hover:text-white transition-colors duration-200 leading-relaxed">
+                  J'accepte les <a href="#" className="text-purple-400 hover:text-purple-300 hover:underline">conditions d'utilisation</a> et la <a href="#" className="text-purple-400 hover:text-purple-300 hover:underline">politique de confidentialité</a>
                 </label>
               </div>
-              {errors.terms && (
-                <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <p className="text-sm text-red-500 font-medium">{errors.terms.message}</p>
-                </div>
+              {errors.terms ? (
+                <p className="text-red-400 text-sm mt-1">{errors.terms.message}</p>
+              ) : (
+                <p className="text-gray-500 text-xs mt-1">Veuillez accepter les conditions d'utilisation.</p>
               )}
 
               <button
                 type="submit"
                 disabled={!isValid || isSubmitting}
-                className={`group relative w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-4 rounded-xl flex justify-center items-center font-medium transition-all duration-300 shadow-lg shadow-purple-500/20 ${!isValid ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-[0.98]'}`}
+                className={`group relative w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-4 rounded-xl flex justify-center items-center font-medium transition-all duration-300 shadow-lg shadow-purple-500/20 ${!isValid || isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-[0.98]'}`}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                 <span className="relative z-10 flex items-center">
@@ -271,7 +328,12 @@ const Register = () => {
                       Creating account...
                     </>
                   ) : (
-                    'Create Account'
+                    <>
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                      </svg>
+                      Create Account
+                    </>
                   )}
                 </span>
               </button>

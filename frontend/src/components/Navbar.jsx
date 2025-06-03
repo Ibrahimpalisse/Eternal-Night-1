@@ -7,6 +7,7 @@ import {
 import openBookLogo from '../assets/open-book.svg';
 import SearchDialog from './SearchDialog';
 import LogoutConfirmDialog from './LogoutConfirmDialog';
+import CloseButton from './ui/CloseButton';
 import { useAuth } from '../contexts/AuthContext';
 import useSocket from '../hooks/useSocket';
 import useNotifications from '../hooks/useNotifications';
@@ -15,13 +16,13 @@ import useNotifications from '../hooks/useNotifications';
 const getUserAvatar = (user) => {
     if (!user) return null;
     
-    // Essayer différentes propriétés d'avatar possibles
-    if (user.avatar) return user.avatar;
-    if (user.profile && user.profile.avatar_path) return user.profile.avatar_path;
-    
-    // Si nous avons une URL d'API, essayer de construire le chemin complet
-    if (import.meta.env.VITE_API_URL && user.profile && user.profile.avatar_path) {
-        return `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.profile.avatar_path}`;
+  // Essayer différentes propriétés d'avatar possibles
+  if (user.avatar) return user.avatar;
+  if (user.profile && user.profile.avatar_path) return user.profile.avatar_path;
+  
+  // Si nous avons une URL d'API, essayer de construire le chemin complet
+  if (import.meta.env.VITE_API_URL && user.profile && user.profile.avatar_path) {
+    return `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.profile.avatar_path}`;
     }
     
     return null;
@@ -32,16 +33,16 @@ const Navbar = () => {
     const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
     
-    const { user, logout, isSocketConnected } = useAuth();
-    const { socket } = useSocket();
-    
-    // Utiliser le hook de notifications si disponible, sinon utiliser un état local
-    const notificationsHook = typeof useNotifications === 'function' 
-        ? useNotifications(false) 
-        : { unreadCount: 3 };
-    
-    const unreadCount = notificationsHook.unreadCount || 0;
-    
+  const { user, logout, isSocketConnected } = useAuth();
+  const { socket } = useSocket();
+  
+  // Utiliser le hook de notifications si disponible, sinon utiliser un état local
+  const notificationsHook = typeof useNotifications === 'function' 
+    ? useNotifications(false) 
+    : { unreadCount: 3 };
+  
+  const unreadCount = notificationsHook.unreadCount || 0;
+
     // Use location hook to get current path
     const location = useLocation();
 
@@ -93,7 +94,7 @@ const Navbar = () => {
     // Navigation items for desktop menu
     const navItems = [
         { to: "/", icon: <Home className="w-5 h-5" />, label: "Home" },
-        { to: "/user/home", icon: <User className="w-5 h-5" />, label: "Dashboard" },
+    { to: "/user/home", icon: <User className="w-5 h-5" />, label: "Dashboard" },
         { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
         { to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" },
         { to: "/readers", icon: <List className="w-5 h-5" />, label: "Best Readers" },
@@ -164,22 +165,22 @@ const Navbar = () => {
                         {/* Si l'utilisateur est connecté */}
                         {user ? (
                             <>
-                                {/* Notifications Button */}
+                        {/* Notifications Button */}
                                 <Link to="/notifications" className="relative">
-                                    <div className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95">
-                                        {unreadCount > 0 && (
-                                            <div className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-purple-500 text-white text-[10px] font-bold rounded-full animate-pulse">
-                                                {unreadCount > 99 ? '99+' : unreadCount}
-                                            </div>
-                                        )}
-                                        <Bell className="w-4 h-4" />
+                            <div className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95">
+                                {unreadCount > 0 && (
+                                    <div className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-purple-500 text-white text-[10px] font-bold rounded-full animate-pulse">
+                                        {unreadCount > 99 ? '99+' : unreadCount}
                                     </div>
-                                </Link>
+                                )}
+                                <Bell className="w-4 h-4" />
+                            </div>
+                        </Link>
 
                                 <div className="flex items-center">
                                     <div className="relative">
                                         <button 
-                                            onClick={toggleMoreMenu}
+                  onClick={toggleMoreMenu}
                                             className="group flex items-center space-x-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300"
                                         >
                                             <div className="relative">
@@ -203,11 +204,11 @@ const Navbar = () => {
                                                 <span className="text-sm font-medium text-white/90 group-hover:text-white transition-colors">
                                                     {user.name || user.username}
                                                 </span>
-                                                <span className="text-[0.65rem] text-white/40">
-                                                    {isSocketConnected ? 'Connecté' : 'Connexion...'}
-                                                </span>
+                    <span className="text-[0.65rem] text-white/40">
+                      {isSocketConnected ? 'Connecté' : 'Connexion...'}
+                    </span>
                                             </div>
-                                            <div className={`w-1.5 h-1.5 rounded-full ${isSocketConnected ? 'bg-green-500/80 ring-4 ring-green-500/20' : 'bg-yellow-500/80 ring-4 ring-yellow-500/20'}`}></div>
+                  <div className={`w-1.5 h-1.5 rounded-full ${isSocketConnected ? 'bg-green-500/80 ring-4 ring-green-500/20' : 'bg-yellow-500/80 ring-4 ring-yellow-500/20'}`}></div>
                                         </button>
 
                                         {/* Menu utilisateur connecté */}
@@ -219,7 +220,7 @@ const Navbar = () => {
                                                 />
                                                 
                                                 <div className="absolute right-0 mt-2 w-64 bg-black/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                                                    {/* En-tête du menu */}
+                      {/* En-tête du menu */}
                                                     <div className="p-4 border-b border-white/10">
                                                         <div className="flex items-center space-x-3">
                                                             <div className="relative">
@@ -248,7 +249,7 @@ const Navbar = () => {
                                                         </div>
                                                     </div>
 
-                                                    {/* Options du menu */}
+                      {/* Options du menu */}
                                                     <div className="p-2">
                                                         <Link 
                                                             to="/profile" 
@@ -353,26 +354,33 @@ const Navbar = () => {
 
                         {/* Si l'utilisateur est connecté */}
                         {user && (
-                            <Link
-                                to="/notifications"
-                                className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all"
-                            >
-                                {unreadCount > 0 && (
-                                    <div className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-purple-500 text-white text-[10px] font-bold rounded-full animate-pulse">
-                                        {unreadCount > 99 ? '99+' : unreadCount}
-                                    </div>
-                                )}
-                                <Bell className="w-4 h-4" />
-                            </Link>
+                        <Link
+                            to="/notifications"
+                            className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all"
+                        >
+                            {unreadCount > 0 && (
+                                <div className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 bg-purple-500 text-white text-[10px] font-bold rounded-full animate-pulse">
+                                    {unreadCount > 99 ? '99+' : unreadCount}
+                                </div>
+                            )}
+                            <Bell className="w-4 h-4" />
+                        </Link>
                         )}
 
-                        {/* Mobile menu button */}
+            {/* Mobile menu button */}
                         <button
+                            className="md:hidden relative z-50 p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
                             onClick={toggleMenu}
-                            className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95 z-50 touch-manipulation"
-                            aria-label="Menu principal"
                         >
-                            {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                            {isMenuOpen ? (
+                                <CloseButton
+                                    variant="ghost"
+                                    size="sm"
+                                    className="!w-4 !h-4 !bg-transparent !border-0"
+                                />
+                            ) : (
+                                <Menu className="w-4 h-4" />
+                            )}
                         </button>
                     </div>
                 </div>
@@ -488,16 +496,16 @@ const Navbar = () => {
                                         {/* Profile Section */}
                                         <div className="space-y-1">
                                             <div className="px-3 text-xs font-medium text-white/40 uppercase tracking-wider">Profil</div>
-                                            <Link 
-                                                to="/profile" 
+                                <Link 
+                                    to="/profile" 
                                                 className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${location.pathname === '/profile' && !location.search.includes('tab=settings') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
                                                 onClick={() => setIsMenuOpen(false)}
                                             >
                                                 <div className={`p-2 rounded-lg ${location.pathname === '/profile' && !location.search.includes('tab=settings') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
-                                                    <User className="w-4 h-4" />
-                                                </div>
-                                                <span>Voir le profil</span>
-                                            </Link>
+                                        <User className="w-4 h-4" />
+                                    </div>
+                                    <span>Voir le profil</span>
+                                </Link>
                                         </div>
 
                                         {/* Settings Section */}
@@ -512,26 +520,26 @@ const Navbar = () => {
                                                     <Settings className="w-4 h-4" />
                                                 </div>
                                                 <span>Paramètres</span>
-                                            </Link>
+                                    </Link>
                                         </div>
                                     </>
                                 )}
-                            </div>
+                                </div>
 
                             {/* Bottom Section - Login/Logout */}
-                            <div className="p-3 sm:p-4 mt-auto border-t border-white/10 bg-black/50">
+                                <div className="p-3 sm:p-4 mt-auto border-t border-white/10 bg-black/50">
                                 {user ? (
-                                    <button 
-                                        type="button"
-                                        onClick={() => {
-                                            setIsLogoutDialogOpen(true);
-                                            setIsMenuOpen(false);
-                                        }}
-                                        className="flex items-center justify-center w-full space-x-2 px-4 py-3 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors touch-manipulation active:bg-red-500/30"
-                                    >
-                                        <LogOut className="w-4 h-4" />
-                                        <span>Déconnexion</span>
-                                    </button>
+                            <button 
+                                            type="button"
+                                onClick={() => {
+                                    setIsLogoutDialogOpen(true);
+                                                setIsMenuOpen(false);
+                                }}
+                                            className="flex items-center justify-center w-full space-x-2 px-4 py-3 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors touch-manipulation active:bg-red-500/30"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                <span>Déconnexion</span>
+                            </button>
                                 ) : (
                                     <div className="space-y-3">
                                         <Link 
@@ -553,9 +561,9 @@ const Navbar = () => {
                                         <p className="text-center text-xs text-white/40 px-2">
                                             Rejoignez notre communauté pour accéder à toutes les fonctionnalités
                                         </p>
-                                    </div>
+                                </div>
                                 )}
-                            </div>
+                        </div>
                         </div>
                     </div>
                 </>
@@ -564,4 +572,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar; 
+export default Navbar;

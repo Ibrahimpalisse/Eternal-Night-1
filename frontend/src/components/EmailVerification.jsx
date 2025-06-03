@@ -3,6 +3,7 @@ import SendVerificationEmail from './SendVerificationEmail';
 import VerificationCode from './VerificationCode';
 import User from '../services/User';
 import { useToast } from '../contexts/ToastContext';
+import CloseButton from './ui/CloseButton';
 
 const EmailVerification = ({ 
   email = '', 
@@ -176,15 +177,13 @@ const EmailVerification = ({
     <div className="w-full max-w-md mx-auto">
       <div className="relative">
         {showCloseButton && onCancel && (
-          <button
+          <CloseButton
+            variant="ghost"
+            size="md"
             onClick={handleCancel}
-            className="absolute top-1 right-4 text-gray-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-all z-10"
-            aria-label="Fermer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            className="absolute top-1 right-4 z-10"
+            ariaLabel="Fermer la vérification"
+          />
         )}
         
         {step === 'send-email' ? (

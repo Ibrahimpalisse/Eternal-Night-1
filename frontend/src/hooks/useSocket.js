@@ -61,21 +61,21 @@ const useSocket = (url, options = {}) => {
       socketRef.current = socketInstance;
       isInitialized.current = true;
     
-      // Configurer les écouteurs d'événements
-      socketInstance.on('connect', () => {
+    // Configurer les écouteurs d'événements
+    socketInstance.on('connect', () => {
         console.log('Socket.IO: Connecté au serveur avec ID:', socketInstance.id);
-        setIsConnected(true);
+      setIsConnected(true);
         setSocket(socketInstance);
       });
       
       socketInstance.on('disconnect', (reason) => {
         console.log('Socket.IO: Déconnecté du serveur:', reason);
         setIsConnected(false);
-      });
+    });
     
       socketInstance.on('connect_error', (error) => {
         console.error('Socket.IO: Erreur de connexion:', error.message);
-        setIsConnected(false);
+      setIsConnected(false);
       });
       
       socketInstance.on('reconnect', (attemptNumber) => {
@@ -95,8 +95,8 @@ const useSocket = (url, options = {}) => {
       // Gérer les erreurs génériques
       socketInstance.on('error', (error) => {
         console.error('Socket.IO: Erreur générique:', error);
-      });
-      
+    });
+    
     } catch (error) {
       console.error('Socket.IO: Erreur lors de l\'initialisation:', error);
       setIsConnected(false);

@@ -1,6 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Configuration du thème avec Tailwind v4 */
+@theme {
+  --color-background: 260 40% 10%;
+  --color-foreground: 0 0% 98%;
+  --color-card: 240 30% 8%;
+  --color-card-foreground: 0 0% 98%;
+  --color-popover: 240 30% 8%;
+  --color-popover-foreground: 0 0% 98%;
+  --color-primary: 0 0% 98%;
+  --color-primary-foreground: 0 0% 9%;
+  --color-secondary: 240 25% 15%;
+  --color-secondary-foreground: 0 0% 98%;
+  --color-muted: 240 25% 15%;
+  --color-muted-foreground: 0 0% 63.9%;
+  --color-accent: 262 83% 58%;
+  --color-accent-foreground: 0 0% 98%;
+  --color-destructive: 0 62.8% 30.6%;
+  --color-destructive-foreground: 0 0% 98%;
+  --color-border: 240 30% 20%;
+  --color-input: 240 30% 20%;
+  --color-ring: 240 5% 65%;
+  --radius: 0.5rem;
+  --color-chart-1: 220 70% 50%;
+  --color-chart-2: 160 60% 45%;
+  --color-chart-3: 30 80% 55%;
+  --color-chart-4: 280 65% 60%;
+  --color-chart-5: 340 75% 55%;
+}
 
 /* Configuration du fond de base */
 @layer base {
@@ -62,7 +89,7 @@
   * {
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
     font-feature-settings: "rlig" 1, "calt" 1;
     width: 100%;
     min-height: 100vh;
@@ -198,12 +225,10 @@
     radial-gradient(0.5px 0.5px at 77% 23%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
     radial-gradient(0.5px 0.5px at 21% 89%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
     radial-gradient(0.5px 0.5px at 66% 44%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 7% 56%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 93% 11%, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 41% 92%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 59% 8%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
-  background-size: 200% 200%;
-  animation: stars-twinkle 80s infinite linear;
+    radial-gradient(0.5px 0.5px at 11% 11%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
+    radial-gradient(0.5px 0.5px at 99% 99%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+  background-size: 180% 180%;
+  animation: stars-twinkle 8s ease-in-out infinite alternate;
   opacity: 0.4;
   pointer-events: none;
   z-index: -1;
@@ -211,107 +236,96 @@
 
 @keyframes stars-move-large {
   0% { 
-    background-position: 50% 0%; 
+    background-position: 0% 100%; 
   }
   100% { 
-    background-position: 50% 100%; 
+    background-position: 100% 0%; 
   }
 }
 
 @keyframes stars-twinkle {
   0% { 
-    background-position: 0% 0%;
-    opacity: 0.4;
-  }
-  25% { 
-    background-position: 25% 25%;
-    opacity: 0.6;
+    opacity: 0.3;
+    transform: scale(1);
   }
   50% { 
-    background-position: 50% 50%;
-    opacity: 0.3;
-  }
-  75% { 
-    background-position: 75% 75%;
-    opacity: 0.7;
+    opacity: 0.6;
+    transform: scale(1.05);
   }
   100% { 
-    background-position: 100% 100%;
     opacity: 0.4;
+    transform: scale(1);
   }
 }
 
-/* Animations pour les toasts */
+/* Animations personnalisées */
 @keyframes slide-in {
-  0% {
-    transform: translateX(100%);
+  0% { 
+    transform: translateX(-100%); 
     opacity: 0;
   }
-  100% {
-    transform: translateX(0);
+  100% { 
+    transform: translateX(0); 
     opacity: 1;
   }
 }
 
 @keyframes slide-out {
-  0% {
-    transform: translateX(0);
+  0% { 
+    transform: translateX(0); 
     opacity: 1;
   }
-  100% {
-    transform: translateX(100%);
+  100% { 
+    transform: translateX(-100%); 
     opacity: 0;
   }
 }
 
 @keyframes fade-in {
-  0% {
-    opacity: 0;
+  0% { 
+    opacity: 0; 
   }
-  100% {
-    opacity: 1;
+  100% { 
+    opacity: 1; 
   }
 }
 
 @keyframes fade-out {
-  0% {
-    opacity: 1;
+  0% { 
+    opacity: 1; 
   }
-  100% {
-    opacity: 0;
+  100% { 
+    opacity: 0; 
   }
 }
 
 .animate-slide-in {
-  animation: slide-in 0.3s ease-out forwards;
+  animation: slide-in 0.2s ease-out;
 }
 
 .animate-slide-out {
-  animation: slide-out 0.3s ease-in forwards;
+  animation: slide-out 0.2s ease-in;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
+  animation: fade-in 0.3s ease-out;
 }
 
 .animate-fade-out {
-  animation: fade-out 0.3s ease-in forwards;
+  animation: fade-out 0.2s ease-in;
 }
 
-/* Animations de gradient */
 @keyframes gradient-x {
-  0% {
-    background-position: 0% 50%;
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    background-size: 200% 200%;
+    background-position: right center;
   }
 }
 
 .animate-gradient-x {
-  background-size: 200% 200%;
   animation: gradient-x 15s ease infinite;
 }
