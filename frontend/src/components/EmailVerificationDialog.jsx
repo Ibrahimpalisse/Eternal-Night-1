@@ -1,0 +1,174 @@
+import React, { useState, useEffect } from 'react';
+import { Mail, AlertTriangle, Loader2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+import { Button } from './ui/button';
+import User from '../services/User';
+import { useToast } from '../contexts/ToastContext';
+import EmailVerification from './EmailVerification';
+
+const EmailVerificationDialog = ({ 
+  isOpen, 
+  onClose, 
+  email, 
+  onVerificationSent,
+  onVerificationSuccess
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showVerificationForm, setShowVerificationForm] = useState(false);
+  const toast = useToast();
+
+  // Réinitialiser l'état quand le dialog se ferme/s'ouvre
+  useEffect(() => {
+    if (!isOpen) {
+      setShowVerificationForm(false);
+      setIsLoading(false);
+    }
+  }, [isOpen]);
+
+  const handleVerifyEmail = async () => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    
+    try {
+      const result = await User.resendVerification(email);
+      
+      if (result && result.success) {
+        toast.success("Code de vérification envoyé avec succès !");
+        
+        // Appeler le callback si fourni
+        if (onVerificationSent) {
+          onVerificationSent();
+        }
+        
+        // Passer au formulaire de vérification
+        setShowVerificationForm(true);
+        
+        // Fermer le dialogue principal après l'envoi réussi
+        onClose();
+      } else {
+        const errorMessage = result?.message || "Erreur lors de l'envoi du code";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      // Ne pas logger en production pour éviter le spam dans la console
+      const errorMessage = error.message || "Une erreur est survenue";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowVerificationForm(false);
+    setIsLoading(false);
+    onClose();
+  };
+
+  const handleVerificationSuccess = (verifiedEmail) => {
+    setShowVerificationForm(false);
+    setIsLoading(false);
+    
+    if (onVerificationSuccess) {
+      onVerificationSuccess(verifiedEmail);
+    }
+    
+    // Fermer le dialog après un petit délai pour éviter les conflits DOM
+    setTimeout(() => {
+      onClose();
+    }, 100);
+  };
+
+  const handleVerificationCancel = () => {
+    setShowVerificationForm(false);
+    // Rester dans le dialog principal au lieu de fermer complètement
+  };
+
+  // Ne pas rendre le composant si pas ouvert
+  if (!isOpen) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleCancel} modal={true}>
+      <DialogContent 
+        className={`${showVerificationForm ? 'sm:max-w-lg' : 'sm:max-w-md'} bg-black/95 backdrop-blur-xl border-white/10 text-white`}
+      >
+        {!showVerificationForm ? (
+          <>
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-500/20">
+                <AlertTriangle className="h-8 w-8 text-yellow-400" />
+              </div>
+              <DialogTitle className="text-xl font-bold text-white">
+                Vérification d'email requise
+              </DialogTitle>
+              <DialogDescription className="text-gray-300 mt-2">
+                Votre adresse email{' '}
+                <span className="font-medium text-yellow-300">{email}</span>{' '}
+                n'a pas encore été vérifiée. Vous devez vérifier votre email avant de pouvoir vous connecter.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="flex items-center justify-center py-4">
+              <div className="flex items-center space-x-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <Mail className="h-5 w-5 text-yellow-400" />
+                <div className="text-sm text-gray-300">
+                  <p className="font-medium">Que va-t-il se passer ?</p>
+                  <p>Un code de vérification sera envoyé à votre email</p>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isLoading}
+                className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white"
+              >
+                Annuler
+              </Button>
+              <Button
+                type="button"
+                onClick={handleVerifyEmail}
+                disabled={isLoading}
+                className="bg-yellow-500 hover:bg-yellow-400 text-black font-medium"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Envoi en cours...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Vérifier maintenant
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </>
+        ) : (
+          <div className="py-2">
+            <EmailVerification
+              email={email}
+              onVerificationSuccess={handleVerificationSuccess}
+              onCancel={handleVerificationCancel}
+              showSendEmailForm={false}
+              showCloseButton={false}
+            />
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default EmailVerificationDialog; 
