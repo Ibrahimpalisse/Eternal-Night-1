@@ -7,11 +7,12 @@ import { io } from 'socket.io-client';
  * @param {Object} options - Options de configuration Socket.IO
  * @returns {Object} - Objet contenant le socket et son statut
  */
-const useSocket = (url = import.meta.env.VITE_API_URL || 'http://localhost:4000', options = {}) => {
+const useSocket = (url, options = {}) => {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef(null);
   const isInitialized = useRef(false);
+  const connectAttempted = useRef(false);
   
   // Fonction pour authentifier l'utilisateur sur le socket
   const authenticateUser = useCallback((userId) => {
@@ -22,75 +23,84 @@ const useSocket = (url = import.meta.env.VITE_API_URL || 'http://localhost:4000'
   }, []);
 
   useEffect(() => {
-    // Désactiver Socket.IO temporairement en mode développement
-    if (import.meta.env.DEV) {
-      console.log('Socket.IO: Désactivé en mode développement');
-      setIsConnected(false);
+    // Protection contre les connexions multiples en mode StrictMode
+    if (isInitialized.current || connectAttempted.current) {
       return;
     }
     
-    // Éviter les connexions multiples
-    if (isInitialized.current || socketRef.current) {
-      return;
-    }
+    connectAttempted.current = true;
     
-    isInitialized.current = true;
+    // Corriger l'URL - enlever /api si présent et utiliser l'URL de base du serveur
+    let socketUrl = url;
+    if (!socketUrl) {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+      // Enlever /api de l'URL pour obtenir l'URL de base du serveur
+      socketUrl = apiUrl.replace('/api', '').replace(/\/$/, '');
+    }
     
     // Configuration de base pour Socket.IO
     const socketOptions = {
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 3,
-      reconnectionDelay: 3000,
-      reconnectionDelayMax: 10000,
-      timeout: 10000,
-      forceNew: true,
-      transports: ['polling', 'websocket'], // Commencer par polling puis upgrader
+      reconnectionDelay: 2000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      transports: ['polling', 'websocket'],
       upgrade: true,
+      path: '/socket.io/', // Explicit path
       ...options
     };
     
-    console.log('Socket.IO: Initialisation de la connexion...');
+    console.log('Socket.IO: Initialisation de la connexion...', socketUrl);
     
     try {
-      // Créer une nouvelle connexion socket
-      const socketInstance = io(url, socketOptions);
+      // Créer une nouvelle connexion socket avec namespace par défaut
+      const socketInstance = io(socketUrl, socketOptions);
       
       socketRef.current = socketInstance;
+      isInitialized.current = true;
     
-    // Configurer les écouteurs d'événements
-    socketInstance.on('connect', () => {
-      console.log('Socket.IO: Connecté au serveur');
-      setIsConnected(true);
+      // Configurer les écouteurs d'événements
+      socketInstance.on('connect', () => {
+        console.log('Socket.IO: Connecté au serveur avec ID:', socketInstance.id);
+        setIsConnected(true);
         setSocket(socketInstance);
       });
       
       socketInstance.on('disconnect', (reason) => {
-        console.log('Socket.IO: Déconnecté du serveur', reason);
+        console.log('Socket.IO: Déconnecté du serveur:', reason);
         setIsConnected(false);
-    });
+      });
     
       socketInstance.on('connect_error', (error) => {
-        console.error('Socket.IO: Erreur de connexion', error.message);
-      setIsConnected(false);
+        console.error('Socket.IO: Erreur de connexion:', error.message);
+        setIsConnected(false);
       });
       
       socketInstance.on('reconnect', (attemptNumber) => {
         console.log('Socket.IO: Reconnecté après', attemptNumber, 'tentatives');
         setIsConnected(true);
-    });
+      });
     
       socketInstance.on('reconnect_error', (error) => {
-        console.error('Socket.IO: Erreur de reconnexion', error.message);
-    });
+        console.error('Socket.IO: Erreur de reconnexion:', error.message);
+      });
     
       socketInstance.on('reconnect_failed', () => {
         console.error('Socket.IO: Échec de reconnexion après toutes les tentatives');
         setIsConnected(false);
       });
+
+      // Gérer les erreurs génériques
+      socketInstance.on('error', (error) => {
+        console.error('Socket.IO: Erreur générique:', error);
+      });
+      
     } catch (error) {
-      console.error('Socket.IO: Erreur lors de l\'initialisation', error);
+      console.error('Socket.IO: Erreur lors de l\'initialisation:', error);
       setIsConnected(false);
+      connectAttempted.current = false;
     }
     
     // Nettoyage à la destruction du composant
@@ -106,6 +116,7 @@ const useSocket = (url = import.meta.env.VITE_API_URL || 'http://localhost:4000'
       setSocket(null);
       setIsConnected(false);
       isInitialized.current = false;
+      connectAttempted.current = false;
     };
   }, []); // Pas de dépendances pour éviter les réinitialisations
   

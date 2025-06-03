@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import UserService from '../services/User';
 import useSocket from '../hooks/useSocket';
 
@@ -13,6 +13,15 @@ export const AuthProvider = ({ children }) => {
 
   // Socket management
   const { socket, isConnected, authenticateUser } = useSocket();
+
+  // Handle force logout from server
+  const handleForceLogout = useCallback((reason) => {
+    setUser(null);
+    setError({
+      type: 'force_logout',
+      message: reason || 'Session expirée'
+    });
+  }, []);
 
   // Initialize user session on mount
   useEffect(() => {
@@ -84,8 +93,8 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (userData) {
-      setUser(userData);
-      
+        setUser(userData);
+        
         // Setup socket if connected
         if (socket && socket.connected && userData.id) {
           authenticateUser(userData.id);
@@ -120,7 +129,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       // Clear local state even if API call fails
-    setUser(null);
+      setUser(null);
       setError(null);
       return { success: true, local: true };
     } finally {
@@ -154,11 +163,11 @@ export const AuthProvider = ({ children }) => {
   // Refresh user data
   const refreshUser = async () => {
     try {
-        const response = await UserService.getMe();
+      const response = await UserService.getMe();
+      
+      if (response.success && response.user) {
+        setUser(response.user);
         
-        if (response.success && response.user) {
-          setUser(response.user);
-          
         // Authenticate socket if connected
         if (socket && socket.connected && response.user.id) {
           authenticateUser(response.user.id);
@@ -175,15 +184,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Handle force logout from server
-  const handleForceLogout = (reason) => {
-    setUser(null);
-    setError({
-      type: 'force_logout',
-      message: reason || 'Session expirée'
-    });
-  };
-
   // Setup socket listeners when socket or user changes
   useEffect(() => {
     if (socket && user && user.id) {
@@ -192,11 +192,11 @@ export const AuthProvider = ({ children }) => {
     }
     
     return () => {
-    if (socket) {
+      if (socket) {
         UserService.detachSocketListeners();
       }
-      };
-  }, [socket, user]);
+    };
+  }, [socket, user, authenticateUser, handleForceLogout]);
 
   const value = {
     user,
