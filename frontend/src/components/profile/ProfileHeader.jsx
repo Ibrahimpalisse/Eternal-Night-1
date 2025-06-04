@@ -25,17 +25,7 @@ const ProfileHeader = ({ user }) => {
           >
             {user?.username?.charAt(0).toUpperCase() || 'U'}
           </div>
-          
-          {/* Indicateur de statut en ligne */}
           <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"></div>
-          
-          {/* Nouveau bouton de téléchargement d'image */}
-          <div className="absolute -bottom-2 -right-2 bg-gray-800/70 p-2 rounded-full cursor-pointer hover:bg-gray-700/70 transition-colors duration-200"
-               title="Télécharger une image">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-          </div>
         </div>
         
         {/* Informations du profil */}

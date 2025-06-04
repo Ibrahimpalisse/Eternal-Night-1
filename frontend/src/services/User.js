@@ -32,22 +32,27 @@ class User {
     // Si l'utilisateur est connecté
     if (this.isLoggedIn()) {
       // Démarrer un intervalle pour rafraîchir le token
+      // Rafraîchir toutes les 90 minutes (token expire après 2h)
       this.refreshTokenInterval = setInterval(async () => {
         try {
-          // Vérifier si le dernier rafraîchissement date de moins de 5 minutes
-          if (this.lastTokenRefresh && Date.now() - this.lastTokenRefresh < 5 * 60 * 1000) {
+          // Vérifier si le dernier rafraîchissement date de moins de 60 minutes
+          if (this.lastTokenRefresh && Date.now() - this.lastTokenRefresh < 60 * 60 * 1000) {
             return; // Éviter les rafraîchissements trop fréquents
           }
           
+          console.log('🔄 Rafraîchissement automatique du token...');
           // Rafraîchir le token
           await this.refreshToken();
+          console.log('✅ Token rafraîchi avec succès');
         } catch (error) {
-          // Si le rafraîchissement échoue, déconnecter l'utilisateur
-          if (error.message.includes('invalide') || error.message.includes('expiré')) {
-            this.logout();
+          console.log('❌ Erreur lors du rafraîchissement automatique:', error.message);
+          // Si le rafraîchissement échoue, déconnecter l'utilisateur seulement si c'est une erreur d'expiration
+          if (error.message.includes('invalide') || error.message.includes('expiré') || error.message.includes('expired')) {
+            console.log('🚪 Déconnexion automatique due à l\'expiration du token');
+            this.handleForceLogout('Token refresh failed');
           }
         }
-      }, this.refreshInterval);
+      }, 90 * 60 * 1000); // 90 minutes
     }
   }
 
@@ -64,6 +69,8 @@ class User {
 
       if (!response.ok) {
         const error = await response.json();
+        // Dispatch event for failed refresh
+        window.dispatchEvent(new CustomEvent('token:refresh-failed'));
         throw new Error(error.message || 'Erreur lors du rafraîchissement du token');
       }
 
@@ -72,8 +79,15 @@ class User {
       // Mise à jour de la dernière fois que le token a été rafraîchi
       this.lastTokenRefresh = Date.now();
 
+      // Dispatch event for successful refresh
+      window.dispatchEvent(new CustomEvent('token:refreshed'));
+
       return data;
     } catch (error) {
+      // Dispatch event for failed refresh if not already done
+      if (!error.message.includes('Erreur lors du rafraîchissement')) {
+        window.dispatchEvent(new CustomEvent('token:refresh-failed'));
+      }
       throw error;
     }
   }

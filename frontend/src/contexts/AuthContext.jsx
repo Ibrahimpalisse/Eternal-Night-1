@@ -24,7 +24,19 @@ export const AuthProvider = ({ children }) => {
   // Check user session on mount only
   useEffect(() => {
     checkUserSession();
-  }, []);
+    
+    // Listen for authentication failures from API interceptor
+    const handleAuthLogout = (event) => {
+      console.log('🔒 Événement de déconnexion reçu:', event.detail?.reason);
+      handleForceLogout(event.detail?.reason || 'Authentication failed');
+    };
+    
+    window.addEventListener('auth:logout', handleAuthLogout);
+    
+    return () => {
+      window.removeEventListener('auth:logout', handleAuthLogout);
+    };
+  }, [handleForceLogout]);
 
   // Check if user has an active session
   const checkUserSession = async () => {
@@ -176,12 +188,43 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Refresh token function
+  const refreshToken = async () => {
+    try {
+      const response = await UserService.refreshToken();
+      
+      if (response.success) {
+        console.log('✅ Token rafraîchi avec succès depuis AuthContext');
+        return { success: true };
+      } else {
+        console.log('❌ Échec du rafraîchissement du token');
+        // Si le refresh token échoue, déconnecter l'utilisateur
+        setUser(null);
+        setError({
+          type: 'session',
+          message: 'Votre session a expiré. Veuillez vous reconnecter.'
+        });
+        return { success: false, message: 'Session expirée' };
+      }
+    } catch (error) {
+      console.log('❌ Erreur lors du rafraîchissement du token:', error.message);
+      // Si le refresh token échoue, déconnecter l'utilisateur
+      setUser(null);
+      setError({
+        type: 'session',
+        message: 'Votre session a expiré. Veuillez vous reconnecter.'
+      });
+      return { success: false, message: error.message };
+    }
+  };
+
   const value = {
     user,
     login,
     logout,
     logoutAllSessions,
     refreshUser,
+    refreshToken,
     loading,
     error,
     setUser,

@@ -9,6 +9,7 @@ import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -38,6 +39,7 @@ const AppContent = () => {
             </ToastProvider>
           </main>
       <Footer />
+      <TokenRefreshNotification />
         </div>
   );
 };

@@ -4,13 +4,13 @@ class JwtMiddleware {
   constructor() {
     this.secretKey = process.env.JWT_SECRET || 'votre_clé_secrète_jwt'; // Utiliser la variable d'environnement si elle existe
     this.refreshSecretKey = process.env.JWT_REFRESH_SECRET || 'votre_clé_secrète_refresh'; // Clé pour les refresh tokens
-    this.expiresIn = process.env.JWT_EXPIRES_IN || '1h'; // Utiliser la variable d'environnement si elle existe
+    this.expiresIn = process.env.JWT_EXPIRES_IN || '2h'; // Utiliser la variable d'environnement si elle existe (étendu à 2h)
     this.refreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '7d'; // Durée de vie des refresh tokens
   }
 
   // Méthode pour vérifier le token
   authenticateToken() {
-    return (req, res, next) => {
+    return async (req, res, next) => {
       console.log('🔐 Middleware JWT: Vérification du token...');
       console.log('📋 Headers disponibles:', Object.keys(req.headers));
       console.log('🍪 Cookies disponibles:', Object.keys(req.cookies || {}));
@@ -30,6 +30,58 @@ class JwtMiddleware {
       jwt.verify(token, this.secretKey, async (err, user) => {
         if (err) {
           console.log('❌ Middleware JWT: Token invalide.', err.message);
+          
+          // Si le token est expiré, tenter de le rafraîchir automatiquement
+          if (err.name === 'TokenExpiredError') {
+            console.log('🔄 Token expiré, tentative de rafraîchissement automatique...');
+            
+            const refreshToken = req.cookies.refresh_token;
+            if (refreshToken) {
+              try {
+                // Vérifier le refresh token
+                const decoded = this.verifyRefreshToken(refreshToken);
+                
+                // Récupérer l'utilisateur
+                const User = require('../models/User');
+                const refreshedUser = await User.getUserById(decoded.id);
+                
+                if (refreshedUser) {
+                  // Récupérer les rôles
+                  const roles = await User.getUserRoles(refreshedUser.id);
+                  
+                  // Générer un nouveau token
+                  const newToken = this.generateToken({
+                    id: refreshedUser.id,
+                    email: refreshedUser.email,
+                    roles
+                  });
+                  
+                  // Mettre à jour le cookie
+                  const cookieOptions = {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000 // 1 jour
+                  };
+                  
+                  res.cookie('access_token', newToken, cookieOptions);
+                  
+                  // Ajouter les informations utilisateur à la requête
+                  req.user = {
+                    id: refreshedUser.id,
+                    email: refreshedUser.email,
+                    roles
+                  };
+                  
+                  console.log('✅ Token rafraîchi automatiquement pour user:', refreshedUser.id);
+                  return next();
+                }
+              } catch (refreshError) {
+                console.log('❌ Erreur lors du rafraîchissement automatique:', refreshError.message);
+              }
+            }
+          }
+          
           return res.status(403).json({ message: 'Token invalide ou expiré.' });
         }
         
