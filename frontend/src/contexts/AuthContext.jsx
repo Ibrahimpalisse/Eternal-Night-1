@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (userData) {
-        setUser(userData);
+      setUser(userData);
       }
       
       return { success: true, user: userData };
@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       // Clear local state even if API call fails
-      setUser(null);
+    setUser(null);
       setError(null);
       return { success: true, local: true };
     } finally {
@@ -161,10 +161,10 @@ export const AuthProvider = ({ children }) => {
   // Refresh user data
   const refreshUser = async () => {
     try {
-      const response = await UserService.getMe();
-      
-      if (response.success && response.user) {
-        setUser(response.user);
+        const response = await UserService.getMe();
+        
+        if (response.success && response.user) {
+          setUser(response.user);
       } else {
         setUser(null);
       }

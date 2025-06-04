@@ -576,6 +576,142 @@ class User {
       this.forceLogoutCallback(reason);
     }
   }
+
+  // Méthode pour vérifier le mot de passe actuel
+  async checkPassword(password) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/auth/check-password`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+          credentials: 'include'
+        },
+        'Erreur lors de la vérification du mot de passe'
+      );
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour mettre à jour le mot de passe
+  async updatePassword(passwordData) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/user/password`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(passwordData),
+          credentials: 'include'
+        },
+        'Erreur lors de la mise à jour du mot de passe'
+      );
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour mettre à jour le nom d'utilisateur
+  async updateUsername(username) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/user/username`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username }),
+          credentials: 'include'
+        },
+        'Erreur lors de la mise à jour du nom d\'utilisateur'
+      );
+      
+      // Mettre à jour les données utilisateur en mémoire
+      if (data.success && this.userDataInMemory) {
+        this.userDataInMemory.username = username;
+      }
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour mettre à jour l'email (lance le processus de vérification)
+  async updateEmail(email) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/user/email`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+          credentials: 'include'
+        },
+        'Erreur lors de la mise à jour de l\'email'
+      );
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour vérifier le code de changement d'email
+  async verifyEmailChange(verificationCode) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/user/email/verify`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ verificationCode }),
+          credentials: 'include'
+        },
+        'Erreur lors de la vérification du changement d\'email'
+      );
+      
+      // Mettre à jour les données utilisateur en mémoire
+      if (data.success && data.email && this.userDataInMemory) {
+        this.userDataInMemory.email = data.email;
+      }
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour vérifier si un email est disponible
+  async checkEmailAvailability(email) {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/user/check-email`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+          credentials: 'include'
+        },
+        'Erreur lors de la vérification de la disponibilité de l\'email'
+      );
+      
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
 }
 
 export default new User();

@@ -84,8 +84,11 @@ const Navbar = () => {
         if (path === '/') {
             return location.pathname === '/';
         }
-        if (path === '/settings') {
-            return location.pathname === '/profile' && location.search.includes('tab=settings');
+        if (path === '/user/profil') {
+            return location.pathname === '/user/profil' && !location.search.includes('tab=settings');
+        }
+        if (path === '/user/profil?tab=settings') {
+            return location.pathname === '/user/profil' && location.search.includes('tab=settings');
         }
         return location.pathname.startsWith(path);
     };
@@ -93,7 +96,6 @@ const Navbar = () => {
     // Navigation items for desktop menu
     const navItems = [
         { to: "/", icon: <Home className="w-5 h-5" />, label: "Home" },
-    { to: "/user/home", icon: <User className="w-5 h-5" />, label: "Dashboard" },
         { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
         { to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" },
         { to: "/readers", icon: <List className="w-5 h-5" />, label: "Best Readers" },
@@ -251,7 +253,7 @@ const Navbar = () => {
                       {/* Options du menu */}
                                                     <div className="p-2">
                                                         <Link 
-                                                            to="/profile" 
+                                                            to="/user/profil" 
                                                             className="flex items-center space-x-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
                                                             onClick={() => {
                                                                 setIsMoreMenuOpen(false);
@@ -262,19 +264,6 @@ const Navbar = () => {
                                                                 <User className="w-4 h-4" />
                                                             </div>
                                                             <span>Voir le profil</span>
-                                                        </Link>
-                                                        <Link 
-                                                            to="/profile?tab=settings" 
-                                                            className="flex items-center space-x-3 px-3 py-3 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
-                                                            onClick={() => {
-                                                                setIsMoreMenuOpen(false);
-                                                                setIsMenuOpen(false);
-                                                            }}
-                                                        >
-                                                            <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-purple-500/50 transition-colors">
-                                                                <Settings className="w-4 h-4" />
-                                                            </div>
-                                                            <span>Paramètres</span>
                                                         </Link>
                                                     </div>
 
@@ -492,29 +481,14 @@ const Navbar = () => {
                                         <div className="space-y-1">
                                             <div className="px-3 text-xs font-medium text-white/40 uppercase tracking-wider">Profil</div>
                                 <Link 
-                                    to="/profile" 
-                                                className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${location.pathname === '/profile' && !location.search.includes('tab=settings') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
+                                                to="/user/profil" 
+                                                className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/user/profil') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
                                                 onClick={() => setIsMenuOpen(false)}
                                             >
-                                                <div className={`p-2 rounded-lg ${location.pathname === '/profile' && !location.search.includes('tab=settings') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
+                                                <div className={`p-2 rounded-lg ${isActive('/user/profil') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
                                         <User className="w-4 h-4" />
-                                    </div>
-                                    <span>Voir le profil</span>
-                                </Link>
-                                        </div>
-
-                                        {/* Settings Section */}
-                                        <div className="space-y-1">
-                                            <div className="px-3 text-xs font-medium text-white/40 uppercase tracking-wider">Paramètres</div>
-                                            <Link 
-                                                to="/profile?tab=settings" 
-                                                className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/settings') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
-                                                onClick={() => setIsMenuOpen(false)}
-                                            >
-                                                <div className={`p-2 rounded-lg ${isActive('/settings') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
-                                                    <Settings className="w-4 h-4" />
                                                 </div>
-                                                <span>Paramètres</span>
+                                                <span>Profil</span>
                                     </Link>
                                         </div>
                                     </>

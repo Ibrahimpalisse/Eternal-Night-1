@@ -59,12 +59,12 @@ const useSocket = (url, options = {}) => {
       
       // Configuration de base pour Socket.IO
       const socketOptions = {
-        autoConnect: true,
-        reconnection: true,
+      autoConnect: true,
+      reconnection: true,
         reconnectionAttempts: 3,
         reconnectionDelay: 2000,
         reconnectionDelayMax: 5000,
-        timeout: 20000,
+      timeout: 20000,
         transports: ['polling', 'websocket'],
         upgrade: true,
         path: '/socket.io/',
@@ -77,12 +77,12 @@ const useSocket = (url, options = {}) => {
         // Créer une nouvelle connexion socket
         const socketInstance = io(socketUrl, socketOptions);
         globalSocket = socketInstance;
-      
-        // Configurer les écouteurs d'événements
-        socketInstance.on('connect', () => {
+    
+    // Configurer les écouteurs d'événements
+    socketInstance.on('connect', () => {
           console.log('Socket.IO: Connecté au serveur avec ID:', socketInstance.id);
           if (mountedRef.current) {
-            setIsConnected(true);
+      setIsConnected(true);
             setSocket(socketInstance);
           }
           resolve();
@@ -92,13 +92,13 @@ const useSocket = (url, options = {}) => {
           console.log('Socket.IO: Déconnecté du serveur:', reason);
           if (mountedRef.current) {
             setIsConnected(false);
-          }
-        });
-      
+      }
+    });
+    
         socketInstance.on('connect_error', (error) => {
           console.error('Socket.IO: Erreur de connexion:', error.message);
           if (mountedRef.current) {
-            setIsConnected(false);
+      setIsConnected(false);
           }
           resolve();
         });
@@ -107,7 +107,7 @@ const useSocket = (url, options = {}) => {
           console.log('Socket.IO: Reconnecté après', attemptNumber, 'tentatives');
           if (mountedRef.current) {
             setIsConnected(true);
-          }
+      }
         });
       
         socketInstance.on('reconnect_error', (error) => {
@@ -118,14 +118,14 @@ const useSocket = (url, options = {}) => {
           console.error('Socket.IO: Échec de reconnexion après toutes les tentatives');
           if (mountedRef.current) {
             setIsConnected(false);
-          }
+        }
         });
 
         // Gérer les erreurs génériques
         socketInstance.on('error', (error) => {
           console.error('Socket.IO: Erreur générique:', error);
-        });
-      
+    });
+    
       } catch (error) {
         console.error('Socket.IO: Erreur lors de l\'initialisation:', error);
         if (mountedRef.current) {
