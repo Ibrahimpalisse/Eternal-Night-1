@@ -8,7 +8,7 @@ const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
         setIsOpen(false);
     };
 
-  return (
+    return (
         <Transition show={isOpen} as={Fragment}>
             <Dialog 
                 as="div" 
@@ -24,7 +24,7 @@ const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
@@ -38,49 +38,61 @@ const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-black border border-white/10 p-6 text-left align-middle shadow-xl transition-all">
-                                <div className="flex items-center mb-6">
-                                    <div className="mr-4 flex-shrink-0 p-2 bg-red-500/20 rounded-full">
-                                        <AlertTriangle className="h-6 w-6 text-red-500" />
-            </div>
-                                    <Dialog.Title
-                                        as="h3"
-                                        className="text-lg font-medium leading-6 text-white"
-                                    >
-                                        Confirmation de déconnexion
-                                    </Dialog.Title>
-          </div>
-          
-                                <div className="mt-2">
-                                    <p className="text-sm text-white/80">
-                                        Êtes-vous sûr de vouloir vous déconnecter ? Toutes les données non enregistrées seront perdues.
-          </p>
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white/[0.07] backdrop-blur-xl border border-white/20 p-8 text-left align-middle shadow-[0_8px_32px_rgb(0_0_0/0.4)] transition-all hover:shadow-purple-500/10">
+                                <div className="flex items-center mb-8">
+                                    <div className="relative mr-4 flex-shrink-0">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/30 to-red-400/20 rounded-full blur-lg"></div>
+                                        <div className="relative p-3 bg-red-500/10 backdrop-blur-sm rounded-full border border-red-500/20">
+                                            <AlertTriangle className="h-6 w-6 text-red-400" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Dialog.Title
+                                            as="h3"
+                                            className="text-xl font-bold text-white leading-6"
+                                        >
+                                            Confirmation de déconnexion
+                                        </Dialog.Title>
+                                        <p className="text-sm text-white/60 mt-1">
+                                            Cette action nécessite une confirmation
+                                        </p>
+                                    </div>
                                 </div>
           
-                                <div className="mt-6 flex gap-3 justify-end">
-            <button
+                                <div className="mb-8">
+                                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                                        <p className="text-white/90 leading-relaxed">
+                                            Êtes-vous sûr de vouloir vous déconnecter ? Toutes les données 
+                                            non enregistrées seront perdues.
+                                        </p>
+                                    </div>
+                                </div>
+          
+                                <div className="flex gap-4 justify-end">
+                                    <button
                                         type="button"
-                                        className="inline-flex justify-center rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
-              onClick={() => setIsOpen(false)}
-            >
-              Annuler
-            </button>
-            <button
+                                        className="group inline-flex justify-center items-center rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 hover:border-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all duration-300"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        Annuler
+                                    </button>
+                                    <button
                                         type="button"
-                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                                        className="group relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-6 py-3 text-sm font-medium text-white hover:from-red-500 hover:to-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent shadow-lg shadow-red-500/20 hover:shadow-red-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                                         onClick={handleLogout}
                                     >
-                                        <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
-            </button>
-          </div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-red-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                                        <LogOut className="w-4 h-4 mr-2 relative z-10" />
+                                        <span className="relative z-10">Déconnexion</span>
+                                    </button>
+                                </div>
                             </Dialog.Panel>
                         </Transition.Child>
-        </div>
-      </div>
+                    </div>
+                </div>
             </Dialog>
         </Transition>
-  );
+    );
 };
 
 export default LogoutConfirmDialog; 

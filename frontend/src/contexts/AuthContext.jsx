@@ -11,19 +11,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Socket management
+  // Initialize socket connection
   const { socket, isConnected, authenticateUser } = useSocket();
 
-  // Handle force logout from server
+  // Memoize handleForceLogout to prevent effect loops
   const handleForceLogout = useCallback((reason) => {
+    console.log('Force logout triggered:', reason);
     setUser(null);
-    setError({
-      type: 'force_logout',
-      message: reason || 'Session expirée'
-    });
+    setError(null);
   }, []);
 
-  // Initialize user session on mount
+  // Check user session on mount only
   useEffect(() => {
     checkUserSession();
   }, []);
@@ -36,12 +34,6 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success && response.user) {
         setUser(response.user);
-
-        // Authenticate socket if connected
-        if (socket && socket.connected && response.user.id) {
-          authenticateUser(response.user.id);
-          UserService.setupSocketListeners(socket, handleForceLogout);
-        }
       } else {
         setUser(null);
       }
@@ -51,6 +43,18 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Setup socket authentication and listeners when socket connects and user is available
+  useEffect(() => {
+    if (socket && isConnected && user && user.id) {
+      authenticateUser(user.id);
+      UserService.setupSocketListeners(socket, handleForceLogout);
+      
+      return () => {
+        UserService.detachSocketListeners();
+      };
+    }
+  }, [socket, isConnected, user?.id, authenticateUser, handleForceLogout]);
 
   // Login function
   const login = async (credentials) => {
@@ -93,13 +97,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       if (userData) {
-      setUser(userData);
-      
-        // Setup socket if connected
-        if (socket && socket.connected && userData.id) {
-          authenticateUser(userData.id);
-          UserService.setupSocketListeners(socket, handleForceLogout);
-        }
+        setUser(userData);
       }
       
       return { success: true, user: userData };
@@ -129,7 +127,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       // Clear local state even if API call fails
-    setUser(null);
+      setUser(null);
       setError(null);
       return { success: true, local: true };
     } finally {
@@ -163,16 +161,10 @@ export const AuthProvider = ({ children }) => {
   // Refresh user data
   const refreshUser = async () => {
     try {
-        const response = await UserService.getMe();
-        
-        if (response.success && response.user) {
-          setUser(response.user);
-          
-        // Authenticate socket if connected
-        if (socket && socket.connected && response.user.id) {
-          authenticateUser(response.user.id);
-          UserService.setupSocketListeners(socket, handleForceLogout);
-        }
+      const response = await UserService.getMe();
+      
+      if (response.success && response.user) {
+        setUser(response.user);
       } else {
         setUser(null);
       }
@@ -183,20 +175,6 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
-  // Setup socket listeners when socket or user changes
-  useEffect(() => {
-    if (socket && user && user.id) {
-      authenticateUser(user.id);
-      UserService.setupSocketListeners(socket, handleForceLogout);
-    }
-    
-    return () => {
-    if (socket) {
-        UserService.detachSocketListeners();
-      }
-    };
-  }, [socket, user, authenticateUser, handleForceLogout]);
 
   const value = {
     user,

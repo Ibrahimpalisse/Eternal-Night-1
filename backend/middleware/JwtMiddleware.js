@@ -11,37 +11,49 @@ class JwtMiddleware {
   // Méthode pour vérifier le token
   authenticateToken() {
     return (req, res, next) => {
-      console.log('Middleware JWT: Vérification du token...');
+      console.log('🔐 Middleware JWT: Vérification du token...');
+      console.log('📋 Headers disponibles:', Object.keys(req.headers));
+      console.log('🍪 Cookies disponibles:', Object.keys(req.cookies || {}));
       
       // Récupérer le token du cookie ou du header
       const token = req.cookies.access_token || req.headers['authorization']?.split(' ')[1];
       
       if (!token) {
-        console.log('Middleware JWT: Aucun token trouvé.');
+        console.log('❌ Middleware JWT: Aucun token trouvé.');
+        console.log('🔍 Cookie access_token:', req.cookies.access_token ? 'présent' : 'absent');
+        console.log('🔍 Header Authorization:', req.headers['authorization'] ? 'présent' : 'absent');
         return res.status(401).json({ message: 'Accès non autorisé. Token requis.' });
       }
 
+      console.log('✅ Token trouvé, vérification en cours...');
+      
       jwt.verify(token, this.secretKey, async (err, user) => {
         if (err) {
-          console.log('Middleware JWT: Token invalide.', err.message);
+          console.log('❌ Middleware JWT: Token invalide.', err.message);
           return res.status(403).json({ message: 'Token invalide ou expiré.' });
         }
+        
+        console.log('✅ Token valide, vérification des rôles pour user ID:', user.id);
         
         // Vérifier si l'utilisateur a au moins un rôle
         try {
           const User = require('../models/User'); // Importer ici pour éviter les dépendances circulaires
           const roles = await User.getUserRoles(user.id);
           
+          console.log('🎭 Rôles récupérés pour user', user.id, ':', roles);
+          
           if (!roles || roles.length === 0) {
+            console.log('❌ Utilisateur sans rôle. User ID:', user.id);
             return res.status(403).json({ message: 'Utilisateur sans rôle. Accès refusé.' });
           }
           
           // Ajouter les rôles à l'objet user dans la requête
           user.roles = roles;
           req.user = user;
+          console.log('✅ Authentification réussie pour user:', user.id, 'avec rôles:', roles);
           next();
         } catch (error) {
-          console.error('Erreur lors de la vérification des rôles:', error);
+          console.error('💥 Erreur lors de la vérification des rôles:', error);
           return res.status(500).json({ message: 'Erreur lors de la vérification des droits d\'accès.' });
         }
       });

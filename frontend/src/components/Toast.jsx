@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import CloseButton from './ui/CloseButton';
 
 // Types de toasts
 export const TOAST_TYPES = {
@@ -121,13 +120,17 @@ const ToastItem = ({ id, type, message, onClose, duration = DEFAULT_DURATION }) 
     >
       {getIcon()}
       <div className="ml-3 text-sm font-medium pr-8">{message}</div>
-      <CloseButton
-        variant="ghost"
-        size="sm"
+      <button
+        type="button"
+        className="ml-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8 hover:bg-white/10 transition-colors"
+        aria-label="Close"
         onClick={handleClose}
-        className="ml-auto -mr-1"
-        ariaLabel="Fermer la notification"
-      />
+      >
+        <span className="sr-only">Close</span>
+        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path>
+        </svg>
+      </button>
       
       {/* Barre de progression */}
       <div className="absolute bottom-0 left-0 h-1 bg-current opacity-30" style={{ width: `${progress}%`, transition: 'width 100ms linear' }}></div>

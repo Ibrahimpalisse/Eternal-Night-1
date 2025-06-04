@@ -21,7 +21,7 @@ export class FormValidation {
   // Validation du mot de passe
   static password = z
     .string()
-    .min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" })
+    .min(2, { message: "Le mot de passe doit contenir au moins 8 caractères" })
     .max(100, { message: "Le mot de passe est trop long" })
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
       message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"

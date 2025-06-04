@@ -72,6 +72,35 @@ export default {
         "fade-out": {
           "0%": { opacity: "1" },
           "100%": { opacity: "0" }
+        },
+        "fade-in-down": {
+          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "stars-move-small": {
+          "0%": { "background-position": "0% 0%" },
+          "100%": { "background-position": "100% 100%" }
+        },
+        "stars-move-medium": {
+          "0%": { "background-position": "100% 0%" },
+          "100%": { "background-position": "0% 100%" }
+        },
+        "stars-move-large": {
+          "0%": { "background-position": "0% 100%" },
+          "100%": { "background-position": "100% 0%" }
+        },
+        "stars-twinkle": {
+          "0%": { opacity: "0.3", transform: "scale(1)" },
+          "50%": { opacity: "0.6", transform: "scale(1.05)" },
+          "100%": { opacity: "0.4", transform: "scale(1)" }
+        },
+        "bounce-gentle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" }
         }
       }
     },

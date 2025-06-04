@@ -254,7 +254,7 @@ const Login = () => {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                       className="text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
-                    >
+                  >
                       {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                   </button>
                     </div>
