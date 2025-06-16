@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import openBookLogo from '../../assets/open-book.svg';
 import User from '../../services/User';
@@ -7,6 +7,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useAuth } from '../../contexts/AuthContext';
 import EmailVerificationDialog from '../../components/EmailVerificationDialog';
 import CodeVerificationDialog from '../../components/CodeVerificationDialog';
+
 
 // Composants pour les icônes d'œil
 const EyeIcon = () => (
@@ -46,6 +47,7 @@ const ValidationIndicator = ({ isValid, hasError, isEmpty, className = '' }) => 
 };
 
 const Login = () => {
+  // États séparés et stables
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -54,16 +56,19 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState('');
-  const [showCodeVerificationDialog, setShowCodeVerificationDialog] = useState(false);
+  
+  // États pour les modals - un seul modal actif à la fois
+  const [modalState, setModalState] = useState({
+    type: null, // null | 'verification-dialog' | 'code-verification'
+    email: ''
+  });
 
   const navigate = useNavigate();
   const toast = useToast();
   const auth = useAuth();
 
-  // Validation en temps réel
-  const handleInputChange = (e) => {
+  // Callbacks stables avec useCallback
+  const handleInputChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     
@@ -72,26 +77,27 @@ const Login = () => {
       [name]: newValue
     }));
 
-    // Supprimer les erreurs spécifiques de champ en temps réel
-    setErrors(prev => ({
-      ...prev,
-      [name]: ''
-    }));
-  };
-  
-  // Soumission du formulaire
-  const handleSubmit = async (e) => {
+    // Supprimer les erreurs spécifiques
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  }, [errors]);
+
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     
     if (isLoading) return;
 
-    // Validation complète
+    // Validation
     const validation = FormValidation.validateForm('login', formData);
     if (!validation.success) {
       setErrors({ general: "Email ou mot de passe incorrect" });
       toast.error("Email ou mot de passe incorrect");
-        return;
-      }
+      return;
+    }
       
     setIsLoading(true);
     setErrors({});
@@ -99,81 +105,74 @@ const Login = () => {
     try {
       const result = await auth.login(formData);
 
-      if (result && result.success) {
-      toast.success("Connexion réussie");
+      if (result?.success) {
+        toast.success("Connexion réussie");
         navigate('/user/home', { replace: true });
-      } else if (result && result.requiresVerification) {
-        // Cas explicite de vérification requise
-        setVerificationEmail(formData.email);
-        setShowVerificationDialog(true);
-        // Le toast est déjà géré dans le dialogue principal
+      } else if (result && (result.requiresVerification || result.needVerification)) {
+        // Afficher le modal de vérification
+        setModalState({
+          type: 'verification-dialog',
+          email: formData.email
+        });
       } else {
-        // Vérifier si le message d'erreur indique une vérification requise
         const errorMessage = result?.message || "Email ou mot de passe incorrect";
         
         if (errorMessage.includes("vérifi") || errorMessage.includes("verify")) {
-          setVerificationEmail(formData.email);
-          setShowVerificationDialog(true);
-          // Le toast est déjà géré dans le dialogue principal
+          setModalState({
+            type: 'verification-dialog',
+            email: formData.email
+          });
         } else {
-          setErrors({ general: "Email ou mot de passe incorrect" });
-          toast.error("Email ou mot de passe incorrect");
+          setErrors({ general: errorMessage });
+          toast.error(errorMessage);
         }
       }
     } catch (error) {
       if (error.silent) return;
       
-      // Vérifier si c'est une erreur de vérification d'email
       const errorMessage = error.message || "Une erreur est survenue lors de la connexion";
       
       if (errorMessage.includes("vérifi") || errorMessage.includes("verify") || errorMessage.includes("403")) {
-        setVerificationEmail(formData.email);
-        setShowVerificationDialog(true);
-        // Le toast est déjà géré dans le dialogue principal
+        setModalState({
+          type: 'verification-dialog',
+          email: formData.email
+        });
       } else {
-        setErrors({ general: "Email ou mot de passe incorrect" });
-        toast.error("Email ou mot de passe incorrect");
+        setErrors({ general: errorMessage });
+        toast.error(errorMessage);
       }
     } finally {
       setIsLoading(false);
     }
-  };
-  
-  // Callback après envoi du code de vérification (appelé par EmailVerificationDialog)
-  const handleVerificationSent = () => {
-    // Fermer le premier dialogue
-    setShowVerificationDialog(false);
-    
-    // Utiliser un petit délai avant d'ouvrir le second dialogue
-    // pour s'assurer que le premier est bien fermé
-    setTimeout(() => {
-      // Afficher le dialogue de vérification du code
-      setShowCodeVerificationDialog(true);
-    }, 100); // Un délai de 100ms devrait être suffisant
-  };
+  }, [formData, isLoading, auth, toast, navigate]);
 
-  // Callback après succès de la vérification d'email (appelé par CodeVerificationDialog)
-  const handleVerificationSuccess = (verifiedEmail) => {
-    // Fermer proprement le dialogue de vérification de code
-    setShowCodeVerificationDialog(false);
+  // Callbacks pour les modals
+  const handleVerificationSent = useCallback((sentEmail) => {
+    console.log('handleVerificationSent called with email:', sentEmail);
+    // Fermer d'abord le modal actuel
+    setModalState(null);
+    // Puis ouvrir le modal de vérification après un petit délai
+    setTimeout(() => {
+      setModalState({
+        type: 'code-verification',
+        email: sentEmail  // Utiliser directement sentEmail au lieu de modalState.email
+      });
+    }, 100);
+  }, []);
+
+  const handleVerificationSuccess = useCallback((verifiedEmail) => {
+    setModalState({ type: null, email: '' });
     
-    // Petit délai avant d'afficher le toast pour éviter les conflits DOM
     setTimeout(() => {
       toast.success(`Email ${verifiedEmail} vérifié avec succès ! Vous pouvez maintenant vous connecter.`);
-      // Réinitialiser les champs du formulaire de connexion si nécessaire
-      setFormData({ ...formData, password: '' });
+      setFormData(prev => ({ ...prev, password: '' }));
       setErrors({});
-      // Optionellement, tenter la connexion automatique ici si désiré
-      // handleSubmit(); // Appel à la soumission du formulaire si connexion auto souhaitée
-    }, 200);
-  };
+    }, 100);
+  }, [toast]);
 
-  // Callback pour annuler la vérification du code (appelé par CodeVerificationDialog)
-  const handleCodeVerificationCancel = () => {
-    setShowCodeVerificationDialog(false);
-    setVerificationEmail(''); // Clear email for verification
-    // Revenir à l'écran de login si nécessaire (il est déjà visible par défaut)
-  };
+  const handleCloseModal = useCallback(() => {
+    setModalState({ type: null, email: '' });
+  }, []);
 
   const isFormValid = formData.email && formData.password && !errors.email && !errors.password;
 
@@ -202,38 +201,37 @@ const Login = () => {
             Sign in to continue your reading journey
           </p>
         </div>
-        
-        {/* Login form or Verification Form */}
-        {!showCodeVerificationDialog && (
+
+        {/* Login form */}
         <div className="w-full max-w-md px-4 animate-fade-in-up">
           <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/20 shadow-[0_8px_32px_rgb(0_0_0/0.4)] transition-all duration-300 hover:shadow-purple-500/10">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               
-                {/* General error */}
-                {errors.general && (
-                  <p className="text-red-400 text-sm">{errors.general}</p>
-                )}
+              {/* General error */}
+              {errors.general && (
+                <p className="text-red-400 text-sm">{errors.general}</p>
+              )}
 
-                {/* Email */}
+              {/* Email */}
               <div className="group">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2 transition-colors group-focus-within:text-purple-400">
                   Email address
                 </label>
                 <div className="relative">
-                <input
-                  id="email"
-                      name="email"
-                  type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white/10 border ${errors.general ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 ${formData.email && !errors.email ? '' : ''}`}
-                  placeholder="Enter your email"
-                      autoComplete="email"
-                />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={`w-full px-4 py-3 bg-white/10 border ${errors.general ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50`}
+                    placeholder="Enter your email"
+                    autoComplete="email"
+                  />
                 </div>
               </div>
               
-                {/* Password */}
+              {/* Password */}
               <div className="group">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2 transition-colors group-focus-within:text-purple-400">
                   Password
@@ -241,35 +239,35 @@ const Login = () => {
                 <div className="relative">
                   <input
                     id="password"
-                      name="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={handleInputChange}
+                    value={formData.password}
+                    onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-white/10 border ${errors.general ? 'border-red-500 ring-1 ring-red-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-500/50 pr-20`}
                     placeholder="Enter your password"
-                      autoComplete="current-password"
+                    autoComplete="current-password"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
                       className="text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
-                  >
+                    >
                       {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-                  </button>
-                    </div>
+                    </button>
+                  </div>
                 </div>
               </div>
               
-                {/* Remember me and forgot password */}
+              {/* Remember me and forgot password */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
                     id="rememberMe"
-                      name="rememberMe"
+                    name="rememberMe"
                     type="checkbox"
-                      checked={formData.rememberMe}
-                      onChange={handleInputChange}
+                    checked={formData.rememberMe}
+                    onChange={handleInputChange}
                     className="h-4 w-4 rounded border-gray-600 text-purple-500 focus:ring-purple-500 bg-white/10 transition-colors duration-200"
                   />
                   <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-300 hover:text-white transition-colors duration-200">
@@ -286,15 +284,15 @@ const Login = () => {
                 </div>
               </div>
               
-                {/* Submit button */}
+              {/* Submit button */}
               <button
                 type="submit"
-                  disabled={!isFormValid || isLoading}
-                  className={`group relative w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-4 rounded-xl flex justify-center items-center font-medium transition-all duration-300 shadow-lg shadow-purple-500/20 ${(!isFormValid || isLoading) ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-[0.98]'}`}
+                disabled={!isFormValid || isLoading}
+                className={`group relative w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-4 rounded-xl flex justify-center items-center font-medium transition-all duration-300 shadow-lg shadow-purple-500/20 ${(!isFormValid || isLoading) ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-[0.98]'}`}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                 <span className="relative z-10 flex items-center">
-                    {isLoading ? (
+                  {isLoading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Signing in...
@@ -320,32 +318,34 @@ const Login = () => {
               </p>
             </div>
           </div>
-            
+          
           <div className="text-center mt-12 mb-8">
             <p className="text-xs text-gray-500 hover:text-gray-400 transition-colors duration-200">
               © {new Date().getFullYear()} Night Novels. All rights reserved.
             </p>
           </div>
         </div>
-        )}
       </div>
       
-      {/* Dialog de vérification d'email (avertissement initial) */}
-      <EmailVerificationDialog
-        isOpen={showVerificationDialog && !showCodeVerificationDialog}
-        onClose={() => setShowVerificationDialog(false)}
-        email={verificationEmail}
-        onVerificationSent={handleVerificationSent}
-        onVerificationSuccess={handleVerificationSuccess}
-      />
+      {/* Modals - rendu conditionnel stable */}
+      {modalState && modalState.type === 'verification-dialog' && (
+        <EmailVerificationDialog
+          isOpen={true}
+          onClose={handleCloseModal}
+          email={modalState.email}
+          onVerificationSent={handleVerificationSent}
+          onVerificationSuccess={handleVerificationSuccess}
+        />
+      )}
 
-      {/* Dialog de vérification du code */}
-      <CodeVerificationDialog
-        isOpen={showCodeVerificationDialog && !showVerificationDialog}
-        onClose={handleCodeVerificationCancel}
-              email={verificationEmail}
-              onVerificationSuccess={handleVerificationSuccess}
-            />
+      {modalState && modalState.type === 'code-verification' && (
+        <CodeVerificationDialog
+          isOpen={true}
+          onClose={handleCloseModal}
+          email={modalState.email}
+          onVerificationSuccess={handleVerificationSuccess}
+        />
+      )}
     </div>
   );
 };

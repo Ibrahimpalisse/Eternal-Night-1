@@ -153,7 +153,7 @@ const ToastContainer = ({ toasts, position = 'bottom-right', onRemoveToast }) =>
   };
 
   return (
-    <div className={`fixed z-50 flex flex-col gap-3 max-w-xs w-full ${getPositionClasses()}`}>
+    <div className={`fixed z-[9999] flex flex-col gap-3 max-w-xs w-full ${getPositionClasses()}`}>
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}

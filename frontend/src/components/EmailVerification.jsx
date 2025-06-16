@@ -53,101 +53,113 @@ const EmailVerification = ({
 
   // Fonction pour gérer le changement de code
   const handleCodeChange = (newCode) => {
-    if (!isMountedRef.current) return;
-    
+    console.log('EmailVerification - Code change received:', newCode);
     setVerificationCode(newCode);
     setCodeError('');
   };
 
   // Fonction pour gérer la soumission du code
   const handleSubmitCode = async () => {
-    if (!isMountedRef.current) return;
+    console.log('handleSubmitCode - Function called!');
+    console.log('handleSubmitCode - verificationCode:', verificationCode);
     
     // Convertir le tableau de code en chaîne
     const codeString = verificationCode.join('');
+    console.log('handleSubmitCode - codeString:', codeString);
     
     // Vérifier que le code est complet
     if (codeString.length !== 6) {
-      if (isMountedRef.current) {
+      console.log('handleSubmitCode - Code incomplete, length:', codeString.length);
       setCodeError("Veuillez entrer le code complet à 6 chiffres");
-      }
       return;
     }
     
+    console.log('handleSubmitCode - Starting verification...');
     setIsSubmittingCode(true);
     setCodeError('');
     
     try {
+      console.log('handleSubmitCode - Calling User.verifyEmail with:', currentEmail, codeString);
       const result = await User.verifyEmail(currentEmail, codeString);
       
-      if (!isMountedRef.current) return;
+      console.log('handleSubmitCode - API result:', result);
       
       // Ne pas traiter les erreurs silencieuses (généralement rate limit)
       if (result && result.silent) {
-        if (isMountedRef.current) {
+        console.log('handleSubmitCode - Silent error, stopping');
         setIsSubmittingCode(false);
-        }
         return;
       }
       
       if (result.success) {
-        if (toast && isMountedRef.current) {
-        toast.success("Email vérifié avec succès");
-        }
+        console.log('handleSubmitCode - Success!');
+        // Pas de toast ici - le parent se charge d'afficher le toast détaillé
         
-        if (onVerificationSuccess && isMountedRef.current) {
+        if (onVerificationSuccess) {
           // Petit délai pour éviter les conflicts DOM
           setTimeout(() => {
-            if (isMountedRef.current) {
-          onVerificationSuccess(currentEmail);
-            }
+            onVerificationSuccess(currentEmail);
           }, 50);
         }
       } else {
-        if (isMountedRef.current) {
+        console.log('handleSubmitCode - Verification failed:', result.message);
         setCodeError(result.message || "Code de vérification invalide");
-          if (toast) {
-        toast.error("Échec de la vérification");
-          }
+        if (toast) {
+          toast.error("Échec de la vérification");
         }
       }
     } catch (error) {
-      if (!isMountedRef.current) return;
-      
+      console.log('handleSubmitCode - Error caught:', error);
       setCodeError(error.message || "Une erreur est survenue lors de la vérification");
       if (toast) {
-      toast.error(error.message || "Échec de la vérification");
+        toast.error(error.message || "Échec de la vérification");
       }
     } finally {
-      if (isMountedRef.current) {
+      console.log('handleSubmitCode - Finally block, setting isSubmittingCode to false');
       setIsSubmittingCode(false);
-      }
     }
   };
 
   // Fonction pour renvoyer le code
   const handleResendCode = async () => {
-    if (!isMountedRef.current) return;
+    console.log('handleResendCode - Function called!');
+    console.log('handleResendCode - currentEmail:', currentEmail);
+    console.log('handleResendCode - isMountedRef.current:', isMountedRef.current);
     
     try {
+      console.log('handleResendCode - Starting resend process...');
+      
       // Si une fonction de rappel personnalisée est fournie, l'utiliser
       if (onResendCode) {
+        console.log('handleResendCode - Using custom onResendCode callback');
         const result = await onResendCode();
+        console.log('handleResendCode - Custom callback result:', result);
         // Ne pas traiter les erreurs silencieuses
-        if (result && result.silent) return;
+        if (result && result.silent) {
+          console.log('handleResendCode - Silent error from custom callback');
+          return;
+        }
       } else {
+        console.log('handleResendCode - Using default User.resendVerification');
         // Sinon, utiliser le comportement par défaut
         const result = await User.resendVerification(currentEmail);
+        console.log('handleResendCode - Default resend result:', result);
         // Ne pas traiter les erreurs silencieuses
-        if (result && result.silent) return;
+        if (result && result.silent) {
+          console.log('handleResendCode - Silent error from default method');
+          return;
+        }
         
-        if (toast && isMountedRef.current) {
-        toast.info(`Un nouveau code de vérification a été envoyé à ${currentEmail}`);
+        if (toast) {
+          console.log('handleResendCode - Showing success toast');
+          toast.info(`Un nouveau code de vérification a été envoyé à ${currentEmail}`);
         }
       }
     } catch (error) {
-      if (toast && isMountedRef.current) {
-      toast.error(error.message || "Échec de l'envoi du nouveau code");
+      console.log('handleResendCode - Error caught:', error);
+      if (toast) {
+        console.log('handleResendCode - Showing error toast');
+        toast.error(error.message || "Échec de l'envoi du nouveau code");
       }
     }
   };
@@ -232,6 +244,12 @@ const EmailVerification = ({
                   onClick={handleSubmitCode}
                   disabled={isSubmittingCode || verificationCode.some(digit => digit === '')}
                   className="group relative w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-4 rounded-xl flex justify-center items-center font-medium transition-all duration-300 shadow-lg shadow-purple-500/20 hover:from-purple-500 hover:to-purple-400 hover:shadow-purple-500/30 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                  onMouseEnter={() => {
+                    console.log('Button state - isSubmittingCode:', isSubmittingCode);
+                    console.log('Button state - verificationCode:', verificationCode);
+                    console.log('Button state - hasEmptyDigits:', verificationCode.some(digit => digit === ''));
+                    console.log('Button state - disabled:', isSubmittingCode || verificationCode.some(digit => digit === ''));
+                  }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                   <span className="relative z-10 flex items-center">

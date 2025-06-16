@@ -2,6 +2,8 @@ const db = require('../db');
 const jwtMiddleware = require('../middleware/JwtMiddleware');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../services/emailService');
 const socketService = require('../services/socketService');
+const bcrypt = require('bcrypt');
+
 
 class User {
   // Exposer la connexion à la base de données pour les contrôleurs
@@ -332,24 +334,31 @@ class User {
       
       const userId = rows[0].user_id;
       
-      // Récupérer l'ancien mot de passe pour comparaison
+      // Récupérer l'ancien mot de passe haché pour comparaison
       const [userRows] = await db.execute('SELECT password FROM users WHERE id = ?', [userId]);
       
       if (!userRows.length) {
         throw new Error('Utilisateur non trouvé.');
       }
       
-      const oldPassword = userRows[0].password;
+      const oldHashedPassword = userRows[0].password;
+      
+      // Importer bcrypt pour le hachage et la comparaison
       
       // Vérifier que le nouveau mot de passe est différent de l'ancien
-      if (newPassword === oldPassword) {
+      const isSamePassword = await bcrypt.compare(newPassword, oldHashedPassword);
+      if (isSamePassword) {
         throw new Error('Le nouveau mot de passe doit être différent de l\'ancien.');
       }
       
-      // Mettre à jour le mot de passe
+      // Hasher le nouveau mot de passe
+      const saltRounds = 10;
+      const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+      
+      // Mettre à jour le mot de passe avec le mot de passe haché
       await db.execute(
         'UPDATE users SET password = ? WHERE id = ?',
-        [newPassword, userId]
+        [hashedNewPassword, userId]
       );
       
       // Invalider le token et le code

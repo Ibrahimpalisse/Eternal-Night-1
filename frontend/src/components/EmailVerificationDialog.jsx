@@ -45,14 +45,11 @@ const EmailVerificationDialog = ({
         
         // Appeler le callback si fourni
         if (onVerificationSent) {
-          onVerificationSent();
+          onVerificationSent(email);
         }
         
-        // Passer au formulaire de vérification
-        setShowVerificationForm(true);
-        
-        // Fermer le dialogue principal après l'envoi réussi
-        onClose();
+        // Ne pas fermer le dialog ici - laisser le parent gérer l'état
+        // onClose() sera appelé par le parent quand approprié
       } else {
         const errorMessage = result?.message || "Erreur lors de l'envoi du code";
         toast.error(errorMessage);

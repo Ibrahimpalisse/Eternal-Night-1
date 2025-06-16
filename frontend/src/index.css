@@ -1,33 +1,6 @@
-@import "tailwindcss";
-
-/* Configuration du thème avec Tailwind v4 */
-@theme {
-  --color-background: 260 40% 10%;
-  --color-foreground: 0 0% 98%;
-  --color-card: 240 30% 8%;
-  --color-card-foreground: 0 0% 98%;
-  --color-popover: 240 30% 8%;
-  --color-popover-foreground: 0 0% 98%;
-  --color-primary: 0 0% 98%;
-  --color-primary-foreground: 0 0% 9%;
-  --color-secondary: 240 25% 15%;
-  --color-secondary-foreground: 0 0% 98%;
-  --color-muted: 240 25% 15%;
-  --color-muted-foreground: 0 0% 63.9%;
-  --color-accent: 262 83% 58%;
-  --color-accent-foreground: 0 0% 98%;
-  --color-destructive: 0 62.8% 30.6%;
-  --color-destructive-foreground: 0 0% 98%;
-  --color-border: 240 30% 20%;
-  --color-input: 240 30% 20%;
-  --color-ring: 240 5% 65%;
-  --radius: 0.5rem;
-  --color-chart-1: 220 70% 50%;
-  --color-chart-2: 160 60% 45%;
-  --color-chart-3: 30 80% 55%;
-  --color-chart-4: 280 65% 60%;
-  --color-chart-5: 340 75% 55%;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Configuration du fond de base */
 @layer base {
@@ -87,7 +60,9 @@
   }
 
   * {
+    border-color: hsl(var(--border));
   }
+  
   body {
     @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -198,19 +173,16 @@
     radial-gradient(2px 2px at 45% 85%, rgba(168, 85, 247, 0.5) 50%, transparent 100%),
     radial-gradient(2px 2px at 25% 45%, rgba(147, 51, 234, 0.6) 50%, transparent 100%),
     radial-gradient(2px 2px at 75% 15%, rgba(196, 181, 253, 0.5) 50%, transparent 100%),
-    radial-gradient(2px 2px at 55% 35%, rgba(139, 92, 246, 0.6) 50%, transparent 100%),
-    radial-gradient(2px 2px at 5% 75%, rgba(168, 85, 247, 0.5) 50%, transparent 100%),
-    radial-gradient(2px 2px at 95% 25%, rgba(190, 170, 255, 0.6) 50%, transparent 100%),
-    radial-gradient(2px 2px at 35% 5%, rgba(147, 51, 234, 0.5) 50%, transparent 100%),
-    radial-gradient(2px 2px at 65% 95%, rgba(196, 181, 253, 0.6) 50%, transparent 100%);
-  background-size: 150% 150%;
+    radial-gradient(2px 2px at 35% 65%, rgba(168, 85, 247, 0.4) 50%, transparent 100%),
+    radial-gradient(2px 2px at 65% 35%, rgba(147, 51, 234, 0.5) 50%, transparent 100%),
+    radial-gradient(2px 2px at 5% 85%, rgba(175, 130, 245, 0.6) 50%, transparent 100%),
+    radial-gradient(2px 2px at 95% 15%, rgba(139, 92, 246, 0.4) 50%, transparent 100%);
+  background-size: 100% 100%;
   animation: stars-move-large 240s infinite linear;
   opacity: 0.6;
-  pointer-events: none;
-  z-index: -1;
+  z-index: -2;
 }
 
-/* Couche d'étoiles scintillantes supplémentaires */
 .stars-background::after {
   content: '';
   position: absolute;
@@ -219,82 +191,72 @@
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(0.5px 0.5px at 12% 18%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 88% 82%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 33% 67%, rgba(255, 255, 255, 0.7) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 77% 23%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 21% 89%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 66% 44%, rgba(255, 255, 255, 0.8) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 11% 11%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
-    radial-gradient(0.5px 0.5px at 99% 99%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
-  background-size: 180% 180%;
-  animation: stars-twinkle 8s ease-in-out infinite alternate;
-  opacity: 0.4;
-  pointer-events: none;
+    radial-gradient(3px 3px at 50% 50%, rgba(168, 85, 247, 0.8) 30%, transparent 70%),
+    radial-gradient(2px 2px at 25% 25%, rgba(147, 51, 234, 0.6) 40%, transparent 80%),
+    radial-gradient(2px 2px at 75% 75%, rgba(196, 181, 253, 0.7) 35%, transparent 75%);
+  background-size: 200% 200%;
+  animation: stars-twinkle 8s infinite ease-in-out;
+  opacity: 0.5;
   z-index: -1;
 }
 
 @keyframes stars-move-large {
   0% { 
-    background-position: 0% 100%; 
+    background-position: 0% 50%; 
   }
   100% { 
-    background-position: 100% 0%; 
+    background-position: 100% 50%; 
   }
 }
 
 @keyframes stars-twinkle {
-  0% { 
-    opacity: 0.3;
+  0%, 100% { 
+    opacity: 0.3; 
     transform: scale(1);
   }
   50% { 
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
-  100% { 
-    opacity: 0.4;
-    transform: scale(1);
+    opacity: 0.8; 
+    transform: scale(1.1);
   }
 }
 
-/* Animations personnalisées */
+/* Animations personnalisées pour les éléments de l'interface */
 @keyframes slide-in {
-  0% {
-    transform: translateX(-100%); 
+  from {
+    transform: translateX(-100%);
     opacity: 0;
   }
-  100% {
+  to {
     transform: translateX(0);
     opacity: 1;
   }
 }
 
 @keyframes slide-out {
-  0% {
+  from {
     transform: translateX(0);
     opacity: 1;
   }
-  100% {
-    transform: translateX(-100%); 
+  to {
+    transform: translateX(-100%);
     opacity: 0;
   }
 }
 
 @keyframes fade-in {
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 }
 
 @keyframes fade-out {
-  0% {
+  from {
     opacity: 1;
   }
-  100% {
+  to {
     opacity: 0;
   }
 }

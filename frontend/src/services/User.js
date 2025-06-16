@@ -121,11 +121,21 @@ class User {
 
   // Méthode pour gérer les requêtes API avec gestion appropriée des réponses non-JSON
   async fetchWithErrorHandling(url, options, defaultErrorMessage) {
+    console.log('fetchWithErrorHandling - Called with:', { url, options, defaultErrorMessage });
+    
     try {
+      console.log('fetchWithErrorHandling - About to call fetch...');
       const response = await fetch(url, options);
+      console.log('fetchWithErrorHandling - fetch completed, response:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: response.headers
+      });
       
       // Si c'est une erreur 429 (Too Many Requests), elle peut ne pas être au format JSON
       if (response.status === 429) {
+        console.log('fetchWithErrorHandling - Rate limit detected');
         // Si un toast de rate limit n'est pas déjà affiché
         if (!this.rateLimitToastDisplayed) {
           this.rateLimitToastDisplayed = true;
@@ -148,26 +158,35 @@ class User {
       // Pour les autres types de réponses, essayer de parser en JSON
       let data;
       try {
+        console.log('fetchWithErrorHandling - About to parse response as JSON...');
         data = await response.json();
+        console.log('fetchWithErrorHandling - JSON parsed successfully:', data);
       } catch (e) {
+        console.log('fetchWithErrorHandling - JSON parsing failed, trying text:', e);
         // Si la réponse n'est pas du JSON valide, utiliser le texte brut si disponible
         const text = await response.text();
+        console.log('fetchWithErrorHandling - Text response:', text);
         data = { message: text || defaultErrorMessage };
       }
       
       // Pour les erreurs d'authentification (401, 422, etc.), retourner les données JSON au lieu de lancer une erreur
       // Cela permet de traiter les messages d'erreur de connexion/inscription
       if (!response.ok) {
+        console.log('fetchWithErrorHandling - Response not OK, status:', response.status);
         // Si c'est une erreur d'authentification avec des données JSON, les retourner
         if (response.status === 401 || response.status === 422 || response.status === 400 || response.status === 403) {
+          console.log('fetchWithErrorHandling - Returning auth error data:', data);
           return data;
         }
         // Pour les autres erreurs (500, etc.), lancer une erreur
+        console.log('fetchWithErrorHandling - Throwing error for status:', response.status);
         throw new Error(data.message || defaultErrorMessage);
       }
       
+      console.log('fetchWithErrorHandling - Success, returning data:', data);
       return data;
     } catch (error) {
+      console.log('fetchWithErrorHandling - Exception caught:', error);
       // Propager l'erreur
       throw error;
     }
@@ -317,7 +336,12 @@ class User {
 
   // Méthode pour vérifier l'email
   async verifyEmail(email, code) {
+    console.log('User.verifyEmail - Method called with:', { email, code });
+    console.log('User.verifyEmail - API URL will be:', `${this.apiUrl}/auth/verify-email`);
+    
     try {
+      console.log('User.verifyEmail - About to call fetchWithErrorHandling...');
+      
       const data = await this.fetchWithErrorHandling(
         `${this.apiUrl}/auth/verify-email`,
         {
@@ -329,16 +353,27 @@ class User {
         'Erreur lors de la vérification de l\'email'
       );
       
+      console.log('User.verifyEmail - fetchWithErrorHandling returned:', data);
       return data;
     } catch (error) {
-      if (error.silent) return { success: false, silent: true };
+      console.log('User.verifyEmail - Error caught:', error);
+      if (error.silent) {
+        console.log('User.verifyEmail - Error is silent, returning silent response');
+        return { success: false, silent: true };
+      }
+      console.log('User.verifyEmail - Throwing error:', error);
       throw error;
     }
   }
 
   // Méthode pour renvoyer le code de vérification
   async resendVerification(email) {
+    console.log('User.resendVerification - Method called with email:', email);
+    console.log('User.resendVerification - API URL will be:', `${this.apiUrl}/auth/resend-verification`);
+    
     try {
+      console.log('User.resendVerification - About to call fetchWithErrorHandling...');
+      
       const data = await this.fetchWithErrorHandling(
         `${this.apiUrl}/auth/resend-verification`,
         {
@@ -350,9 +385,15 @@ class User {
         'Erreur lors du renvoi du code de vérification'
       );
       
+      console.log('User.resendVerification - fetchWithErrorHandling returned:', data);
       return data;
     } catch (error) {
-      if (error.silent) return { success: false, silent: true };
+      console.log('User.resendVerification - Error caught:', error);
+      if (error.silent) {
+        console.log('User.resendVerification - Error is silent, returning silent response');
+        return { success: false, silent: true };
+      }
+      console.log('User.resendVerification - Throwing error:', error);
       throw error;
     }
   }
