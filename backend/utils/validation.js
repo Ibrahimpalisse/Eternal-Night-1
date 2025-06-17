@@ -93,6 +93,16 @@ class FormValidation {
     name: this.username
   });
 
+  // Schéma pour demander un changement d'email
+  static updateEmailSchema = z.object({
+    email: this.email
+  });
+
+  // Schéma pour vérifier le changement d'email
+  static verifyEmailChangeSchema = z.object({
+    code: z.string().length(6, { message: "Le code de vérification doit contenir 6 caractères" })
+  });
+
   // Fonction pour valider un champ spécifique
   static validateField(field, value) {
     try {

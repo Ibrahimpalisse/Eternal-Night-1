@@ -700,18 +700,18 @@ class User {
     }
   }
 
-  // Méthode pour mettre à jour l'email (lance le processus de vérification)
+  // Méthode pour demander un changement d'email (lance le processus de vérification)
   async updateEmail(email) {
     try {
       const data = await this.fetchWithErrorHandling(
-        `${this.apiUrl}/user/email`,
+        `${this.apiUrl}/profile/email`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
           credentials: 'include'
         },
-        'Erreur lors de la mise à jour de l\'email'
+        'Erreur lors de la demande de changement d\'email'
       );
       
       return data;
@@ -722,14 +722,14 @@ class User {
   }
 
   // Méthode pour vérifier le code de changement d'email
-  async verifyEmailChange(verificationCode) {
+  async verifyEmailChange(code) {
     try {
       const data = await this.fetchWithErrorHandling(
-        `${this.apiUrl}/user/email/verify`,
+        `${this.apiUrl}/profile/email/verify`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ verificationCode }),
+          body: JSON.stringify({ code }),
           credentials: 'include'
         },
         'Erreur lors de la vérification du changement d\'email'
@@ -751,7 +751,7 @@ class User {
   async checkEmailAvailability(email) {
     try {
       const data = await this.fetchWithErrorHandling(
-        `${this.apiUrl}/user/check-email`,
+        `${this.apiUrl}/profile/check-email`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

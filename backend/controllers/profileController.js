@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const { sendVerificationEmail } = require('../services/emailService');
 
 // Contrôleur pour la gestion des profils
 exports.getProfile = async (req, res) => {
@@ -159,6 +160,116 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Une erreur est survenue lors de la récupération du profil'
+    });
+  }
+};
+
+// Contrôleur pour demander un changement d'email
+exports.requestEmailChange = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { email } = req.body;
+    
+    // Vérifier si l'utilisateur existe
+    const currentUser = await User.getUserById(userId);
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+    
+    // Vérifier si le nouvel email est différent de l'actuel
+    if (currentUser.email === email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le nouvel email doit être différent de l\'email actuel'
+      });
+    }
+    
+    // Vérifier si l'email n'est pas déjà utilisé par un autre utilisateur
+    const existingUser = await User.findByEmail(email);
+    if (existingUser && existingUser.id !== userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cet email est déjà utilisé par un autre compte'
+      });
+    }
+    
+    // Utiliser Profile pour générer et stocker le code
+    const result = await Profile.requestEmailChange(userId, email);
+    
+    if (result.success) {
+      // Envoyer l'email de vérification au nouvel email
+      await sendVerificationEmail(email, result.verificationCode);
+      
+      res.json({
+        success: true,
+        message: 'Un code de vérification a été envoyé à votre nouvelle adresse email. Veuillez vérifier votre boîte de réception.',
+        email: email
+      });
+    } else {
+      res.status(400).json(result);
+    }
+    
+  } catch (error) {
+    console.error('Erreur lors de la demande de changement d\'email:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la demande de changement d\'email'
+    });
+  }
+};
+
+// Contrôleur pour vérifier le code et confirmer le changement d'email
+exports.verifyEmailChange = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { code } = req.body;
+    
+    // Utiliser Profile pour vérifier le code et effectuer le changement
+    const result = await Profile.verifyEmailChange(userId, code);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Email mis à jour avec succès',
+        email: result.newEmail
+      });
+    } else {
+      res.status(400).json(result);
+    }
+    
+  } catch (error) {
+    console.error('Erreur lors de la vérification du changement d\'email:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la vérification du changement d\'email'
+    });
+  }
+};
+
+// Contrôleur pour vérifier la disponibilité d'un email
+exports.checkEmailAvailability = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { email } = req.body;
+    
+    // Vérifier si l'email est déjà utilisé par un autre utilisateur
+    const existingUser = await User.findByEmail(email);
+    const isAvailable = !existingUser || existingUser.id === userId;
+    
+    res.json({
+      success: true,
+      available: isAvailable,
+      message: isAvailable ? 'Email disponible' : 'Cet email est déjà utilisé par un autre compte'
+    });
+    
+  } catch (error) {
+    console.error('Erreur lors de la vérification de la disponibilité de l\'email:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la vérification de l\'email'
     });
   }
 }; 

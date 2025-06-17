@@ -43,6 +43,9 @@ async function setupDatabase() {
         password_reset_token VARCHAR(255),
         password_reset_code VARCHAR(255),
         password_reset_expires DATETIME,
+        email_change_code VARCHAR(6),
+        email_change_expires TIMESTAMP NULL,
+        pending_email VARCHAR(255),
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);

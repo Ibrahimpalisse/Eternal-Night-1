@@ -407,6 +407,125 @@ class Profile {
     
     return contentTypes[extension.toLowerCase()] || 'application/octet-stream';
   }
+
+  // Générer un code de vérification à 6 chiffres
+  _generateVerificationCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  // Demander un changement d'email
+  async requestEmailChange(userId, newEmail) {
+    try {
+      // Générer un code de vérification
+      const verificationCode = this._generateVerificationCode();
+      
+      // Vérifier si une entrée existe déjà dans la table verification
+      const [existingVerification] = await this.db.execute(
+        'SELECT id FROM verification WHERE user_id = ?',
+        [userId]
+      );
+      
+      if (existingVerification.length > 0) {
+        // Mettre à jour l'entrée existante
+        await this.db.execute(
+          `UPDATE verification 
+           SET email_change_code = ?, 
+               email_change_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE),
+               pending_email = ?
+           WHERE user_id = ?`,
+          [verificationCode, newEmail, userId]
+        );
+      } else {
+        // Créer une nouvelle entrée
+        await this.db.execute(
+          `INSERT INTO verification 
+           (user_id, email_change_code, email_change_expires, pending_email) 
+           VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 5 MINUTE), ?)`,
+          [userId, verificationCode, newEmail]
+        );
+      }
+      
+      return {
+        success: true,
+        verificationCode: verificationCode,
+        message: 'Code de vérification généré avec succès'
+      };
+      
+    } catch (error) {
+      console.error('Erreur lors de la demande de changement d\'email:', error);
+      return {
+        success: false,
+        message: 'Une erreur est survenue lors de la génération du code de vérification'
+      };
+    }
+  }
+
+  // Vérifier le code et confirmer le changement d'email
+  async verifyEmailChange(userId, code) {
+    try {
+      // Vérifier le code et récupérer le nouvel email en attente
+      const [rows] = await this.db.execute(
+        `SELECT pending_email FROM verification 
+         WHERE user_id = ? AND email_change_code = ? AND email_change_expires > NOW()`,
+        [userId, code]
+      );
+      
+      if (!rows.length) {
+        return {
+          success: false,
+          message: 'Code de vérification invalide ou expiré'
+        };
+      }
+      
+      const newEmail = rows[0].pending_email;
+      
+      // Vérifier à nouveau que l'email n'est pas utilisé (sécurité supplémentaire)
+      const User = require('./User');
+      const existingUser = await User.findByEmail(newEmail);
+      if (existingUser && existingUser.id !== userId) {
+        return {
+          success: false,
+          message: 'Cet email est maintenant utilisé par un autre compte'
+        };
+      }
+      
+      // Mettre à jour l'email de l'utilisateur
+      const [updateResult] = await this.db.execute(
+        'UPDATE users SET email = ?, updated_at = NOW() WHERE id = ?',
+        [newEmail, userId]
+      );
+      
+      if (updateResult.affectedRows === 0) {
+        return {
+          success: false,
+          message: 'Impossible de mettre à jour l\'email'
+        };
+      }
+      
+      // Nettoyer les codes de changement d'email
+      await this.db.execute(
+        `UPDATE verification 
+         SET email_change_code = NULL, 
+             email_change_expires = NULL,
+             pending_email = NULL
+         WHERE user_id = ?`,
+        [userId]
+      );
+      
+      return {
+        success: true,
+        newEmail: newEmail,
+        message: 'Email mis à jour avec succès'
+      };
+      
+    } catch (error) {
+      console.error('Erreur lors de la vérification du changement d\'email:', error);
+      return {
+        success: false,
+        message: 'Une erreur est survenue lors de la vérification du changement d\'email'
+      };
+    }
+  }
 }
 
 module.exports = new Profile(); 
