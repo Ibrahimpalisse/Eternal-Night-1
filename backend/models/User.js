@@ -330,7 +330,7 @@ class User {
       }
       
       // Hasher le nouveau mot de passe
-      const saltRounds = 10;
+      const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
       const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
       
       // Mettre à jour le mot de passe avec le mot de passe haché

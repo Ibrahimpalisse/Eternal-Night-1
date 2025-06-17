@@ -4,15 +4,15 @@ require('dotenv').config(); // Assurez-vous de charger les variables d'environne
 
 // Création du transporteur pour l'envoi d'emails
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'localhost', // Utilisez une variable d'environnement
-  port: process.env.EMAIL_PORT || 1025, // Utilisez une variable d'environnement
+  host: process.env.SMTP_HOST || 'localhost', // Utilisez une variable d'environnement
+  port: process.env.SMTP_PORT || 1025, // Utilisez une variable d'environnement
   secure: false, // true pour le port 465, false pour les autres ports
 });
 
 // Fonction pour envoyer un email de vérification
 const sendVerificationEmail = async (to, code) => {
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Night Novels" <noreply@nightnovels.com>',
+    from: process.env.SMTP_FROM || '"Night Novels" <noreply@nightnovels.com>',
     to: to,
     subject: 'Vérification de votre adresse email',
     html: emailTemplates.verificationEmail(code),
@@ -32,7 +32,7 @@ const sendVerificationEmail = async (to, code) => {
 const sendPasswordResetEmail = async (to, resetCode) => {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_FROM || 'noreply@eternalnight.com',
+      from: process.env.SMTP_FROM || 'noreply@eternalnight.com',
       to,
       subject: 'Réinitialisation de mot de passe',
       html: emailTemplates.resetPasswordEmail(resetCode)

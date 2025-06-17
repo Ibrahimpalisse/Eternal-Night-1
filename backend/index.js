@@ -47,7 +47,7 @@ const port = process.env.PORT || 4000;
     // Express body-parser middleware (souvent nécessaire pour traiter les corps de requêtes JSON/URL-encodées)
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    app.use(cookieParser(process.env.COOKIE_SECRET || 'votre_secret_cookies'));
+    app.use(cookieParser(process.env.JWT_REFRESH_SECRET || 'votre_secret_cookies'));
     console.log('Middlewares Express JSON/URL-encoded appliqués.');
 
     // --- Fin Application des Middlewares de Sécurité ---

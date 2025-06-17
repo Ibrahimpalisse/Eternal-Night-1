@@ -6,7 +6,7 @@ const jwtMiddleware = require('../middleware/JwtMiddleware');
 exports.register = async (req, res) => {
   try {
     // Hasher le mot de passe avant de créer l'utilisateur
-    const saltRounds = 10;
+    const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     
     // Remplacer le mot de passe en clair par le mot de passe hashé

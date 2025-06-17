@@ -561,8 +561,8 @@ class Profile {
       }
       
       // Hasher le nouveau mot de passe
-      const saltRounds = 12;
-      const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+          const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
       
       // Mettre à jour le mot de passe dans la base de données
       const [updateResult] = await this.db.execute(
