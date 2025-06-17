@@ -76,6 +76,23 @@ const Register = () => {
   // Observer les valeurs des champs pour la validation en temps réel
   const watchedFields = watch();
   
+  // État pour les erreurs de validation dynamique
+  const [dynamicPasswordError, setDynamicPasswordError] = useState('');
+  
+  // Validation dynamique du mot de passe en temps réel
+  useEffect(() => {
+    if (watchedFields.password) {
+      const validation = FormValidation.analyzePassword(watchedFields.password);
+      if (!validation.success) {
+        setDynamicPasswordError(validation.error);
+      } else {
+        setDynamicPasswordError('');
+      }
+    } else {
+      setDynamicPasswordError('');
+    }
+  }, [watchedFields.password]);
+
   // Fonction appelée lorsque le formulaire est valide
   const onSubmit = async (data) => {
     try {
@@ -254,11 +271,13 @@ const Register = () => {
                     </button>
                 </div>
                   </div>
-                {errors.password ? (
+                {/* Affichage de l'erreur dynamique ou de l'erreur de validation classique */}
+                {dynamicPasswordError ? (
+                  <p className="text-red-400 text-sm mt-1">{dynamicPasswordError}</p>
+                ) : errors.password ? (
                   <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
                 ) : (
-                  <p className="text-gray-500 text-xs mt-1">Minimum 8 caractères
-                  , une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+                  <p className="text-gray-500 text-xs mt-1">Votre mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
                 )}
               </div>
 
@@ -373,4 +392,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;

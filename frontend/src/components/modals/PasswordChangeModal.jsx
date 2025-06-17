@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FormValidation } from '../../utils/validation';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '../../contexts/ToastContext';
-import User from '../../services/User';
-import { securityStorage } from '../../utils/securityStorage';
+import Profile from '../../services/Profile';
+import SecurityWarningModal from './SecurityWarningModal';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +11,6 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import SecurityAlertModal from './SecurityAlertModal';
 
 const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
   const [step, setStep] = useState(1); // 1: Vérification du mot de passe actuel, 2: Saisie du nouveau mot de passe
@@ -23,25 +19,29 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [attemptCount, setAttemptCount] = useState(0); // Compteur de tentatives
-  const maxAttempts = 4; // Nombre maximum de tentatives
-  const { logout } = useAuth(); // Hook d'authentification
-  const navigate = useNavigate(); // Hook de navigation
-  const [showSecurityAlert, setShowSecurityAlert] = useState(false);
-  const toast = useToast();
+  const [showSecurityWarning, setShowSecurityWarning] = useState(false);
+  const [warningCountdown, setWarningCountdown] = useState(10);
+  
+  // États pour afficher/cacher les mots de passe
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Vérifier si l'utilisateur est en processus de déconnexion forcée au chargement du composant
+  // Vérifier l'état de blocage au chargement du modal
   useEffect(() => {
-    const forcedLogout = securityStorage.getItem('security_forced_logout');
-    if (forcedLogout === 'true') {
-      setShowSecurityAlert(true);
-      // S'assurer que la déconnexion se termine après 3 secondes
-      setTimeout(() => {
-        securityStorage.clear();
-        window.location.replace('/auth/login');
-      }, 3000);
+    if (!isOpen) return;
+    
+    const securityStatus = Profile.checkSecurityBlock();
+    
+    if (securityStatus.blocked) {
+      console.warn('Utilisateur bloqué détecté au chargement - Déconnexion immédiate');
+      
+      // Déclencher immédiatement la déconnexion forcée sans avertissement
+      // car l'utilisateur a déjà été averti avant
+      if (window.UserService && typeof window.UserService.handleForceLogout === 'function') {
+        window.UserService.handleForceLogout('Session bloquée pour sécurité - Rafraîchissement détecté');
+      }
     }
-  }, []);
+  }, [isOpen]);
 
   // Vérifier le mot de passe actuel
   const verifyCurrentPassword = async (e) => {
@@ -60,58 +60,87 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
       }
       
       // Appeler l'API pour vérifier le mot de passe
-      const result = await User.checkPassword(currentPassword);
+      const result = await Profile.verifyCurrentPassword(currentPassword);
       
-      if (!result.valid) {
-        // Incrémenter le compteur de tentatives
-        const newAttemptCount = attemptCount + 1;
-        setAttemptCount(newAttemptCount);
-        
-        // Vérifier si le nombre maximum de tentatives est atteint
-        if (newAttemptCount >= maxAttempts) {
-          // Marquer l'état de déconnexion forcée dans localStorage avec expiration de 2 minutes
-          securityStorage.setItem('security_forced_logout', 'true', 2);
-          
-          // Afficher l'alerte de sécurité
-          setShowSecurityAlert(true);
-          setIsLoading(false);
-          
-          // Désactiver les interactions avec le reste de l'interface
-          document.body.style.pointerEvents = 'none';
-          
-          // Restaurer les interactions uniquement pour notre modal d'alerte
-          setTimeout(() => {
-            const alertModal = document.querySelector('.security-alert-modal');
-            if (alertModal) {
-              alertModal.style.pointerEvents = 'auto';
-            }
-          }, 100);
-          
-          // Attendre que l'animation soit terminée avant de déconnecter
-          setTimeout(() => {
-            // Nettoyer le localStorage et rediriger
-            securityStorage.clear();
-            window.location.replace('/auth/login');
-          }, 3000);
-          return;
-        }
-        
+      if (!result.success) {
         setErrors({ 
-          currentPassword: `Mot de passe actuel incorrect (tentative ${newAttemptCount}/${maxAttempts})` 
+          currentPassword: "Mot de passe actuel incorrect" 
         });
         setIsLoading(false);
         return;
       }
       
-      // Réinitialiser le compteur en cas de succès
-      setAttemptCount(0);
-      
       // Mot de passe correct, passer à l'étape suivante
       setStep(2);
       setIsLoading(false);
     } catch (err) {
+      // Gérer les erreurs de rate limiting avec UX progressive
+      if (err.isRateLimit) {
+        setIsLoading(false);
+        
+        // Si c'est la déconnexion forcée (suspendSession = true)
+        if (err.suspendSession) {
+          console.warn('Limite de sécurité atteinte - Affichage de l\'avertissement');
+          setShowSecurityWarning(true);
+          setWarningCountdown(10);
+          return;
+        }
+        
+        // Sinon, afficher des messages progressifs selon le nombre de tentatives
+        const remaining = err.attemptsRemaining || 0;
+        const current = err.currentAttempts || 0;
+        
+        let message = 'Mot de passe actuel incorrect';
+        
+        if (remaining === 2) {
+          message = `Mot de passe incorrect. Plus que ${remaining} tentatives avant la déconnexion sécurisée.`;
+        } else if (remaining === 1) {
+          message = `⚠️ Mot de passe incorrect. DERNIÈRE tentative avant déconnexion automatique !`;
+        } else if (remaining === 0) {
+          message = `🚨 Limite atteinte ! Déconnexion de sécurité imminente.`;
+        } else if (remaining <= 3) {
+          message = `Mot de passe incorrect. ${remaining} tentatives restantes.`;
+        }
+        
+        setErrors({ 
+          currentPassword: message
+        });
+        return;
+      }
+      
       setErrors({ general: err.message || 'Une erreur est survenue' });
       setIsLoading(false);
+    }
+  };
+
+  // Validation en temps réel du nouveau mot de passe
+  const handleNewPasswordChange = (e) => {
+    const value = e.target.value;
+    setNewPassword(value);
+    
+    // Validation dynamique en temps réel
+    if (value) {
+      const validation = FormValidation.analyzePassword(value);
+      if (!validation.success) {
+        setErrors(prev => ({ ...prev, newPassword: validation.error }));
+      } else {
+        setErrors(prev => ({ ...prev, newPassword: undefined }));
+      }
+    } else {
+      setErrors(prev => ({ ...prev, newPassword: undefined }));
+    }
+  };
+
+  // Validation en temps réel de la confirmation
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+    
+    // Vérifier la correspondance des mots de passe
+    if (value && newPassword && value !== newPassword) {
+      setErrors(prev => ({ ...prev, confirmPassword: "Les mots de passe ne correspondent pas" }));
+    } else {
+      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
     }
   };
 
@@ -123,20 +152,14 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
 
     try {
       // Valider les données avec le schéma de validation
-      const validationResult = FormValidation.validateForm('resetPassword', {
+      const validationResult = FormValidation.validateForm('changePassword', {
+        currentPassword: currentPassword,
         password: newPassword,
         confirmPassword: confirmPassword
       });
 
       if (!validationResult.success) {
         setErrors(validationResult.errors);
-        setIsLoading(false);
-        return;
-      }
-
-      // Vérifier que le nouveau mot de passe est différent de l'ancien
-      if (newPassword === currentPassword) {
-        setErrors({ newPassword: "Le nouveau mot de passe doit être différent de l'ancien" });
         setIsLoading(false);
         return;
       }
@@ -151,23 +174,41 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
+  // Gérer la fin du compte à rebours de sécurité
+  const handleSecurityCountdownComplete = async () => {
+    console.warn('Compte à rebours terminé - Déconnexion forcée');
+    
+    // Déclencher la déconnexion forcée
+    if (window.UserService && typeof window.UserService.handleForceLogout === 'function') {
+      await window.UserService.handleForceLogout('Trop de tentatives incorrectes - Déconnexion sécurisée');
+    }
+  };
+
   // Fermer la modal et réinitialiser les états
   const handleClose = () => {
+    if (showSecurityWarning) return; // Empêcher la fermeture pendant l'avertissement
+    
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
     setErrors({});
     setStep(1);
-    setAttemptCount(0); // Réinitialiser le compteur de tentatives
+    setShowSecurityWarning(false);
+    
+    // Réinitialiser les états des icônes d'œil
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+    
     onClose();
   };
 
-  // Si l'alerte de sécurité est affichée, ne montrer que cette alerte
-  if (showSecurityAlert) {
+  // Si l'avertissement de sécurité est affiché, montrer seulement celui-ci
+  if (showSecurityWarning) {
     return (
-      <SecurityAlertModal 
-        isOpen={true}
-        message="Trop de tentatives échouées. Pour votre sécurité, vous allez être déconnecté."
+      <SecurityWarningModal 
+        isOpen={showSecurityWarning}
+        onCountdownComplete={handleSecurityCountdownComplete}
+        remainingTime={warningCountdown}
       />
     );
   }
@@ -241,39 +282,66 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
               
               <div className="space-y-3">
                 <div>
-                  <Input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Nouveau mot de passe"
-                    className={`${errors.password ? 'border-red-500' : 'border-gray-700'} text-white`}
-                    required
-                    autoFocus
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={handleNewPasswordChange}
+                      placeholder="Nouveau mot de passe"
+                      className={`${errors.newPassword ? 'border-red-500' : 'border-gray-700'} text-white pr-10`}
+                      required
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                    >
+                      {showNewPassword ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                   
-                  {errors.password && (
-                    <p className="mt-2 text-xs text-red-500 flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                      {errors.password}
-                    </p>
+                  {errors.newPassword && (
+                    <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>
                   )}
-                  
-                  <p className="mt-2 text-xs text-gray-500">
-                    Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
-                  </p>
                 </div>
                 
                 <div>
-                  <Input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirmer le nouveau mot de passe"
-                    className={`${errors.confirmPassword ? 'border-red-500' : 'border-gray-700'} text-white`}
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      placeholder="Confirmer le nouveau mot de passe"
+                      className={`${errors.confirmPassword ? 'border-red-500' : 'border-gray-700'} text-white pr-10`}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none transition-colors duration-200"
+                    >
+                      {showConfirmPassword ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
                   
                   {errors.confirmPassword && (
                     <p className="mt-2 text-xs text-red-500 flex items-center">

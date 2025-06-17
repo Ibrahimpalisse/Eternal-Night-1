@@ -21,7 +21,7 @@ export class FormValidation {
   // Validation du mot de passe
   static password = z
     .string()
-    .min(2, { message: "Le mot de passe doit contenir au moins 8 caractères" })
+    .min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" })
     .max(100, { message: "Le mot de passe est trop long" })
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
       message: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
@@ -122,7 +122,83 @@ export class FormValidation {
     path: ["confirmPassword"]
   });
 
-  // Fonction pour valider un champ spécifique
+  // Schéma pour le changement de mot de passe (avec mot de passe actuel)
+  static changePasswordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
+    password: this.password,
+    confirmPassword: z.string().min(1, { message: "La confirmation du mot de passe est requise" })
+  }).refine(data => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"]
+  }).refine(data => data.currentPassword !== data.password, {
+    message: "Le nouveau mot de passe doit être différent de l'ancien",
+    path: ["password"]
+  });
+
+  // Fonction pour analyser un mot de passe et retourner les erreurs spécifiques
+  static analyzePassword(password) {
+    if (!password || typeof password !== 'string') {
+      return { success: false, error: "Veuillez saisir un mot de passe" };
+    }
+
+    const errors = [];
+    const missing = [];
+
+    // Vérifier la longueur
+    if (password.length < 8) {
+      missing.push("caractères supplémentaires");
+      errors.push(`Ajoutez ${8 - password.length} caractère(s) supplémentaire(s)`);
+    }
+
+    // Vérifier les lettres minuscules
+    if (!/[a-z]/.test(password)) {
+      missing.push("lettre minuscule");
+      errors.push("Ajoutez au moins une lettre minuscule (a-z)");
+    }
+
+    // Vérifier les lettres majuscules
+    if (!/[A-Z]/.test(password)) {
+      missing.push("lettre majuscule");
+      errors.push("Ajoutez au moins une lettre majuscule (A-Z)");
+    }
+
+    // Vérifier les chiffres
+    if (!/\d/.test(password)) {
+      missing.push("chiffre");
+      errors.push("Ajoutez au moins un chiffre (0-9)");
+    }
+
+    // Vérifier les caractères spéciaux
+    if (!/[@$!%*?&]/.test(password)) {
+      missing.push("caractère spécial");
+      errors.push("Ajoutez au moins un caractère spécial (@$!%*?&)");
+    }
+
+    // Si aucune erreur, mot de passe valide
+    if (errors.length === 0) {
+      return { success: true };
+    }
+
+    // Créer un message personnalisé selon ce qui manque
+    let message;
+    if (errors.length === 1) {
+      message = errors[0];
+    } else if (errors.length === 2) {
+      message = `${errors[0]} et ${errors[1].toLowerCase()}`;
+    } else {
+      const lastError = errors.pop();
+      message = `${errors.join(", ")} et ${lastError.toLowerCase()}`;
+    }
+
+    return {
+      success: false,
+      error: message,
+      missing: missing,
+      detailedErrors: errors
+    };
+  }
+
+  // Fonction pour valider un champ spécifique avec analyse dynamique
   static validateField(field, value) {
     try {
       if (field === 'username') {
@@ -130,6 +206,7 @@ export class FormValidation {
       } else if (field === 'email') {
         this.email.parse(value);
       } else if (field === 'password') {
+        // Utilisation du schéma Zod standard pour la cohérence
         this.password.parse(value);
       } else if (field === 'imageUrl') {
         return this.validateImageUrl(value);
@@ -170,6 +247,8 @@ export class FormValidation {
         this.forgotPasswordSchema.parse(data);
       } else if (formType === 'resetPassword') {
         this.resetPasswordSchema.parse(data);
+      } else if (formType === 'changePassword') {
+        this.changePasswordSchema.parse(data);
       }
       return { success: true };
     } catch (error) {

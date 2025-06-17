@@ -526,6 +526,71 @@ class Profile {
       };
     }
   }
+
+  // Mettre à jour le mot de passe
+  async updatePassword(userId, currentPassword, newPassword) {
+    try {
+      const bcrypt = require('bcrypt');
+      const User = require('./User');
+      
+      // Récupérer l'utilisateur avec son mot de passe hashé
+      const user = await User.getUserById(userId);
+      if (!user) {
+        return {
+          success: false,
+          message: 'Utilisateur non trouvé'
+        };
+      }
+      
+      // Vérifier le mot de passe actuel
+      const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isCurrentPasswordValid) {
+        return {
+          success: false,
+          message: 'Mot de passe actuel incorrect'
+        };
+      }
+      
+      // Vérifier que le nouveau mot de passe est différent de l'ancien
+      const isSamePassword = await bcrypt.compare(newPassword, user.password);
+      if (isSamePassword) {
+        return {
+          success: false,
+          message: 'Le nouveau mot de passe doit être différent de l\'ancien'
+        };
+      }
+      
+      // Hasher le nouveau mot de passe
+      const saltRounds = 12;
+      const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+      
+      // Mettre à jour le mot de passe dans la base de données
+      const [updateResult] = await this.db.execute(
+        'UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?',
+        [hashedNewPassword, userId]
+      );
+      
+      if (updateResult.affectedRows === 0) {
+        return {
+          success: false,
+          message: 'Impossible de mettre à jour le mot de passe'
+        };
+      }
+      
+      return {
+        success: true,
+        message: 'Mot de passe mis à jour avec succès',
+        logoutRequired: true // Indiquer qu'une déconnexion de toutes les sessions est recommandée
+      };
+      
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du mot de passe:', error);
+      return {
+        success: false,
+        message: 'Une erreur est survenue lors de la mise à jour du mot de passe'
+      };
+    }
+  }
 }
 
 module.exports = new Profile(); 

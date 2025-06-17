@@ -1,6 +1,7 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
 const { sendVerificationEmail } = require('../services/emailService');
+const bcrypt = require('bcrypt');
 
 // Contrôleur pour la gestion des profils
 exports.getProfile = async (req, res) => {
@@ -270,6 +271,85 @@ exports.checkEmailAvailability = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Une erreur est survenue lors de la vérification de l\'email'
+    });
+  }
+};
+
+// Contrôleur pour vérifier le mot de passe actuel
+exports.verifyCurrentPassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword } = req.body;
+    
+    // Récupérer l'utilisateur avec son mot de passe hashé
+    const user = await User.getUserWithPassword(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+    
+    // Vérifier le mot de passe avec bcrypt
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    
+    if (!isValid) {
+      // Log de tentative de vérification échouée pour sécurité
+      console.warn(`Tentative de vérification de mot de passe échouée pour l'utilisateur ${userId} depuis IP ${req.ip}`);
+      
+      return res.status(401).json({
+        success: false,
+        message: 'Mot de passe actuel incorrect',
+        error: 'INVALID_PASSWORD'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Mot de passe vérifié avec succès'
+    });
+    
+  } catch (error) {
+    console.error('Erreur lors de la vérification du mot de passe:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la vérification du mot de passe'
+    });
+  }
+};
+
+// Contrôleur pour mettre à jour le mot de passe
+exports.updatePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+    
+    // Utiliser Profile pour gérer la mise à jour du mot de passe
+    const result = await Profile.updatePassword(userId, currentPassword, newPassword);
+    
+    if (result.success) {
+      // Log de changement de mot de passe réussi
+      console.log(`Mot de passe changé avec succès pour l'utilisateur ${userId} depuis IP ${req.ip}`);
+      
+      res.json({
+        success: true,
+        message: 'Mot de passe mis à jour avec succès',
+        logoutRequired: result.logoutRequired
+      });
+    } else {
+      // Si c'est une erreur de mot de passe incorrect, logger pour sécurité
+      if (result.message.includes('incorrect')) {
+        console.warn(`Tentative de changement de mot de passe avec mot de passe incorrect pour l'utilisateur ${userId} depuis IP ${req.ip}`);
+      }
+      
+      res.status(400).json(result);
+    }
+    
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du mot de passe:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la mise à jour du mot de passe'
     });
   }
 }; 

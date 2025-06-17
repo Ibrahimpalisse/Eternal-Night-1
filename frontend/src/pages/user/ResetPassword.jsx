@@ -99,6 +99,23 @@ const ResetPassword = () => {
   // Observer le mot de passe
   const password = watch('password');
   
+  // État pour les erreurs de validation dynamique
+  const [dynamicPasswordError, setDynamicPasswordError] = useState('');
+  
+  // Validation dynamique du mot de passe en temps réel
+  useEffect(() => {
+    if (password) {
+      const validation = FormValidation.analyzePassword(password);
+      if (!validation.success) {
+        setDynamicPasswordError(validation.error);
+      } else {
+        setDynamicPasswordError('');
+      }
+    } else {
+      setDynamicPasswordError('');
+    }
+  }, [password]);
+  
   // Fonction appelée lorsque le formulaire est valide
   const onSubmit = async (data) => {
     if (!resetCode) {
@@ -224,11 +241,12 @@ const ResetPassword = () => {
                       )}
                     </button>
                   </div>
-                  {errors.password && (
-                    <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20 animate-fade-in-down">
-                      <p className="text-sm text-red-500 font-semibold animate-bounce-gentle">{errors.password.message}</p>
-                    </div>
-                  )}
+                  {/* Affichage de l'erreur dynamique ou de l'erreur de validation classique */}
+                  {dynamicPasswordError ? (
+                    <p className="text-red-500 text-sm mt-2">{dynamicPasswordError}</p>
+                  ) : errors.password ? (
+                    <p className="text-red-500 text-sm mt-2">{errors.password.message}</p>
+                  ) : null}
                 </div>
 
                 <div className="group">
@@ -261,48 +279,8 @@ const ResetPassword = () => {
                     </button>
                   </div>
                   {errors.confirmPassword && (
-                    <div className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20 animate-fade-in-down">
-                      <p className="text-sm text-red-500 font-semibold animate-bounce-gentle">{errors.confirmPassword.message}</p>
-                    </div>
+                    <p className="text-red-500 text-sm mt-2">{errors.confirmPassword.message}</p>
                   )}
-                </div>
-
-                <div className="pt-2">
-                  <div className="space-y-1.5">
-                    <p className="text-xs text-gray-400">Votre mot de passe doit contenir:</p>
-                    <ul className="space-y-1">
-                      <li className={`text-xs flex items-center ${password && password.length >= 8 ? 'text-green-500' : 'text-gray-500'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-1.5 ${password && password.length >= 8 ? 'text-green-500' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={password && password.length >= 8 ? "M5 13l4 4L19 7" : "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} />
-                        </svg>
-                        Au moins 8 caractères
-                      </li>
-                      <li className={`text-xs flex items-center ${password && /[A-Z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-1.5 ${password && /[A-Z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={password && /[A-Z]/.test(password) ? "M5 13l4 4L19 7" : "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} />
-                        </svg>
-                        Une lettre majuscule
-                      </li>
-                      <li className={`text-xs flex items-center ${password && /[a-z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-1.5 ${password && /[a-z]/.test(password) ? 'text-green-500' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={password && /[a-z]/.test(password) ? "M5 13l4 4L19 7" : "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} />
-                        </svg>
-                        Une lettre minuscule
-                      </li>
-                      <li className={`text-xs flex items-center ${password && /\d/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-1.5 ${password && /\d/.test(password) ? 'text-green-500' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={password && /\d/.test(password) ? "M5 13l4 4L19 7" : "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} />
-                        </svg>
-                        Un chiffre
-                      </li>
-                      <li className={`text-xs flex items-center ${password && /[@$!%*?&]/.test(password) ? 'text-green-500' : 'text-gray-500'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-1.5 ${password && /[@$!%*?&]/.test(password) ? 'text-green-500' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={password && /[@$!%*?&]/.test(password) ? "M5 13l4 4L19 7" : "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} />
-                        </svg>
-                        Un caractère spécial (@$!%*?&)
-                      </li>
-                    </ul>
-                  </div>
                 </div>
 
                 <button

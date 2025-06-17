@@ -148,11 +148,18 @@ const FormField = ({ label, type, defaultValue, onSave, description, className }
     try {
       const result = await User.updatePassword({
         currentPassword,
-        newPassword
+        newPassword,
+        confirmPassword: newPassword // Ajouter la confirmation pour la validation backend
       });
 
       if (result.success) {
         toast.success('Mot de passe mis à jour avec succès');
+        
+        // Si une déconnexion est recommandée, proposer de déconnecter toutes les sessions
+        if (result.logoutRequired) {
+          toast.info('Pour votre sécurité, nous recommandons de vous reconnecter sur tous vos appareils.');
+        }
+        
         return result;
       } else {
         throw new Error(result.message || 'Une erreur est survenue');

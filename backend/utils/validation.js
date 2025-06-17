@@ -103,6 +103,24 @@ class FormValidation {
     code: z.string().length(6, { message: "Le code de vérification doit contenir 6 caractères" })
   });
 
+  // Schéma pour vérifier le mot de passe actuel
+  static checkPasswordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" })
+  });
+
+  // Schéma pour mettre à jour le mot de passe
+  static updatePasswordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
+    newPassword: this.password,
+    confirmPassword: z.string().min(1, { message: "La confirmation du mot de passe est requise" })
+  }).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"]
+  }).refine((data) => data.currentPassword !== data.newPassword, {
+    message: "Le nouveau mot de passe doit être différent de l'ancien",
+    path: ["newPassword"]
+  });
+
   // Fonction pour valider un champ spécifique
   static validateField(field, value) {
     try {

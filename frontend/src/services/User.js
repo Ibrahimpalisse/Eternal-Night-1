@@ -616,19 +616,68 @@ class User {
   }
   
   // Gérer la déconnexion forcée
-  handleForceLogout(reason) {
-    // Nettoyer l'intervalle de rafraîchissement du token
-    if (this.refreshTokenInterval) {
-      clearInterval(this.refreshTokenInterval);
-      this.refreshTokenInterval = null;
-    }
-    
-    // Nettoyer les données utilisateur en mémoire
-    this.userDataInMemory = null;
-    
-    // Appeler le callback de déconnexion forcée si défini
-    if (this.forceLogoutCallback && typeof this.forceLogoutCallback === 'function') {
-      this.forceLogoutCallback(reason);
+  async handleForceLogout(reason) {
+    try {
+      // Bloquer toutes les interactions avant de commencer la déconnexion
+      document.body.style.pointerEvents = 'none';
+      document.body.style.userSelect = 'none';
+      
+      console.warn(`Force logout: ${reason}`);
+      
+      // Faire une déconnexion côté serveur pour invalider le token
+      try {
+        await fetch(`${this.apiUrl}/auth/logout`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        // Même si la déconnexion serveur échoue, continuer le processus
+        console.warn('Server logout failed, continuing with client cleanup:', error);
+      }
+      
+      // Nettoyer l'intervalle de rafraîchissement du token
+      if (this.refreshTokenInterval) {
+        clearInterval(this.refreshTokenInterval);
+        this.refreshTokenInterval = null;
+      }
+      
+      // Nettoyer toutes les données côté client
+      localStorage.clear();
+      sessionStorage.clear();
+      this.userDataInMemory = null;
+      
+      // Nettoyer spécifiquement les blocages de sécurité
+      if (window.Profile && typeof window.Profile.clearSecurityBlock === 'function') {
+        window.Profile.clearSecurityBlock();
+      }
+      
+      // Nettoyer tous les cookies de session
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+      
+      // Détacher les listeners socket
+      this.detachSocketListeners();
+      
+      // Appeler le callback de déconnexion forcée si défini
+      if (this.forceLogoutCallback && typeof this.forceLogoutCallback === 'function') {
+        this.forceLogoutCallback(reason);
+      }
+      
+      // Forcer la redirection et recharger la page pour nettoyer complètement l'état
+      setTimeout(() => {
+        window.location.replace('/auth/login');
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      }, 500);
+      
+    } catch (error) {
+      console.error('Error during force logout:', error);
+      // En cas d'erreur, forcer quand même la redirection
+      window.location.replace('/auth/login');
+      window.location.reload();
     }
   }
 
@@ -653,11 +702,40 @@ class User {
     }
   }
 
+  // Méthode pour vérifier le mot de passe actuel
+  async verifyCurrentPassword(currentPassword) {
+    try {
+      const response = await fetch(`${this.apiUrl}/profile/password/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      // Gérer spécifiquement les rate limits avec déconnexion forcée
+      if (response.status === 429 && data.suspendSession) {
+        console.warn('Rate limit atteint - Déconnexion forcée pour sécurité');
+        
+        // Déclencher immédiatement la déconnexion forcée
+        await this.handleForceLogout('Trop de tentatives incorrectes - Sécurité');
+        
+        throw new Error('Trop de tentatives incorrectes. Déconnexion automatique pour votre sécurité.');
+      }
+
+      return data;
+    } catch (error) {
+      if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
   // Méthode pour mettre à jour le mot de passe
   async updatePassword(passwordData) {
     try {
       const data = await this.fetchWithErrorHandling(
-        `${this.apiUrl}/user/password`,
+        `${this.apiUrl}/profile/password`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -812,4 +890,10 @@ class User {
   }
 }
 
-export default new User();
+// Créer l'instance et l'exporter
+const UserService = new User();
+
+// Rendre l'instance disponible globalement pour les autres services
+window.UserService = UserService;
+
+export default UserService;

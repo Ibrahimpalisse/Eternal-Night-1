@@ -145,6 +145,21 @@ class User {
       throw error;
     }
   }
+
+  // Méthode spéciale pour récupérer l'utilisateur avec son mot de passe (pour la vérification)
+  static async getUserWithPassword(userId) {
+    try {
+      const [rows] = await db.execute('SELECT id, name, email, password, created_at FROM users WHERE id = ?', [userId]);
+      if (!rows.length) {
+        return null;
+      }
+      
+      return rows[0];
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'utilisateur avec mot de passe:', error);
+      throw error;
+    }
+  }
   
   static async findByEmail(email) {
     try {
@@ -346,18 +361,6 @@ class User {
       // Émettre l'événement de déconnexion via Socket.IO
       socketService.emitForceLogout(userId, reason);
       
-      // Invalider les sessions en base de données si nécessaire
-      // Par exemple, vous pourriez avoir une table de sessions à invalider
-      try {
-        await db.execute(
-          'UPDATE user_sessions SET is_active = FALSE, updated_at = NOW() WHERE user_id = ? AND is_active = TRUE',
-          [userId]
-        );
-      } catch (dbError) {
-        console.error('Erreur lors de l\'invalidation des sessions en base de données:', dbError);
-        // Continuer même si l'invalidation échoue
-      }
-      
       return {
         success: true,
         message: 'Déconnexion réussie',
@@ -381,15 +384,6 @@ class User {
         });
       }
       
-      // Invalider toutes les sessions actives
-      try {
-        await db.execute(
-          'UPDATE user_sessions SET is_active = FALSE, updated_at = NOW() WHERE is_active = TRUE'
-        );
-      } catch (dbError) {
-        console.error('Erreur lors de l\'invalidation de toutes les sessions:', dbError);
-      }
-      
       return {
         success: true,
         message: 'Tous les utilisateurs ont été déconnectés',
@@ -401,20 +395,11 @@ class User {
     }
   }
   
-  // Méthode pour invalider une session spécifique
+  // Méthode pour invalider une session spécifique (simplifiée pour JWT)
   static async invalidateSession(sessionId) {
     try {
-      const [result] = await db.execute(
-        'UPDATE user_sessions SET is_active = FALSE, updated_at = NOW() WHERE id = ? AND is_active = TRUE',
-        [sessionId]
-      );
-      
-      if (result.affectedRows === 0) {
-        return {
-          success: false,
-          message: 'Session non trouvée ou déjà invalidée'
-        };
-      }
+      // Pour un système JWT, on se contente de logger
+      console.log(`Session ${sessionId} marquée comme invalidée`);
       
       return {
         success: true,

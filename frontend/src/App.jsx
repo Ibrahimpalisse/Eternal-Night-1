@@ -1,5 +1,5 @@
 // frontend/src/App.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/user/Home';
 import Login from './pages/user/login';
@@ -12,9 +12,31 @@ import Footer from './components/Footer';
 import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider } from './contexts/AuthContext';
+import Profile from './services/Profile';
 
 // Composant wrapper pour s'assurer que tout est correctement initialisé
 const AppContent = () => {
+  // Vérification globale du blocage de sécurité au chargement de l'app
+  useEffect(() => {
+    const checkSecurityOnLoad = async () => {
+      // Attendre un moment pour que les services soient prêts
+      setTimeout(() => {
+        const securityStatus = Profile.checkSecurityBlock();
+        
+        if (securityStatus.blocked) {
+          console.warn('Blocage de sécurité détecté au chargement de l\'application - Déconnexion immédiate');
+          
+          // Déclencher immédiatement la déconnexion forcée
+          if (window.UserService && typeof window.UserService.handleForceLogout === 'function') {
+            window.UserService.handleForceLogout('Session bloquée - Tentative de contournement détectée');
+          }
+        }
+      }, 100);
+    };
+    
+    checkSecurityOnLoad();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
           <Navbar />
