@@ -7,6 +7,7 @@ import Register from './pages/user/Register';
 import ResetPassword from './pages/user/ResetPassword';
 import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
+import JoinAuthors from './pages/user/JoinAuthors';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
@@ -57,6 +58,8 @@ const AppContent = () => {
                 <Route path="/auth/reset-password" element={<ResetPassword />} />
                 {/* Add other routes here as needed */}
                 <Route path="/user/profil" element={<Profil />} />
+                {/* Route for Join Authors page */}
+                <Route path="/join-authors" element={<JoinAuthors />} />
               </Routes>
             </ToastProvider>
           </main>

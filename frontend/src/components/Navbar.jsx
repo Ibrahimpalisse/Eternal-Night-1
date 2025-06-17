@@ -111,6 +111,7 @@ const Navbar = () => {
         { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
         { to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" },
         { to: "/readers", icon: <List className="w-5 h-5" />, label: "Best Readers" },
+        { to: "/join-authors", icon: <UserPlus className="w-5 h-5" />, label: "Rejoindre les auteurs" },
     ];
 
     return (
@@ -484,6 +485,17 @@ const Navbar = () => {
                                             <List className="w-4 h-4" />
                                         </div>
                                         <span>Meilleurs lecteurs</span>
+                                    </Link>
+
+                                    <Link 
+                                        to="/join-authors" 
+                                        className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/join-authors') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <div className={`p-2 rounded-lg ${isActive('/join-authors') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
+                                            <UserPlus className="w-4 h-4" />
+                                        </div>
+                                        <span>Rejoindre les auteurs</span>
                                     </Link>
                                 </div>
 

@@ -33,6 +33,32 @@ export class FormValidation {
     .url({ message: "Format d'URL invalide" })
     .regex(/\.(jpeg|jpg|gif|png|webp)$/i, { message: "L'URL doit pointer vers une image (jpeg, jpg, gif, png, webp)" });
 
+  // Validation du nom d'auteur
+  static authorName = z
+    .string()
+    .min(2, { message: "Le nom d'auteur doit contenir au moins 2 caractères" })
+    .max(50, { message: "Le nom d'auteur ne peut pas dépasser 50 caractères" })
+    .regex(/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/, { 
+      message: "Le nom d'auteur ne peut contenir que des lettres, chiffres, espaces et tirets" 
+    });
+
+  // Validation de la motivation pour rejoindre les auteurs
+  static authorMotivation = z
+    .string()
+    .min(100, { message: "La motivation doit contenir au moins 100 caractères" })
+    .max(1000, { message: "La motivation ne peut pas dépasser 1000 caractères" })
+    .refine(value => value.trim().length >= 100, {
+      message: "La motivation doit contenir au moins 100 caractères significatifs"
+    });
+
+  // Validation des liens sociaux (optionnels)
+  static socialUrl = z
+    .string()
+    .optional()
+    .refine(value => !value || z.string().url().safeParse(value).success, {
+      message: "Format d'URL invalide"
+    });
+
   // Validation sécurisée des fichiers d'avatar
   static validateAvatarFile(file) {
     const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -133,6 +159,20 @@ export class FormValidation {
   }).refine(data => data.currentPassword !== data.password, {
     message: "Le nouveau mot de passe doit être différent de l'ancien",
     path: ["password"]
+  });
+
+  // Schéma pour le formulaire de candidature auteur
+  static authorApplicationSchema = z.object({
+    authorName: this.authorName,
+    reason: this.authorMotivation,
+    socialLinks: z.object({
+      website: this.socialUrl,
+      twitter: this.socialUrl,
+      instagram: this.socialUrl
+    }).optional(),
+    acceptTerms: z.boolean().refine(val => val === true, {
+      message: "Vous devez accepter les conditions d'utilisation"
+    })
   });
 
   // Fonction pour analyser un mot de passe et retourner les erreurs spécifiques
@@ -249,13 +289,15 @@ export class FormValidation {
         this.resetPasswordSchema.parse(data);
       } else if (formType === 'changePassword') {
         this.changePasswordSchema.parse(data);
+      } else if (formType === 'authorApplication') {
+        this.authorApplicationSchema.parse(data);
       }
       return { success: true };
     } catch (error) {
       const errors = {};
       
       error.errors.forEach(err => {
-        const path = err.path[0];
+        const path = err.path.join('.');
         errors[path] = err.message;
       });
       
