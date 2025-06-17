@@ -12,6 +12,7 @@ const ProfileTabs = ({ activeTab, onTabChange }) => {
         </svg>
       )
     }
+    // Vous pouvez ajouter d'autres onglets ici plus tard
   ];
 
   return (

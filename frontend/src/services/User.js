@@ -675,14 +675,14 @@ class User {
   }
 
   // Méthode pour mettre à jour le nom d'utilisateur
-  async updateUsername(username) {
+  async updateName(name) {
     try {
       const data = await this.fetchWithErrorHandling(
-        `${this.apiUrl}/user/username`,
+        `${this.apiUrl}/auth/update-name`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username }),
+          body: JSON.stringify({ name }),
           credentials: 'include'
         },
         'Erreur lors de la mise à jour du nom d\'utilisateur'
@@ -690,7 +690,7 @@ class User {
       
       // Mettre à jour les données utilisateur en mémoire
       if (data.success && this.userDataInMemory) {
-        this.userDataInMemory.username = username;
+        this.userDataInMemory.name = name;
       }
       
       return data;
@@ -764,6 +764,49 @@ class User {
       return data;
     } catch (error) {
       if (error.silent) return { success: false, silent: true };
+      throw error;
+    }
+  }
+
+  // Méthode pour mettre à jour l'avatar
+  async updateAvatar(file) {
+    try {
+      // Créer un FormData pour envoyer le fichier
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/profile/avatar`,
+        {
+          method: 'POST',
+          credentials: 'include', // Inclure les cookies pour l'authentification
+          body: formData // Ne pas définir Content-Type, le navigateur le fera automatiquement avec la boundary
+        },
+        'Erreur lors de la mise à jour de l\'avatar'
+      );
+
+      return data;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'avatar:', error);
+      throw error;
+    }
+  }
+
+  // Méthode pour supprimer l'avatar
+  async removeAvatar() {
+    try {
+      const data = await this.fetchWithErrorHandling(
+        `${this.apiUrl}/profile/avatar`,
+        {
+          method: 'DELETE',
+          credentials: 'include'
+        },
+        'Erreur lors de la suppression de l\'avatar'
+      );
+
+      return data;
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'avatar:', error);
       throw error;
     }
   }

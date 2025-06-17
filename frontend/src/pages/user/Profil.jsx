@@ -4,10 +4,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProfileSettings from '../../components/ProfileSettings';
 import {
   ProfileHeader,
-  ProfileTabs 
+  ProfileTabs
 } from '../../components/profile';
 import { Button } from '../../components/ui/button';
 import User from '../../services/User';
+import Profile from '../../services/Profile';
 import { useToast } from '../../contexts/ToastContext';
 import { securityStorage } from '../../utils/securityStorage';
 
@@ -18,15 +19,41 @@ const Profil = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('settings');
+  const [profileData, setProfileData] = useState(null);
+
+  // Charger les données du profil avec les descriptions des rôles
+  useEffect(() => {
+    const loadProfileData = async () => {
+      if (user) {
+        try {
+          const data = await Profile.getProfile();
+          if (data.success) {
+            setProfileData(data);
+            // Mettre à jour l'utilisateur avec les nouvelles données
+            setUser(prevUser => ({
+              ...prevUser,
+              ...data.user,
+              profile: data.profile
+            }));
+          }
+        } catch (error) {
+          console.error('Erreur lors du chargement du profil:', error);
+          toast.error('Erreur lors du chargement du profil');
+        }
+      }
+    };
+
+    loadProfileData();
+  }, [user?.id, setUser, toast]);
 
   // Lire l'onglet depuis les paramètres URL
   useEffect(() => {
     const tab = searchParams.get('tab');
-    // Limiter les onglets possibles à 'settings' uniquement
+    // Pour l'instant, seul 'settings' est disponible
     if (tab && ['settings'].includes(tab)) {
       setActiveTab(tab);
     } else {
-      setActiveTab('settings'); // Par défaut à 'settings' si un onglet invalide est fourni
+      setActiveTab('settings'); // Par défaut à 'settings'
     }
   }, [searchParams]);
 

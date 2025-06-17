@@ -3,6 +3,7 @@ const jwtMiddleware = require('../middleware/JwtMiddleware');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../services/emailService');
 const socketService = require('../services/socketService');
 const bcrypt = require('bcrypt');
+const Profile = require('./Profile');
 
 
 class User {
@@ -37,7 +38,7 @@ class User {
       );
       
       // Créer un profil vide pour l'utilisateur
-      await db.execute('INSERT INTO profile (user_id) VALUES (?)', [userId]);
+      await Profile.createProfile(userId);
       
       // Attribuer un rôle à l'utilisateur
       const role = await this.assignRole(userId);
@@ -105,37 +106,7 @@ class User {
     }
   }
   
-  static async getUserRoles(userId) {
-    try {
-      const [rows] = await db.execute(`
-        SELECT r.role 
-        FROM roles r
-        JOIN role_user ru ON r.id = ru.role_id
-        WHERE ru.user_id = ?
-      `, [userId]);
-      
-      return rows.map(row => row.role);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des rôles:', error);
-      throw error;
-    }
-  }
-  
-  static async getUserRolesWithDescription(userId) {
-    try {
-      const [rows] = await db.execute(`
-        SELECT r.role, r.description
-        FROM roles r
-        JOIN role_user ru ON r.id = ru.role_id
-        WHERE ru.user_id = ?
-      `, [userId]);
-      
-      return rows;
-    } catch (error) {
-      console.error('Erreur lors de la récupération des rôles avec descriptions:', error);
-      throw error;
-    }
-  }
+
   
   static async isEmailVerified(userId) {
     try {
@@ -147,15 +118,7 @@ class User {
     }
   }
   
-  static async getUserProfile(userId) {
-    try {
-      const [rows] = await db.execute('SELECT avatar_path FROM profile WHERE user_id = ?', [userId]);
-      return rows.length ? rows[0] : {};
-    } catch (error) {
-      console.error('Erreur lors de la récupération du profil utilisateur:', error);
-      throw error;
-    }
-  }
+
   
   static async getUserById(userId) {
     try {
@@ -165,10 +128,10 @@ class User {
       }
       
       const user = rows[0];
-      const roles = await this.getUserRoles(userId);
-      const rolesWithDescription = await this.getUserRolesWithDescription(userId);
+      const roles = await Profile.getUserRoles(userId);
+      const rolesWithDescription = await Profile.getUserRolesWithDescription(userId);
       const isVerified = await this.isEmailVerified(userId);
-      const profile = await this.getUserProfile(userId);
+      const profile = await Profile.getUserProfile(userId);
       
       return {
         ...user,

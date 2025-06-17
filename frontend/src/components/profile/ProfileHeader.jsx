@@ -1,15 +1,43 @@
 import React from 'react';
 
+// Fonction pour obtenir l'avatar de l'utilisateur
+const getUserAvatar = (user) => {
+    if (!user) return null;
+    
+    // Priorité 1: avatarUrl direct (depuis l'API qui construit l'URL S3)
+    if (user.profile && user.profile.avatarUrl) return user.profile.avatarUrl;
+    
+    // Priorité 2: avatar property
+    if (user.avatar) return user.avatar;
+    
+    // Priorité 3: avatarUrl à la racine de l'objet user
+    if (user.avatarUrl) return user.avatarUrl;
+    
+    // Priorité 4: construire l'URL S3 si on a avatar_path
+    if (user.profile && user.profile.avatar_path) {
+        // Si c'est déjà une URL complète, la retourner
+        if (user.profile.avatar_path.startsWith('http')) {
+            return user.profile.avatar_path;
+        }
+        // Sinon, essayer de construire l'URL S3
+        const awsBucket = 'eternal-night'; // votre bucket
+        const awsRegion = 'eu-north-1'; // votre région
+        return `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${user.profile.avatar_path}`;
+    }
+    
+    return null;
+};
+
 const ProfileHeader = ({ user }) => {
   return (
     <div className="bg-gray-900/50 rounded-lg border border-white/10 p-4 sm:p-6 mb-8 backdrop-blur-sm">
       <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
         {/* Avatar ou initiales */}
         <div className="relative">
-          {user?.avatar || user?.profile?.avatar_path ? (
+          {getUserAvatar(user) ? (
             <img 
-              src={user.avatar || user.profile.avatar_path} 
-              alt={`Avatar de ${user.username}`}
+              src={getUserAvatar(user)} 
+              alt={`Avatar de ${user.name}`}
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-purple-500/30"
               onError={(e) => {
                 // En cas d'erreur de chargement, afficher les initiales
@@ -20,10 +48,10 @@ const ProfileHeader = ({ user }) => {
           ) : null}
           <div 
             className={`w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold flex-shrink-0 ${
-              user?.avatar || user?.profile?.avatar_path ? 'hidden' : 'flex'
+              getUserAvatar(user) ? 'hidden' : 'flex'
             }`}
           >
-            {user?.username?.charAt(0).toUpperCase() || 'U'}
+            {user?.name?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"></div>
         </div>
@@ -33,11 +61,26 @@ const ProfileHeader = ({ user }) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                {user?.username || 'Utilisateur'}
+                {user?.name || 'Utilisateur'}
               </h1>
               <p className="text-sm sm:text-base text-gray-400 mb-2">
                 {user?.email || 'email@example.com'}
               </p>
+              
+              {/* Affichage des descriptions des rôles */}
+              {user?.rolesWithDescription && user.rolesWithDescription.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {user.rolesWithDescription.map((roleData, index) => (
+                    <span 
+                      key={index}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                      title={`Rôle: ${roleData.role}`}
+                    >
+                      {roleData.description || roleData.role}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             
             {/* Actions rapides */}
@@ -64,11 +107,7 @@ const ProfileHeader = ({ user }) => {
           
           {/* Badges et statut */}
           <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:space-x-4 mt-3">
-            <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs sm:text-sm font-medium">
-              {user?.role || 'Utilisateur'}
-            </span>
-            
-            {user?.emailVerified && (
+            {user?.isVerified && (
               <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -87,8 +126,8 @@ const ProfileHeader = ({ user }) => {
             )}
             
             <span className="px-3 py-1 bg-gray-500/20 text-gray-400 rounded-full text-xs sm:text-sm">
-              Membre depuis {user?.createdAt ? 
-                new Date(user.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }) : 
+              Membre depuis {user?.created_at ? 
+                new Date(user.created_at).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }) : 
                 'récemment'
               }
             </span>

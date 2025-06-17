@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Profile = require('../models/Profile');
 
 class JwtMiddleware {
   constructor() {
@@ -47,7 +48,7 @@ class JwtMiddleware {
                 
                 if (refreshedUser) {
                   // Récupérer les rôles
-                  const roles = await User.getUserRoles(refreshedUser.id);
+                  const roles = await Profile.getUserRoles(refreshedUser.id);
                   
                   // Générer un nouveau token
                   const newToken = this.generateToken({
@@ -90,7 +91,7 @@ class JwtMiddleware {
         // Vérifier si l'utilisateur a au moins un rôle
         try {
           const User = require('../models/User'); // Importer ici pour éviter les dépendances circulaires
-          const roles = await User.getUserRoles(user.id);
+          const roles = await Profile.getUserRoles(user.id);
           
           console.log('🎭 Rôles récupérés pour user', user.id, ':', roles);
           

@@ -88,6 +88,11 @@ class FormValidation {
     message: "La requête est valide"
   });
 
+  // Schéma pour la mise à jour du nom
+  static updateNameSchema = z.object({
+    name: this.username
+  });
+
   // Fonction pour valider un champ spécifique
   static validateField(field, value) {
     try {
@@ -141,6 +146,194 @@ class FormValidation {
         });
       }
     };
+  }
+
+  // Validation sécurisée des fichiers d'avatar
+  static validateAvatarFile(file, buffer) {
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const ALLOWED_EXTENSIONS = /\.(jpg|jpeg|png|gif|webp)$/i;
+    
+    // Vérifications de base
+    if (!file) {
+      return { success: false, error: "Aucun fichier fourni" };
+    }
+    
+    if (!file.originalname) {
+      return { success: false, error: "Nom de fichier manquant" };
+    }
+    
+    // Validation du nom de fichier permissive - accepte tout sauf les caractères dangereux
+    // Vérifier que le fichier a une extension valide
+    if (!ALLOWED_EXTENSIONS.test(file.originalname)) {
+      return { 
+        success: false, 
+        error: "Extension de fichier non autorisée. Utilisez JPG, JPEG, PNG, GIF ou WEBP" 
+      };
+    }
+    
+    // Vérifier SEULEMENT les caractères vraiment dangereux pour la sécurité
+    const dangerousPatterns = [
+      /\.\./,           // Path traversal (../)
+      /[<>:"|?*\\]/,    // Caractères interdits dans les noms de fichiers système
+      /[\x00-\x1f]/,    // Caractères de contrôle (non-imprimables)
+      /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i, // Noms réservés Windows (plus précis)
+    ];
+    
+    // Vérifier le nom complet
+    for (const pattern of dangerousPatterns) {
+      if (pattern.test(file.originalname)) {
+        return { 
+          success: false, 
+          error: "Nom de fichier contient des caractères système non autorisés" 
+        };
+      }
+    }
+    
+    // Vérifier la longueur (empêcher les noms trop longs)
+    if (file.originalname.length > 255) {
+      return { 
+        success: false, 
+        error: "Le nom de fichier est trop long (maximum 255 caractères)" 
+      };
+    }
+    
+    // Vérification du type MIME
+    if (!ALLOWED_TYPES.includes(file.mimetype.toLowerCase())) {
+      return { 
+        success: false, 
+        error: "Type MIME non autorisé. Seules les images sont acceptées" 
+      };
+    }
+    
+    // Vérification de la taille
+    if (file.size > MAX_SIZE) {
+      return { 
+        success: false, 
+        error: "Le fichier ne peut pas dépasser 5MB" 
+      };
+    }
+    
+    // Vérification du buffer si fourni
+    if (buffer) {
+      if (!Buffer.isBuffer(buffer)) {
+        return { success: false, error: "Buffer invalide" };
+      }
+      
+      if (buffer.length === 0) {
+        return { success: false, error: "Le fichier ne peut pas être vide" };
+      }
+      
+      // Vérification flexible de la taille du buffer (peut différer légèrement à cause de l'encoding)
+      const sizeDifference = Math.abs(buffer.length - file.size);
+      const maxSizeDifference = file.size * 0.1; // 10% de tolérance
+      
+      if (sizeDifference > maxSizeDifference && sizeDifference > 1000) {
+        return { success: false, error: "Taille du buffer incohérente" };
+      }
+      
+      // Vérification basique de la signature du fichier (magic bytes)
+      if (!this._validateImageSignature(buffer)) {
+        return { 
+          success: false, 
+          error: "Le fichier ne semble pas être une image valide" 
+        };
+      }
+    }
+    
+    return { success: true };
+  }
+
+  // Vérification des signatures de fichiers (magic bytes)
+  static _validateImageSignature(buffer) {
+    if (!buffer || buffer.length < 4) return false;
+    
+    // Signatures des formats d'image supportés
+    const signatures = {
+      jpeg: [
+        [0xFF, 0xD8, 0xFF], // JPEG
+      ],
+      png: [
+        [0x89, 0x50, 0x4E, 0x47], // PNG
+      ],
+      gif: [
+        [0x47, 0x49, 0x46, 0x38], // GIF
+      ],
+      webp: [
+        [0x52, 0x49, 0x46, 0x46], // RIFF (WebP commence par RIFF)
+      ]
+    };
+    
+    // Vérifier chaque signature
+    for (const format of Object.keys(signatures)) {
+      for (const signature of signatures[format]) {
+        let matches = true;
+        for (let i = 0; i < signature.length; i++) {
+          if (buffer[i] !== signature[i]) {
+            matches = false;
+            break;
+          }
+        }
+        if (matches) {
+          // Pour WebP, vérifier aussi la signature complète
+          if (format === 'webp') {
+            if (buffer.length >= 12) {
+              const webpSig = buffer.subarray(8, 12);
+              if (webpSig.toString() === 'WEBP') {
+                return true;
+              }
+            }
+          } else {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  // Validation des noms de fichier permissive mais sécurisée
+  static validateFileName(fileName) {
+    if (!fileName || typeof fileName !== 'string') {
+      return { success: false, error: "Nom de fichier manquant" };
+    }
+    
+    // Vérifier la longueur
+    if (fileName.length > 255) {
+      return { 
+        success: false, 
+        error: "Le nom de fichier est trop long (maximum 255 caractères)" 
+      };
+    }
+    
+    // Vérifier que le fichier a une extension valide
+    const validExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+    if (!validExtensions.test(fileName)) {
+      return { 
+        success: false, 
+        error: "Extension de fichier non autorisée. Utilisez JPG, JPEG, PNG, GIF ou WEBP" 
+      };
+    }
+    
+    // Vérifier SEULEMENT les caractères vraiment dangereux
+    const dangerousPatterns = [
+      /\.\./,           // Path traversal (../)
+      /[<>:"|?*\\]/,    // Caractères interdits dans les noms de fichiers système
+      /[\x00-\x1f]/,    // Caractères de contrôle (non-imprimables)
+      /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i, // Noms réservés Windows
+    ];
+    
+    for (const pattern of dangerousPatterns) {
+      if (pattern.test(fileName)) {
+        return { 
+          success: false, 
+          error: "Nom de fichier contient des caractères système non autorisés" 
+        };
+      }
+    }
+    
+    return { success: true };
   }
 }
 

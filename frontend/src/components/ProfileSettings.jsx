@@ -4,6 +4,34 @@ import User from '../services/User';
 import { securityStorage } from '../utils/securityStorage';
 import FormField from './profile/FormField';
 
+// Fonction pour obtenir l'avatar de l'utilisateur
+const getUserAvatar = (user) => {
+    if (!user) return null;
+    
+    // Priorité 1: avatarUrl direct (depuis l'API qui construit l'URL S3)
+    if (user.profile && user.profile.avatarUrl) return user.profile.avatarUrl;
+    
+    // Priorité 2: avatar property
+    if (user.avatar) return user.avatar;
+    
+    // Priorité 3: avatarUrl à la racine de l'objet user
+    if (user.avatarUrl) return user.avatarUrl;
+    
+    // Priorité 4: construire l'URL S3 si on a avatar_path
+    if (user.profile && user.profile.avatar_path) {
+        // Si c'est déjà une URL complète, la retourner
+        if (user.profile.avatar_path.startsWith('http')) {
+            return user.profile.avatar_path;
+        }
+        // Sinon, essayer de construire l'URL S3
+        const awsBucket = 'eternal-night'; // votre bucket
+        const awsRegion = 'eu-north-1'; // votre région
+        return `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${user.profile.avatar_path}`;
+    }
+    
+    return null;
+};
+
 const ProfileSettings = ({ user, setUser }) => {
   const toast = useToast();
 
@@ -18,13 +46,13 @@ const ProfileSettings = ({ user, setUser }) => {
   }, []);
 
   // Fonction pour gérer la mise à jour du nom d'utilisateur
-  const handleUsernameUpdate = async (newUsername) => {
+  const handleNameUpdate = async (newName) => {
     try {
-      const result = await User.updateUsername(newUsername);
+      const result = await User.updateName(newName);
 
       if (result.success) {
         // Mise à jour directe de l'utilisateur
-        setUser(prev => ({ ...prev, username: newUsername }));
+        setUser(prev => ({ ...prev, name: newName }));
         toast.success('Nom d\'utilisateur mis à jour avec succès');
         return result;
       } else {
@@ -48,15 +76,31 @@ const ProfileSettings = ({ user, setUser }) => {
     }
   };
 
-  const handleAvatarUpdate = async (newAvatarUrl) => {
+  const handleAvatarUpdate = async (file) => {
     try {
-      // This is a placeholder for actual API call to update avatar
-      console.log('Updating avatar to:', newAvatarUrl);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500)); 
-      setUser(prev => ({ ...prev, avatar: newAvatarUrl, profile: { ...prev.profile, avatar_path: newAvatarUrl } }));
-      toast.success('Avatar mis à jour avec succès');
-      return { success: true };
+      console.log('Updating avatar with file:', file);
+      
+      // Appel API réel pour mettre à jour l'avatar
+      const result = await User.updateAvatar(file);
+      
+      if (result.success) {
+        // Mettre à jour l'utilisateur avec la nouvelle URL d'avatar
+        setUser(prev => ({ 
+          ...prev, 
+          avatar: result.avatarUrl,
+          avatarUrl: result.avatarUrl,
+          profile: { 
+            ...prev.profile, 
+            avatar_path: result.avatarPath,
+            avatarUrl: result.avatarUrl
+          } 
+        }));
+        
+        toast.success('Avatar mis à jour avec succès');
+        return result;
+      } else {
+        throw new Error(result.message || 'Une erreur est survenue');
+      }
     } catch (error) {
       toast.error(error.message || 'Erreur lors de la mise à jour de l\'avatar');
       throw error;
@@ -69,8 +113,8 @@ const ProfileSettings = ({ user, setUser }) => {
         <FormField
           label="Nom d'utilisateur"
           type="username"
-          defaultValue={user?.username || ''}
-          onSave={handleUsernameUpdate}
+          defaultValue={user?.name || ''}
+          onSave={handleNameUpdate}
           description="Modifiez votre nom d'utilisateur public"
         />
 
@@ -92,7 +136,7 @@ const ProfileSettings = ({ user, setUser }) => {
         <FormField
           label="Avatar"
           type="avatar"
-          defaultValue={user?.avatar || user?.profile?.avatar_path || ''}
+          defaultValue={getUserAvatar(user) || ''}
           onSave={handleAvatarUpdate}
           description="Changez votre photo de profil"
         />

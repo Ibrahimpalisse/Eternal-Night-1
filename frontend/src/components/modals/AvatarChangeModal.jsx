@@ -13,6 +13,7 @@ import { FormValidation } from '../../utils/validation';
 
 const AvatarChangeModal = ({ isOpen, onClose, currentAvatar, onSubmit }) => {
   const [value, setValue] = useState(currentAvatar || '');
+  const [selectedFile, setSelectedFile] = useState(null); // Nouveau state pour le fichier
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const toast = useToast();
@@ -39,18 +40,35 @@ const AvatarChangeModal = ({ isOpen, onClose, currentAvatar, onSubmit }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log('Selected file:', file);
+      
       // Utiliser la validation sécurisée des fichiers
       const fileValidation = FormValidation.validateAvatarFile(file);
       if (!fileValidation.success) {
+        console.error('File validation failed:', fileValidation.error);
         setError(fileValidation.error);
         setValue('');
+        setSelectedFile(null);
+        // Réinitialiser l'input file
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
         return;
       }
+      
+      // Stocker le fichier original pour l'upload
+      setSelectedFile(file);
       
       const reader = new FileReader();
       reader.onloadend = () => {
         setValue(reader.result);
         setError('');
+        console.log('File read successfully, preview set');
+      };
+      reader.onerror = () => {
+        setError('Erreur lors de la lecture du fichier');
+        setSelectedFile(null);
+        setValue('');
       };
       reader.readAsDataURL(file);
     }
@@ -62,37 +80,36 @@ const AvatarChangeModal = ({ isOpen, onClose, currentAvatar, onSubmit }) => {
     setError('');
 
     try {
-      if (value === currentAvatar) {
-        if (value.startsWith('data:image') && !currentAvatar) {
-          // Do nothing, proceed to onSubmit
-        } else {
-          setError('Le nouvel avatar est identique à votre avatar actuel');
+      // Si un fichier a été sélectionné, l'envoyer
+      if (selectedFile) {
+        console.log('Submitting file:', selectedFile);
+        
+        // Double validation côté client avant envoi
+        const fileValidation = FormValidation.validateAvatarFile(selectedFile);
+        if (!fileValidation.success) {
+          setError(fileValidation.error);
           setIsLoading(false);
           return;
         }
-      }
-      
-      // Validate URL using validation.js schema
-      if (!isSecureDataUrl(value)) { // Don't validate data URLs with imageUrl schema
-        const validationResult = FormValidation.validateField('imageUrl', value);
-        if (!validationResult.success) {
-          setError(validationResult.error);
-          setIsLoading(false);
-          return;
-        }
+        
+        await onSubmit(selectedFile);
+        handleClose();
+        return;
       }
 
-      await onSubmit(value);
-      handleClose();
-    } catch (err) {
-      setError(err.message || 'Une erreur est survenue');
-    } finally {
+      // Si aucun fichier n'est sélectionné
+      setError('Veuillez sélectionner un fichier image');
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error submitting avatar:', error);
+      setError(error.message || 'Une erreur est survenue lors de la mise à jour');
       setIsLoading(false);
     }
   };
 
   const handleClose = () => {
     setValue(currentAvatar || '');
+    setSelectedFile(null); // Réinitialiser le fichier sélectionné
     setError('');
     setIsLoading(false);
     if (fileInputRef.current) {
@@ -275,7 +292,7 @@ const AvatarChangeModal = ({ isOpen, onClose, currentAvatar, onSubmit }) => {
             type="submit"
             form="avatar-form"
             onClick={handleSubmit}
-            disabled={isLoading || !value || value === currentAvatar || !!error}
+            disabled={isLoading || (!selectedFile && (!value || value === currentAvatar)) || !!error}
             className="bg-purple-600 hover:bg-purple-700 text-white w-full sm:max-w-[160px]"
           >
             {isLoading ? 'Chargement...' : 'Mettre à jour'}

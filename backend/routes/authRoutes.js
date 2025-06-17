@@ -73,4 +73,12 @@ router.post('/logout-all-sessions',
     authController.logoutAllSessions
 );
 
+// Route pour mettre à jour le nom d'utilisateur
+router.put('/update-name', 
+    securityMiddleware.jwt.authenticateToken(),
+    securityMiddleware.rateLimit.getDefaultLimiter(),
+    FormValidation.validate(FormValidation.updateNameSchema),
+    authController.updateName
+);
+
 module.exports = router; 

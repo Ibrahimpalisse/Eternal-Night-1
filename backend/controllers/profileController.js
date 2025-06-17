@@ -1,32 +1,37 @@
 const Profile = require('../models/Profile');
+const User = require('../models/User');
 
 // Contrôleur pour la gestion des profils
 exports.getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Récupérer le profil de l'utilisateur
-    const profile = await Profile.getProfileByUserId(userId);
+    // Récupérer les informations complètes de l'utilisateur
+    const user = await User.getUserById(userId);
     
-    if (!profile) {
+    if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'Profil non trouvé'
+        message: 'Utilisateur non trouvé'
       });
     }
     
     // Construire l'URL complète de l'avatar si disponible
     let avatarUrl = null;
-    if (profile.avatar_path) {
-      avatarUrl = `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_DEFAULT_REGION}.amazonaws.com/${profile.avatar_path}`;
+    if (user.profile && user.profile.avatar_path) {
+      avatarUrl = `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_DEFAULT_REGION}.amazonaws.com/${user.profile.avatar_path}`;
     }
     
     res.json({
       success: true,
-      profile: {
-        ...profile,
-        avatarUrl
-      }
+      user: {
+        ...user,
+        profile: {
+          ...user.profile,
+          avatarUrl
+        }
+      },
+      profile: user.profile
     });
   } catch (error) {
     console.error('Erreur lors de la récupération du profil :', error);

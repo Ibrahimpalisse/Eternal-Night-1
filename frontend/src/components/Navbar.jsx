@@ -15,13 +15,25 @@ import useNotifications from '../hooks/useNotifications';
 const getUserAvatar = (user) => {
     if (!user) return null;
     
-  // Essayer différentes propriétés d'avatar possibles
-  if (user.avatar) return user.avatar;
-  if (user.profile && user.profile.avatar_path) return user.profile.avatar_path;
-  
-  // Si nous avons une URL d'API, essayer de construire le chemin complet
-  if (import.meta.env.VITE_API_URL && user.profile && user.profile.avatar_path) {
-    return `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.profile.avatar_path}`;
+    // Priorité 1: avatarUrl direct (depuis l'API qui construit l'URL S3)
+    if (user.profile && user.profile.avatarUrl) return user.profile.avatarUrl;
+    
+    // Priorité 2: avatar property
+    if (user.avatar) return user.avatar;
+    
+    // Priorité 3: avatarUrl à la racine de l'objet user
+    if (user.avatarUrl) return user.avatarUrl;
+    
+    // Priorité 4: construire l'URL S3 si on a avatar_path
+    if (user.profile && user.profile.avatar_path) {
+        // Si c'est déjà une URL complète, la retourner
+        if (user.profile.avatar_path.startsWith('http')) {
+            return user.profile.avatar_path;
+        }
+        // Sinon, essayer de construire l'URL S3
+        const awsBucket = 'eternal-night'; // votre bucket
+        const awsRegion = 'eu-north-1'; // votre région
+        return `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${user.profile.avatar_path}`;
     }
     
     return null;

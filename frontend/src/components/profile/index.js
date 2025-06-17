@@ -2,6 +2,7 @@
 export { default as FormField } from './FormField';
 export { default as ProfileHeader } from './ProfileHeader';
 export { default as ProfileTabs } from './ProfileTabs';
+export { default as RolesDisplay } from './RolesDisplay';
 
 // Export des modals
 export { default as SecurityAlertModal } from '../modals/SecurityAlertModal';

@@ -11,28 +11,41 @@ class UploadMiddleware {
       storage: this.storage,
       limits: {
         fileSize: 5 * 1024 * 1024, // 5 MB
+        files: 1, // Limite à 1 fichier
+        fields: 10, // Limite le nombre de champs
       },
       fileFilter: this._fileFilter.bind(this)
     });
   }
 
-  // Filtre pour les fichiers
+  // Filtre pour les fichiers avec validation stricte
   _fileFilter(req, file, cb) {
-    // Vérifier le type MIME du fichier
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Seules les images sont autorisées'), false);
+    try {
+      // Validation basique du nom de fichier
+      const fileNameValidation = FormValidation.validateFileName(file.originalname);
+      if (!fileNameValidation.success) {
+        return cb(new Error(fileNameValidation.error), false);
+      }
+      
+      // Vérifier le type MIME du fichier
+      const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedMimeTypes.includes(file.mimetype.toLowerCase())) {
+        return cb(new Error('Type MIME non autorisé. Seules les images sont acceptées'), false);
+      }
+      
+      // Vérifier l'extension du fichier
+      const allowedExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+      if (!allowedExtensions.test(file.originalname)) {
+        return cb(new Error('Extension de fichier non autorisée. Utilisez JPG, JPEG, PNG, GIF ou WEBP'), false);
+      }
+      
+      cb(null, true);
+    } catch (error) {
+      cb(new Error('Erreur lors de la validation du fichier'), false);
     }
-    
-    // Vérifier l'extension du fichier
-    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-    if (!allowedExtensions.test(file.originalname)) {
-      return cb(new Error('Format de fichier non pris en charge. Utilisez JPG, PNG, GIF ou WEBP'), false);
-    }
-    
-    cb(null, true);
   }
 
-  // Middleware pour l'upload d'avatar
+  // Middleware pour l'upload d'avatar avec validation complète
   uploadAvatar() {
     return [
       this.upload.single('avatar'),
@@ -46,7 +59,16 @@ class UploadMiddleware {
             });
           }
           
-          // Valider l'ID utilisateur
+          // Validation complète du fichier avec le buffer
+          const fileValidation = FormValidation.validateAvatarFile(req.file, req.file.buffer);
+          if (!fileValidation.success) {
+            return res.status(400).json({
+              success: false,
+              message: fileValidation.error
+            });
+          }
+          
+          // Valider l'ID utilisateur et les données
           try {
             FormValidation.avatarSchema.parse({
               userId: parseInt(req.user.id, 10),
@@ -55,19 +77,41 @@ class UploadMiddleware {
           } catch (error) {
             return res.status(400).json({
               success: false,
-              message: 'Validation échouée',
-              errors: error.errors.map(err => err.message)
+              message: 'Données de validation invalides',
+              errors: error.errors?.map(err => err.message) || ['Erreur de validation']
             });
           }
           
+          // Ajouter des informations de sécurité au fichier
+          req.file.validated = true;
+          req.file.validationTimestamp = new Date().toISOString();
+          
           next();
         } catch (error) {
+          console.error('Erreur dans uploadAvatar middleware:', error);
+          
           if (error instanceof multer.MulterError) {
-            if (error.code === 'LIMIT_FILE_SIZE') {
-              return res.status(400).json({
-                success: false,
-                message: 'La taille du fichier ne peut pas dépasser 5 Mo'
-              });
+            switch (error.code) {
+              case 'LIMIT_FILE_SIZE':
+                return res.status(400).json({
+                  success: false,
+                  message: 'La taille du fichier ne peut pas dépasser 5 MB'
+                });
+              case 'LIMIT_FILE_COUNT':
+                return res.status(400).json({
+                  success: false,
+                  message: 'Un seul fichier est autorisé'
+                });
+              case 'LIMIT_UNEXPECTED_FILE':
+                return res.status(400).json({
+                  success: false,
+                  message: 'Champ de fichier inattendu'
+                });
+              default:
+                return res.status(400).json({
+                  success: false,
+                  message: `Erreur de téléchargement: ${error.message}`
+                });
             }
           }
           

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Profile = require('../models/Profile');
 const bcrypt = require('bcrypt');
 const jwtMiddleware = require('../middleware/JwtMiddleware');
 
@@ -71,10 +72,10 @@ exports.login = async (req, res) => {
     }
     
     // Récupérer les rôles de l'utilisateur
-    const roles = await User.getUserRoles(user.id);
+    const roles = await Profile.getUserRoles(user.id);
     
     // Récupérer les rôles avec descriptions
-    const rolesWithDescription = await User.getUserRolesWithDescription(user.id);
+    const rolesWithDescription = await Profile.getUserRolesWithDescription(user.id);
     
     // Générer un token JWT
     const token = jwtMiddleware.generateToken({ 
@@ -90,7 +91,7 @@ exports.login = async (req, res) => {
     });
     
     // Récupérer le profil utilisateur
-    const profile = await User.getUserProfile(user.id);
+    const profile = await Profile.getUserProfile(user.id);
     
     // Définir la durée d'expiration des cookies en fonction de rememberMe
     const maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000; // 30 jours ou 1 jour
@@ -317,7 +318,7 @@ exports.refreshToken = async (req, res) => {
     }
     
     // Récupérer les rôles de l'utilisateur
-    const roles = await User.getUserRoles(user.id);
+    const roles = await Profile.getUserRoles(user.id);
     
     // Générer un nouveau token JWT
     const newToken = jwtMiddleware.generateToken({
@@ -428,6 +429,56 @@ exports.logoutAllSessions = async (req, res) => {
       success: false,
       message: 'Une erreur est survenue lors de la déconnexion',
       error: error.message
+    });
+  }
+};
+
+// Contrôleur pour mettre à jour le nom d'utilisateur
+exports.updateName = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name } = req.body;
+    
+    // Vérifier si le nom est différent de l'actuel
+    const currentUser = await User.getUserById(userId);
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+    
+    if (currentUser.name === name) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le nouveau nom doit être différent du nom actuel'
+      });
+    }
+    
+    // Mettre à jour le nom dans la base de données
+    const [result] = await User.db.execute(
+      'UPDATE users SET name = ?, updated_at = NOW() WHERE id = ?',
+      [name, userId]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Impossible de mettre à jour le nom'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Nom mis à jour avec succès',
+      name: name
+    });
+    
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du nom:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Une erreur est survenue lors de la mise à jour du nom'
     });
   }
 };
