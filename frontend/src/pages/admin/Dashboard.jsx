@@ -1,0 +1,128 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { Navigate, Routes, Route } from 'react-router-dom';
+import { SlideNav, DashboardContent, UsersContent } from '../../components/admin';
+import { ToastProvider } from '../../contexts/ToastContext';
+import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
+import { 
+  Menu
+} from 'lucide-react';
+
+const Dashboard = () => {
+  const { user, loading } = useAuth();
+  // Récupérer l'état de la sidebar depuis localStorage
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('adminSidebarOpen');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  // Fonction pour changer l'état de la sidebar et le sauvegarder
+  const toggleSidebar = (newState) => {
+    const state = newState !== undefined ? newState : !sidebarOpen;
+    setSidebarOpen(state);
+    localStorage.setItem('adminSidebarOpen', JSON.stringify(state));
+  };
+
+  // Hook pour détecter la taille d'écran
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const mobile = width < 768;
+      const tablet = width >= 768 && width < 1024;
+      
+      setIsMobile(mobile);
+      setIsTablet(tablet);
+      
+      // Sur mobile, fermer automatiquement pour une meilleure UX
+      if (mobile && sidebarOpen) {
+        toggleSidebar(false);
+      }
+    };
+
+    // Initial check
+    handleResize();
+    
+    // Listen for resize events
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
+
+  // Calculer la marge gauche selon l'état de la sidebar et la taille d'écran
+  const getContentMargin = () => {
+    if (isMobile) {
+      return 'ml-0'; // Pas de marge sur mobile
+    } else if (isTablet) {
+      return sidebarOpen ? 'ml-64' : 'ml-14';
+    } else {
+      return sidebarOpen ? 'ml-64' : 'ml-16';
+    }
+  };
+
+  // Vérifier si l'utilisateur est connecté et est super admin
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-white/30 border-t-purple-500"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  // Vérifier si l'utilisateur a le rôle super_admin
+  const isSuperAdmin = user.roles?.includes('super_admin');
+  if (!isSuperAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
+    <ToastProvider>
+      <div className="min-h-screen flex">
+        {/* Navigation latérale */}
+        <SlideNav 
+          isOpen={sidebarOpen} 
+          onToggle={() => toggleSidebar()}
+        />
+
+        {/* Contenu principal */}
+        <div className={`flex-1 transition-all duration-300 ${getContentMargin()}`}>
+          {/* Header */}
+          <header className="bg-slate-900/50 border-b border-slate-700/50 px-4 md:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 md:gap-4">
+              <button
+                onClick={() => toggleSidebar()}
+                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <h1 className="text-lg md:text-2xl font-bold text-white">Dashboard Admin</h1>
+            </div>
+            <div className="flex items-center gap-2 md:gap-4">
+              <span className="text-gray-300 text-sm md:text-base hidden sm:block">Bienvenue, {user.name}</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium text-sm">{user.name?.charAt(0).toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Contenu des pages admin */}
+        <Routes>
+          <Route path="/" element={<DashboardContent />} />
+          <Route path="/users" element={<UsersContent />} />
+        </Routes>
+      </div>
+      
+      <TokenRefreshNotification />
+    </div>
+    </ToastProvider>
+  );
+};
+
+export default Dashboard; 

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
-    Home, BookOpen, Bookmark, List, User, Settings, Bell, LogOut, LogIn, UserPlus, Menu, X, Search
+    Home, BookOpen, Bookmark, List, User, Settings, Bell, LogOut, LogIn, UserPlus, Menu, X, Search, Shield
 } from 'lucide-react';
 import openBookLogo from '../assets/open-book.svg';
 import SearchDialog from './SearchDialog';
@@ -291,6 +291,23 @@ const Navbar = () => {
                                                             </div>
                                                             <span>Rejoindre les auteurs</span>
                                                         </Link>
+
+                                                        {/* Lien Admin - visible seulement pour les super admins */}
+                                                        {user.roles?.includes('super_admin') && (
+                                                            <Link 
+                                                                to="/admin" 
+                                                                className="flex items-center space-x-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
+                                                                onClick={() => {
+                                                                    setIsMoreMenuOpen(false);
+                                                                    setIsMenuOpen(false);
+                                                                }}
+                                                            >
+                                                                <div className="p-2 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 group-hover:border-red-500/50 transition-colors">
+                                                                    <Shield className="w-4 h-4 text-red-400" />
+                                                                </div>
+                                                                <span>Dashboard Admin</span>
+                                                            </Link>
+                                                        )}
                                                     </div>
 
                                                     {/* Actions de déconnexion */}
@@ -510,6 +527,20 @@ const Navbar = () => {
                                         </div>
                                         <span>Rejoindre les auteurs</span>
                                     </Link>
+
+                                    {/* Lien Admin Mobile - visible seulement pour les super admins */}
+                                    {user?.roles?.includes('super_admin') && (
+                                        <Link 
+                                            to="/admin" 
+                                            className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/admin') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <div className={`p-2 rounded-lg ${isActive('/admin') ? 'bg-red-500/20 border-red-500/50' : 'bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 group-hover:border-red-500/50'} transition-colors`}>
+                                                <Shield className="w-4 h-4 text-red-400" />
+                                            </div>
+                                            <span>Dashboard Admin</span>
+                                        </Link>
+                                    )}
                                 </div>
 
                                 {user && (

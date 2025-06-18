@@ -182,11 +182,11 @@ const JoinAuthors = () => {
             </div>
           ) : (
             // Afficher le formulaire de candidature
-            <AuthorApplicationForm 
-              onSubmit={handleApplicationSubmit}
-              isSubmitting={isSubmitting}
-              user={user}
-            />
+          <AuthorApplicationForm 
+            onSubmit={handleApplicationSubmit}
+            isSubmitting={isSubmitting}
+            user={user}
+          />
           )}
         </div>
       </div>

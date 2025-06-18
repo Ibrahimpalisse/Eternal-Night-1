@@ -8,6 +8,7 @@ import ResetPassword from './pages/user/ResetPassword';
 import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
 import JoinAuthors from './pages/user/JoinAuthors';
+import AdminDashboard from './pages/admin/Dashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
@@ -39,10 +40,16 @@ const AppContent = () => {
   }, []);
 
   return (
+    <ToastProvider>
+      <Routes>
+        {/* Route for Admin Dashboard - Sans navbar/footer */}
+        <Route path="/admin/*" element={<AdminDashboard />} />
+        
+        {/* Autres routes avec layout normal */}
+        <Route path="*" element={
     <div className="flex flex-col min-h-screen">
           <Navbar />
       <main className="flex-grow pt-16 md:pt-20">
-            <ToastProvider>
               <Routes>
                 {/* Route for the Home page */}
                 <Route path="/" element={<Home />} />
@@ -61,11 +68,13 @@ const AppContent = () => {
                 {/* Route for Join Authors page */}
                 <Route path="/join-authors" element={<JoinAuthors />} />
               </Routes>
-            </ToastProvider>
           </main>
       <Footer />
       <TokenRefreshNotification />
         </div>
+        } />
+      </Routes>
+    </ToastProvider>
   );
 };
 
