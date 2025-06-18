@@ -5,16 +5,15 @@ async function setupDatabase() {
   // Créer une connexion à MySQL sans spécifier une base de données
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || ''
+    port: process.env.DB_PORT || 3307,
+    user: process.env.DB_USER || 'user',
+    password: process.env.DB_PASSWORD || 'password'
   });
 
   try {
-    // Créer la base de données si elle n'existe pas
-    const dbName = process.env.DB_NAME || 'eternal_night';
-    await connection.execute(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
-    console.log(`✅ Base de données ${dbName} créée ou déjà existante`);
+    // Utiliser la base de données existante créée par Docker
+    const dbName = 'eternal-night';
+    console.log(`✅ Utilisation de la base de données ${dbName}`);
 
     // Utiliser la base de données
     await connection.query(`USE \`${dbName}\``);
@@ -84,6 +83,24 @@ async function setupDatabase() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
     console.log('✅ Table role_user créée ou déjà existante');
+
+    // Créer la table des auteurs
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS authors (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL UNIQUE,
+        pseudo VARCHAR(50) NOT NULL,
+        description TEXT,
+        website_url VARCHAR(255) DEFAULT NULL,
+        twitter_url VARCHAR(255) DEFAULT NULL,
+        instagram_url VARCHAR(255) DEFAULT NULL,
+        status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+    console.log('✅ Table authors créée ou déjà existante');
 
     // Insérer les rôles par défaut
     const roles = [

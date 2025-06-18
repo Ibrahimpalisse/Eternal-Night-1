@@ -111,7 +111,6 @@ const Navbar = () => {
         { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
         { to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" },
         { to: "/readers", icon: <List className="w-5 h-5" />, label: "Best Readers" },
-        { to: "/join-authors", icon: <UserPlus className="w-5 h-5" />, label: "Rejoindre les auteurs" },
     ];
 
     return (
@@ -277,6 +276,20 @@ const Navbar = () => {
                                                                 <User className="w-4 h-4" />
                                                             </div>
                                                             <span>Voir le profil</span>
+                                                        </Link>
+                                                        
+                                                        <Link 
+                                                            to="/join-authors" 
+                                                            className="flex items-center space-x-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
+                                                            onClick={() => {
+                                                                setIsMoreMenuOpen(false);
+                                                                setIsMenuOpen(false);
+                                                            }}
+                                                        >
+                                                            <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-purple-500/50 transition-colors">
+                                                                <UserPlus className="w-4 h-4" />
+                                                            </div>
+                                                            <span>Rejoindre les auteurs</span>
                                                         </Link>
                                                     </div>
 

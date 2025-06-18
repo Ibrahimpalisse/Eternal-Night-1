@@ -14,6 +14,7 @@ const securityMiddleware = require('./middleware/SecurityMiddleware');
 // Importer les routes
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const authorRoutes = require('./routes/authorRoutes');
 
 // Importer le service Socket.IO
 const socketService = require('./services/socketService');
@@ -55,7 +56,7 @@ const port = process.env.PORT || 4000;
     // Utiliser les routes
     app.use('/api/auth', authRoutes);
     app.use('/api/profile', profileRoutes);
-    console.log('Routes d\'authentification et de profil configurées.');
+    app.use('/api/authors', authorRoutes);
 
     // Exemple de route basique
     app.get('/', (req, res) => {

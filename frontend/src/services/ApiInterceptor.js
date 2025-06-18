@@ -2,6 +2,19 @@ class ApiInterceptor {
   constructor() {
     this.isRefreshing = false;
     this.failedQueue = [];
+    // Configuration de l'URL de base du backend
+    this.baseURL = 'http://localhost:4000/api';
+    console.log('🔧 ApiInterceptor configuré avec baseURL:', this.baseURL);
+  }
+
+  // Helper method to build full URL
+  buildURL(url) {
+    if (url.startsWith('http')) {
+      return url; // URL absolue
+    }
+    // Ajouter le slash au début si nécessaire
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${this.baseURL}${path}`;
   }
 
   // Process the failed queue of requests after token refresh
@@ -20,13 +33,19 @@ class ApiInterceptor {
   // Enhanced fetch with automatic token refresh
   async fetchWithTokenRefresh(url, options = {}) {
     try {
+      // Build full URL
+      const fullURL = this.buildURL(url);
+      console.log('🌐 Requête API vers:', fullURL);
+      
       // Add credentials to include cookies
       const requestOptions = {
         ...options,
         credentials: 'include'
       };
 
-      let response = await fetch(url, requestOptions);
+      console.log('📤 Options de requête:', requestOptions);
+      let response = await fetch(fullURL, requestOptions);
+      console.log('📥 Réponse reçue:', response.status, response.statusText);
 
       // If we get a 401/403 and we're not already refreshing, try to refresh token
       if ((response.status === 401 || response.status === 403) && !this.isRefreshing) {
@@ -43,7 +62,7 @@ class ApiInterceptor {
 
           try {
             // Attempt to refresh the token
-            const refreshResponse = await fetch('/api/auth/refresh-token', {
+            const refreshResponse = await fetch(this.buildURL('/auth/refresh-token'), {
               method: 'POST',
               credentials: 'include',
               headers: {
@@ -56,7 +75,7 @@ class ApiInterceptor {
               this.processQueue(null, true);
 
               // Retry the original request
-              response = await fetch(url, requestOptions);
+              response = await fetch(fullURL, requestOptions);
             } else {
               // Refresh failed
               this.isRefreshing = false;
@@ -77,12 +96,13 @@ class ApiInterceptor {
           this.failedQueue.push({ resolve, reject });
         }).then(() => {
           // Retry the request after token refresh
-          return fetch(url, requestOptions);
+          return fetch(fullURL, requestOptions);
         });
       }
 
       return response;
     } catch (error) {
+      console.error('❌ Erreur dans fetchWithTokenRefresh:', error);
       throw error;
     }
   }
