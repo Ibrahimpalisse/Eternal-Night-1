@@ -29,6 +29,11 @@ const Users = () => {
   // Récupérer l'état de la sidebar depuis localStorage
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     const saved = localStorage.getItem('adminSidebarOpen');
+    const isMobileCheck = window.innerWidth < 768;
+    // Sur mobile, toujours commencer fermé, sinon utiliser la valeur sauvegardée
+    if (isMobileCheck) {
+      return false;
+    }
     return saved !== null ? JSON.parse(saved) : false;
   });
   const [isMobile, setIsMobile] = useState(false);
@@ -43,7 +48,11 @@ const Users = () => {
   const toggleSidebar = (newState) => {
     const state = newState !== undefined ? newState : !sidebarOpen;
     setSidebarOpen(state);
-    localStorage.setItem('adminSidebarOpen', JSON.stringify(state));
+    
+    // Ne sauvegarder l'état que pour desktop/tablet, pas pour mobile
+    if (!isMobile) {
+      localStorage.setItem('adminSidebarOpen', JSON.stringify(state));
+    }
   };
 
   // Hook pour détecter la taille d'écran
@@ -58,7 +67,7 @@ const Users = () => {
       
       // Sur mobile, fermer automatiquement pour une meilleure UX
       if (mobile && sidebarOpen) {
-        toggleSidebar(false);
+        setSidebarOpen(false);
       }
     };
 
@@ -69,7 +78,7 @@ const Users = () => {
     window.addEventListener('resize', handleResize);
     
     return () => window.removeEventListener('resize', handleResize);
-  }, [sidebarOpen]);
+  }, []); // Suppression de la dépendance sidebarOpen pour éviter les boucles
 
   // Calculer la marge gauche selon l'état de la sidebar et la taille d'écran
   const getContentMargin = () => {

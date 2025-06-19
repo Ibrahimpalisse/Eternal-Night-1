@@ -118,123 +118,123 @@ const SlideNav = ({ isOpen, onToggle }) => {
         />
       )}
       
-      <div className={`fixed left-0 top-0 h-full bg-gray-800/95 backdrop-blur-xl border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile && !isOpen ? '-translate-x-full' : 'translate-x-0'}`}>
-      {/* Logo */}
-      <div className={`flex items-center p-4 border-b border-white/20 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 bg-gradient-to-br from-purple-500/20 to-white/20 rounded-lg p-1.5 backdrop-blur-sm border border-white/20 transition-all duration-300 ${!isOpen ? 'hover:scale-110 hover:shadow-lg hover:shadow-purple-500/20' : ''}`}>
-            <img src={openBookLogo} alt="Night Novels" className="w-full h-full" />
-          </div>
-          {isOpen && (
-            <div className="flex flex-col">
-              <span className="text-white font-bold text-sm">Night Novels</span>
-              <span className="text-gray-400 text-xs">Admin Panel</span>
+      <div className={`fixed left-0 top-0 h-full bg-gray-800/95 backdrop-blur-xl border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}`}>
+        {/* Logo */}
+        <div className={`flex items-center p-4 border-b border-white/20 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
+          <div className="flex items-center gap-3">
+            <div className={`w-8 h-8 bg-gradient-to-br from-purple-500/20 to-white/20 rounded-lg p-1.5 backdrop-blur-sm border border-white/20 transition-all duration-300 ${!isOpen ? 'hover:scale-110 hover:shadow-lg hover:shadow-purple-500/20' : ''}`}>
+              <img src={openBookLogo} alt="Night Novels" className="w-full h-full" />
             </div>
+            {isOpen && (
+              <div className="flex flex-col">
+                <span className="text-white font-bold text-sm">Night Novels</span>
+                <span className="text-gray-400 text-xs">Admin Panel</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Bouton de fermeture en mode mobile */}
+          {isOpen && isMobile && (
+            <button
+              onClick={onToggle}
+              className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           )}
         </div>
-        
-        {/* Bouton de fermeture en mode mobile */}
-        {isOpen && isMobile && (
-          <button
-            onClick={onToggle}
-            className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {menuItems.map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={item.path}
-                end={item.path === '/admin'}
-                onClick={handleMobileNavigation}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
-                    isActive
-                      ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-white border border-purple-500/50 shadow-lg shadow-purple-500/10'
-                      : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
-                  } ${!isOpen ? 'justify-center' : ''}`
-                }
-              >
-                <span className={`flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`}>
-                  {item.icon}
-                </span>
-                {isOpen && (
-                  <>
-                    <span className="font-medium">{item.name}</span>
-                    {item.badge && (
-                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                        {item.badge}
-                      </span>
-                    )}
-                  </>
-                )}
-                
-                {/* Tooltip amélioré pour mode réduit - affiché seulement en mode réduit */}
-                {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
-                  <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
-                    <div className="flex items-center gap-2">
-                      <span>{item.name}</span>
+        {/* Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {menuItems.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  end={item.path === '/admin'}
+                  onClick={handleMobileNavigation}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-white border border-purple-500/50 shadow-lg shadow-purple-500/10'
+                        : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
+                    } ${!isOpen ? 'justify-center' : ''}`
+                  }
+                >
+                  <span className={`flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`}>
+                    {item.icon}
+                  </span>
+                  {isOpen && (
+                    <>
+                      <span className="font-medium">{item.name}</span>
                       {item.badge && (
-                        <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
+                        <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
                           {item.badge}
                         </span>
                       )}
+                    </>
+                  )}
+                  
+                  {/* Tooltip amélioré pour mode réduit - affiché seulement en mode réduit */}
+                  {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
+                    <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
+                      <div className="flex items-center gap-2">
+                        <span>{item.name}</span>
+                        {item.badge && (
+                          <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      {/* Flèche du tooltip */}
+                      <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
                     </div>
-                    {/* Flèche du tooltip */}
-                    <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
-                  </div>
-                )}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      {/* Actions du bas */}
-      <div className="p-4 border-t border-white/20">
-        <div className="space-y-2">
-          {/* Retour au site */}
-          <NavLink
-            to="/"
-            onClick={handleMobileNavigation}
-            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
-          >
-            <Home className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
-            {isOpen && <span className="font-medium">Retour au site</span>}
-            
-            {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
-              <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
-                Retour au site
-                {/* Flèche du tooltip */}
-                <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
-              </div>
-            )}
-          </NavLink>
+        {/* Actions du bas */}
+        <div className="p-4 border-t border-white/20">
+          <div className="space-y-2">
+            {/* Retour au site */}
+            <NavLink
+              to="/"
+              onClick={handleMobileNavigation}
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
+            >
+              <Home className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
+              {isOpen && <span className="font-medium">Retour au site</span>}
+              
+              {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
+                <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
+                  Retour au site
+                  {/* Flèche du tooltip */}
+                  <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
+                </div>
+              )}
+            </NavLink>
 
-          {/* Déconnexion */}
-          <button
-            onClick={handleLogout}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
-          >
-            <LogOut className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
-            {isOpen && <span className="font-medium">Déconnexion</span>}
-            
-            {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
-              <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
-                Déconnexion
-                {/* Flèche du tooltip */}
-                <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
-              </div>
-            )}
-          </button>
+            {/* Déconnexion */}
+            <button
+              onClick={handleLogout}
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
+            >
+              <LogOut className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
+              {isOpen && <span className="font-medium">Déconnexion</span>}
+              
+              {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
+                <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
+                  Déconnexion
+                  {/* Flèche du tooltip */}
+                  <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
       </div>
     </>
   );
