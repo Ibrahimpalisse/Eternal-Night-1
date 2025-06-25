@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Navigate, Routes, Route } from 'react-router-dom';
 import { SlideNav, DashboardContent, UsersContent } from '../../components/admin';
+import ContentAuthors from './ContentAuthors';
+import ChapterContent from './ChapterContent';
+import AuthorApplications from './AuthorApplications';
 import { ToastProvider } from '../../contexts/ToastContext';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { 
@@ -124,7 +127,10 @@ const Dashboard = () => {
         {/* Contenu des pages admin */}
         <Routes>
           <Route path="/" element={<DashboardContent />} />
+          <Route path="/applications" element={<AuthorApplications />} />
           <Route path="/users" element={<UsersContent />} />
+          <Route path="/authorsContent" element={<ContentAuthors />} />
+          <Route path="/chapters" element={<ChapterContent />} />
         </Routes>
       </div>
       

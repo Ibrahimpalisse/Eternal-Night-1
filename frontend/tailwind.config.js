@@ -55,6 +55,10 @@ export default {
       },
       animation: {
         "gradient-x": "gradient-x 15s ease infinite",
+        "fade-in": "fade-in 0.2s ease-out",
+        "zoom-in": "zoom-in 0.2s ease-out",
+        "slide-up": "slide-up 0.3s ease-out",
+        "bounce-subtle": "bounce-subtle 0.6s ease-out",
       },
       keyframes: {
         "gradient-x": {
@@ -66,6 +70,34 @@ export default {
             "background-size": "200% 200%",
             "background-position": "right center"
           }
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" }
+        },
+        "zoom-in": {
+          "0%": { 
+            opacity: "0",
+            transform: "scale(0.95)"
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "scale(1)"
+          }
+        },
+        "slide-up": {
+          "0%": { 
+            opacity: "0",
+            transform: "translateY(10px)"
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "translateY(0)"
+          }
+        },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" }
         }
       }
     },

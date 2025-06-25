@@ -59,6 +59,42 @@
     --chart-5: 340 75% 55%;
   }
 
+  /* Style global pour toutes les scrollbars */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: hsla(var(--background), 0.1);
+    border-radius: 10px;
+    border: 1px solid hsla(var(--border), 0.5);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--accent) / 0.6);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--accent) / 0.8);
+    transform: scale(1.05);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: hsl(var(--accent) / 1);
+    transform: scale(0.95);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   * {
     border-color: hsl(var(--border));
   }
@@ -290,4 +326,959 @@
 
 .animate-gradient-x {
   animation: gradient-x 15s ease infinite;
+}
+
+/* Règles pour empêcher le zoom automatique sur mobile */
+@layer utilities {
+  /* Empêche le zoom automatique sur iOS et Android */
+  input, 
+  textarea, 
+  select,
+  button {
+    font-size: 16px !important; /* Taille minimum pour empêcher le zoom sur iOS */
+    touch-action: manipulation; /* Empêche le double-tap zoom */
+  }
+
+  /* Spécifique pour les écrans mobiles */
+  @media (max-width: 640px) {
+    input, 
+    textarea, 
+    select,
+    button {
+      font-size: 16px !important;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    
+    /* Empêche le zoom sur focus pour les champs de saisie */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="number"],
+    textarea {
+      font-size: 16px !important;
+      -webkit-text-size-adjust: 100%;
+    }
+  }
+
+  /* Classes utilitaires pour forcer la taille de police */
+  .no-zoom {
+    font-size: 16px !important;
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .no-zoom-input {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+/* Prévention du débordement horizontal global */
+@layer utilities {
+  .prevent-overflow {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-container table {
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Assurer que les éléments flexibles ne débordent pas */
+  .flex-no-overflow {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  
+  /* Pour les grilles qui ne doivent pas déborder */
+  .grid-no-overflow {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    overflow: hidden;
+  }
+}
+
+/* Assurer que tous les conteneurs principaux ne débordent pas */
+#root {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Correction pour les pages d'administration */
+.admin-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.admin-page * {
+  box-sizing: border-box;
+}
+
+/* Correction spécifique pour mobile - très petits écrans */
+@media (max-width: 480px) {
+  .admin-page {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Assurer que tous les conteneurs respectent la largeur mobile */
+  .admin-page > * {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Conteneurs de sections */
+  .admin-page .bg-slate-800\/30,
+  .admin-page .bg-slate-800\/50 {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+  }
+  
+  /* Tableaux sur mobile */
+  .table-container {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Correction pour les très petits téléphones */
+@media (max-width: 360px) {
+  .admin-page {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  
+  /* Réduire encore plus les gaps */
+  .admin-page .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 8px;
+  }
+}
+
+/* Gestion des z-index pour éviter les conflits */
+.dropdown-menu {
+  z-index: 60 !important;
+  position: absolute;
+}
+
+/* Assurer que les dropdowns des filtres sont toujours visibles */
+.relative .absolute[class*="z-[60]"] {
+  z-index: 60 !important;
+}
+
+/* Debug pour les dropdowns cachés */
+.relative {
+  isolation: isolate;
+}
+
+.relative .absolute {
+  z-index: 60;
+}
+
+/* =================
+   DROPDOWN ANIMATIONS & STYLES
+   ================= */
+
+/* Animation moderne pour les dropdowns */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Styles pour tous les dropdowns avec portals */
+[data-dropdown-portal] {
+  animation: fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Scrollbar personnalisée pour les dropdowns */
+[data-dropdown-portal]::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-track {
+  background: rgba(71, 85, 105, 0.3);
+  border-radius: 3px;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Firefox scrollbar */
+[data-dropdown-portal] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.5) rgba(71, 85, 105, 0.3);
+}
+
+/* Comportement de scroll amélioré */
+[data-dropdown-portal] {
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+/* Styles pour les boutons de dropdown */
+.dropdown-button {
+  @apply relative bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600/50 hover:border-slate-500/50 
+         text-white rounded-xl px-4 py-3 flex items-center justify-between gap-3 cursor-pointer 
+         transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/30;
+  min-height: 48px; /* Hauteur minimale pour éviter l'écrasement */
+  min-width: 120px; /* Largeur minimale */
+}
+
+.dropdown-item {
+  @apply px-4 py-3 text-sm text-white hover:bg-slate-600/50 cursor-pointer 
+         transition-colors duration-150 flex items-center gap-3;
+  min-height: 44px; /* Hauteur minimale pour les items */
+}
+
+.dropdown-item:first-child {
+  @apply rounded-t-xl;
+}
+
+.dropdown-item:last-child {
+  @apply rounded-b-xl;
+}
+
+.dropdown-item.selected {
+  @apply bg-purple-600/30 text-purple-300;
+}
+
+/* Animations pour les dropdowns */
+[data-dropdown-portal] {
+  animation: fadeInScale 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Scrollbar personnalisée pour les dropdowns */
+[data-dropdown-portal] {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(100 116 139 / 0.5) transparent;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-thumb {
+  background-color: rgb(100 116 139 / 0.5);
+  border-radius: 3px;
+  border: none;
+}
+
+[data-dropdown-portal]::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(100 116 139 / 0.7);
+}
+
+/* Styles pour les modals améliorés */
+.modal-button-group {
+  @apply flex items-center justify-end gap-4 p-6 border-t border-slate-700/50;
+}
+
+.modal-button {
+  @apply px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/30;
+  min-height: 48px; /* Hauteur minimale pour éviter l'écrasement */
+  min-width: 120px; /* Largeur minimale */
+}
+
+.modal-button-secondary {
+  @apply modal-button border border-slate-600/50 text-gray-300 hover:text-white hover:border-slate-500/50 hover:bg-slate-700/30;
+}
+
+.modal-button-primary {
+  @apply modal-button bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600/50 disabled:cursor-not-allowed 
+         text-white shadow-lg hover:shadow-purple-500/25;
+}
+
+/* Responsive modal buttons */
+@media (max-width: 640px) {
+  .modal-button-group {
+    @apply flex-col gap-3 p-4;
+  }
+  
+  .modal-button {
+    @apply w-full py-3;
+    min-width: auto;
+  }
+}
+
+/* Amélioration des champs de formulaire dans les modals */
+.modal-form-field {
+  @apply w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white 
+         placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 
+         focus:border-purple-500/50 transition-all duration-200;
+}
+
+.modal-form-field.error {
+  @apply border-red-500/50 focus:ring-red-500/30;
+}
+
+/* Layout grid amélioré pour les modals */
+.modal-grid-responsive {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+}
+
+.modal-grid-roles {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+/* Amélioration des cartes de rôles */
+.role-card {
+  @apply relative p-4 rounded-xl border transition-all cursor-pointer;
+  min-height: 96px; /* Hauteur minimale pour éviter l'écrasement */
+}
+
+.role-card.selected {
+  @apply bg-purple-500/20 border-purple-500/50 shadow-lg shadow-purple-500/10;
+}
+
+.role-card.unselected {
+  @apply bg-slate-700/30 border-slate-600/30 hover:border-slate-500/50 hover:bg-slate-700/50;
+}
+
+/* Styles pour les switches/toggles */
+.role-toggle {
+  @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 
+         focus:outline-none focus:ring-2 focus:ring-purple-500/50;
+}
+
+.role-toggle.active {
+  @apply bg-purple-600;
+}
+
+.role-toggle.inactive {
+  @apply bg-slate-600;
+}
+
+.role-toggle-slider {
+  @apply inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200;
+}
+
+.role-toggle-slider.active {
+  @apply translate-x-6;
+}
+
+.role-toggle-slider.inactive {
+  @apply translate-x-1;
+}
+
+/* =================
+   FIN DROPDOWN STYLES
+   ================= */
+
+/* =================
+   SCROLLBAR PERSONNALISÉE MODERNE
+   ================= */
+
+/* Styles pour scrollbar personnalisée moderne avec effet violet */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) rgba(15, 23, 42, 0.3);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Webkit scrollbar pour Chrome, Safari, Edge */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+  margin: 4px 0;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.6) 0%,
+    rgba(139, 92, 246, 0.6) 50%,
+    rgba(168, 85, 247, 0.6) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.8) 0%,
+    rgba(139, 92, 246, 0.8) 50%,
+    rgba(168, 85, 247, 0.8) 100%
+  );
+  transform: scale(1.1);
+  box-shadow: 
+    0 4px 8px rgba(99, 102, 241, 0.4),
+    0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 1) 0%,
+    rgba(139, 92, 246, 1) 50%,
+    rgba(168, 85, 247, 1) 100%
+  );
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(99, 102, 241, 0.6),
+    0 0 16px rgba(99, 102, 241, 0.4);
+}
+
+/* Animation de pulse pour la scrollbar au hover */
+@keyframes scrollbar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 4px 8px rgba(99, 102, 241, 0.4),
+      0 0 12px rgba(99, 102, 241, 0.3);
+  }
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  animation: scrollbar-pulse 2s infinite ease-in-out;
+}
+
+/* Style pour la scrollbar corner */
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+}
+
+/* Effet de glow sur le container au scroll */
+@keyframes scroll-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(99, 102, 241, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 8px rgba(99, 102, 241, 0.1);
+  }
+}
+
+.custom-scrollbar:hover {
+  scrollbar-color: rgba(99, 102, 241, 0.8) rgba(15, 23, 42, 0.4);
+  animation: scroll-glow 3s infinite ease-in-out;
+}
+
+/* Styles pour une scrollbar plus fine sur mobile */
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    margin: 2px 0;
+    border-radius: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+  }
+}
+
+/* Styles pour tablettes */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Amélioration de la performance de scroll */
+.custom-scrollbar {
+  will-change: scroll-position;
+  contain: layout style paint;
+}
+
+/* =================
+   SCROLLBAR ORANGE POUR SEARCH HISTORY
+   ================= */
+
+/* Styles pour scrollbar personnalisée avec thème orange pour le modal de recherche */
+.search-history-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(249, 115, 22, 0.5) rgba(15, 23, 42, 0.3);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Webkit scrollbar pour Chrome, Safari, Edge */
+.search-history-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.search-history-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+  margin: 4px 0;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.search-history-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.6) 0%,
+    rgba(251, 146, 60, 0.6) 50%,
+    rgba(253, 186, 116, 0.6) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+}
+
+.search-history-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.8) 0%,
+    rgba(251, 146, 60, 0.8) 50%,
+    rgba(253, 186, 116, 0.8) 100%
+  );
+  transform: scale(1.1);
+  box-shadow: 
+    0 4px 8px rgba(249, 115, 22, 0.4),
+    0 0 12px rgba(249, 115, 22, 0.3);
+}
+
+.search-history-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 1) 0%,
+    rgba(251, 146, 60, 1) 50%,
+    rgba(253, 186, 116, 1) 100%
+  );
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(249, 115, 22, 0.6),
+    0 0 16px rgba(249, 115, 22, 0.4);
+}
+
+/* Animation de pulse pour la scrollbar au hover avec thème orange */
+@keyframes orange-scrollbar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 4px 8px rgba(249, 115, 22, 0.4),
+      0 0 12px rgba(249, 115, 22, 0.3);
+  }
+}
+
+.search-history-scrollbar:hover::-webkit-scrollbar-thumb {
+  animation: orange-scrollbar-pulse 2s infinite ease-in-out;
+}
+
+/* Style pour la scrollbar corner */
+.search-history-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+}
+
+/* Effet de glow orange sur le container au scroll */
+@keyframes orange-scroll-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(249, 115, 22, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 8px rgba(249, 115, 22, 0.1);
+  }
+}
+
+.search-history-scrollbar:hover {
+  scrollbar-color: rgba(249, 115, 22, 0.8) rgba(15, 23, 42, 0.4);
+  animation: orange-scroll-glow 3s infinite ease-in-out;
+}
+
+/* Styles pour une scrollbar plus fine sur mobile */
+@media (max-width: 768px) {
+  .search-history-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .search-history-scrollbar::-webkit-scrollbar-track {
+    margin: 2px 0;
+    border-radius: 8px;
+  }
+  
+  .search-history-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+  }
+}
+
+/* Styles pour tablettes */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .search-history-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Amélioration de la performance de scroll */
+.search-history-scrollbar {
+  will-change: scroll-position;
+  contain: layout style paint;
+}
+
+/* =================
+   SCROLLBAR VIOLET POUR CHAPTER EDIT MODAL
+   ================= */
+
+/* Styles pour scrollbar personnalisée avec thème violet pour le modal de modification des chapitres */
+.chapter-edit-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) rgba(15, 23, 42, 0.3);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Webkit scrollbar pour Chrome, Safari, Edge */
+.chapter-edit-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.chapter-edit-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+  margin: 4px 0;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.chapter-edit-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.6) 0%,
+    rgba(168, 85, 247, 0.6) 50%,
+    rgba(192, 132, 252, 0.6) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+}
+
+.chapter-edit-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.8) 0%,
+    rgba(168, 85, 247, 0.8) 50%,
+    rgba(192, 132, 252, 0.8) 100%
+  );
+  transform: scale(1.1);
+  box-shadow: 
+    0 4px 8px rgba(139, 92, 246, 0.4),
+    0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+.chapter-edit-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 1) 0%,
+    rgba(168, 85, 247, 1) 50%,
+    rgba(192, 132, 252, 1) 100%
+  );
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(139, 92, 246, 0.6),
+    0 0 16px rgba(139, 92, 246, 0.4);
+}
+
+/* Animation de pulse pour la scrollbar au hover avec thème violet */
+@keyframes purple-scrollbar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 4px 8px rgba(139, 92, 246, 0.4),
+      0 0 12px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.chapter-edit-scrollbar:hover::-webkit-scrollbar-thumb {
+  animation: purple-scrollbar-pulse 2s infinite ease-in-out;
+}
+
+/* Style pour la scrollbar corner */
+.chapter-edit-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 12px;
+}
+
+/* Effet de glow violet sur le container au scroll */
+@keyframes purple-scroll-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(139, 92, 246, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 8px rgba(139, 92, 246, 0.1);
+  }
+}
+
+.chapter-edit-scrollbar:hover {
+  scrollbar-color: rgba(139, 92, 246, 0.8) rgba(15, 23, 42, 0.4);
+  animation: purple-scroll-glow 3s infinite ease-in-out;
+}
+
+/* Styles pour une scrollbar plus fine sur mobile */
+@media (max-width: 768px) {
+  .chapter-edit-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .chapter-edit-scrollbar::-webkit-scrollbar-track {
+    margin: 2px 0;
+    border-radius: 8px;
+  }
+  
+  .chapter-edit-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+  }
+}
+
+/* Styles pour tablettes */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .chapter-edit-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Amélioration de la performance de scroll */
+.chapter-edit-scrollbar {
+  will-change: scroll-position;
+  contain: layout style paint;
+}
+
+/* =================
+   SCROLLBAR POUR CANDIDATURES D'AUTEURS
+   ================= */
+
+/* Styles pour scrollbar personnalisée avec thème violet pour le modal de candidatures d'auteurs */
+.comments-history-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.6) rgba(71, 85, 105, 0.2);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Webkit scrollbar pour Chrome, Safari, Edge */
+.comments-history-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.comments-history-scrollbar::-webkit-scrollbar-track {
+  background: rgba(71, 85, 105, 0.2);
+  border-radius: 12px;
+  margin: 4px 0;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.comments-history-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.6) 0%,
+    rgba(139, 92, 246, 0.6) 50%,
+    rgba(168, 85, 247, 0.6) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
+  transform: translateZ(0);
+  will-change: transform, background, box-shadow;
+}
+
+.comments-history-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.8) 0%,
+    rgba(139, 92, 246, 0.8) 50%,
+    rgba(168, 85, 247, 0.8) 100%
+  );
+  transform: scale(1.1) translateZ(0);
+  box-shadow: 
+    0 4px 8px rgba(124, 58, 237, 0.4),
+    0 0 12px rgba(124, 58, 237, 0.3);
+}
+
+.comments-history-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 1) 0%,
+    rgba(139, 92, 246, 1) 50%,
+    rgba(168, 85, 247, 1) 100%
+  );
+  transform: scale(1.05) translateZ(0);
+  box-shadow: 
+    0 6px 12px rgba(124, 58, 237, 0.6),
+    0 0 16px rgba(124, 58, 237, 0.4);
+}
+
+/* Animation de pulse pour la scrollbar au hover avec thème violet candidatures */
+@keyframes comments-scrollbar-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 4px 8px rgba(124, 58, 237, 0.4),
+      0 0 12px rgba(124, 58, 237, 0.3);
+  }
+}
+
+.comments-history-scrollbar:hover::-webkit-scrollbar-thumb {
+  animation: comments-scrollbar-pulse 2s infinite ease-in-out;
+}
+
+/* Style pour la scrollbar corner */
+.comments-history-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(71, 85, 105, 0.2);
+  border-radius: 12px;
+}
+
+/* Effet de glow violet sur le container au scroll */
+@keyframes comments-scroll-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 rgba(124, 58, 237, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 8px rgba(124, 58, 237, 0.1);
+  }
+}
+
+.comments-history-scrollbar:hover {
+  scrollbar-color: rgba(124, 58, 237, 0.8) rgba(71, 85, 105, 0.4);
+  animation: comments-scroll-glow 3s infinite ease-in-out;
+}
+
+/* Styles pour une scrollbar plus fine sur mobile */
+@media (max-width: 768px) {
+  .comments-history-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .comments-history-scrollbar::-webkit-scrollbar-track {
+    margin: 2px 0;
+    border-radius: 8px;
+  }
+  
+  .comments-history-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+  }
+}
+
+/* Styles pour tablettes */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .comments-history-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+/* Amélioration de la performance de scroll avec GPU acceleration */
+.comments-history-scrollbar {
+  will-change: scroll-position;
+  contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* =================
+   FIN SCROLLBAR STYLES
+   ================= */
+
+/* =================
+   ANIMATION POUR ACTION MENU
+   ================= */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }

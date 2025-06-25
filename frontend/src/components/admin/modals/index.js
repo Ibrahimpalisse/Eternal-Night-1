@@ -1,0 +1,11 @@
+// Export all admin modals for easier imports
+export { default as ChapterDetailsModal } from './ChapterDetailsModal';
+export { default as ChapterEditModal } from './ChapterEditModal';
+export { DetailsModal, EditModal, QuickActionModal } from './AuthorContentModals'; 
+export { default as ApprovalConfirmationDialog } from './ApprovalConfirmationDialog';
+export { default as RejectionDialog } from './RejectionDialog';
+export { default as BlockDialog } from './BlockDialog';
+export { default as UnblockDialog } from './UnblockDialog';
+export { default as DeleteDialog } from './DeleteDialog';
+export { default as ApplicationHistoryModal } from './ApplicationHistoryModal';
+export { default as GlobalApplicationHistoryModal } from './GlobalApplicationHistoryModal'; 

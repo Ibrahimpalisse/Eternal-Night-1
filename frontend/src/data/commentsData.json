@@ -1,0 +1,662 @@
+{
+  "comments": [
+    {
+      "id": 1,
+      "content": "Excellent chapitre ! L'intrigue se développe parfaitement et les personnages sont très bien développés.",
+      "type": "chapter",
+      "targetTitle": "Chapter 1354: Heavenly Sovereign Heaven and Earth Soul",
+      "targetId": 1354,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-21T14:30:00Z",
+      "status": "visible",
+      "likes": 15,
+      "replies": 3,
+      "reported": false,
+      "likedBy": [
+        { "id": 1, "name": "Pierre Martin", "avatar": "PM", "date": "2024-01-21T14:45:00Z" },
+        { "id": 2, "name": "Sophie Dubois", "avatar": "SD", "date": "2024-01-21T16:20:00Z" },
+        { "id": 3, "name": "Marc Laurent", "avatar": "ML", "date": "2024-01-21T16:35:00Z" },
+        { "id": 4, "name": "Emma Rousseau", "avatar": "ER", "date": "2024-01-21T18:30:00Z" },
+        { "id": 5, "name": "David Leroy", "avatar": "DL", "date": "2024-01-21T19:15:00Z" },
+        { "id": 6, "name": "Alice Martin", "avatar": "AM", "date": "2024-01-21T20:45:00Z" },
+        { "id": 7, "name": "Bob Dupont", "avatar": "BD", "date": "2024-01-22T08:30:00Z" },
+        { "id": 8, "name": "Marie Legrand", "avatar": "MG", "date": "2024-01-22T09:15:00Z" },
+        { "id": 9, "name": "Thomas Petit", "avatar": "TP", "date": "2024-01-22T11:20:00Z" },
+        { "id": 10, "name": "Julie Roux", "avatar": "JR", "date": "2024-01-22T13:45:00Z" },
+        { "id": 11, "name": "Nicolas Blanc", "avatar": "NB", "date": "2024-01-22T14:10:00Z" },
+        { "id": 12, "name": "Camille Durand", "avatar": "CD", "date": "2024-01-22T14:20:00Z" },
+        { "id": 13, "name": "Lucas Martin", "avatar": "LM", "date": "2024-01-22T15:30:00Z" },
+        { "id": 14, "name": "Isabelle Dumont", "avatar": "ID", "date": "2024-01-22T16:15:00Z" },
+        { "id": 15, "name": "Kevin Leblanc", "avatar": "KL", "date": "2024-01-22T17:00:00Z" }
+      ]
+    },
+    {
+      "id": 2,
+      "content": "J'aimerais voir plus de développement sur ce personnage secondaire.",
+      "type": "chapter",
+      "targetTitle": "Chapter 1355: The Jade Dew Mystery",
+      "targetId": 1355,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-20T16:45:00Z",
+      "status": "visible",
+      "likes": 8,
+      "replies": 1,
+      "reported": false,
+      "likedBy": [
+        { "id": 16, "name": "François Dupuis", "avatar": "FD", "date": "2024-01-20T17:00:00Z" },
+        { "id": 17, "name": "Sandra Moreau", "avatar": "SM", "date": "2024-01-20T19:30:00Z" },
+        { "id": 18, "name": "Vincent Legrand", "avatar": "VL", "date": "2024-01-21T08:15:00Z" },
+        { "id": 19, "name": "Amélie Roussel", "avatar": "AR", "date": "2024-01-21T10:20:00Z" },
+        { "id": 20, "name": "Maxime Blanc", "avatar": "MB", "date": "2024-01-21T13:45:00Z" },
+        { "id": 21, "name": "Caroline Petit", "avatar": "CP", "date": "2024-01-21T15:45:00Z" },
+        { "id": 22, "name": "Julien Martin", "avatar": "JM", "date": "2024-01-21T17:30:00Z" },
+        { "id": 23, "name": "Patricia Durand", "avatar": "PD", "date": "2024-01-21T19:15:00Z" }
+      ]
+    },
+    {
+      "id": 3,
+      "content": "L'auteur a vraiment du talent ! Merci pour ce roman captivant.",
+      "type": "novel",
+      "targetTitle": "Les Chroniques d'Eldoria",
+      "targetId": 1,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-19T10:15:00Z",
+      "status": "visible",
+      "likes": 23,
+      "replies": 7,
+      "reported": false,
+      "likedBy": [
+        { "id": 24, "name": "Benjamin Roux", "avatar": "BR", "date": "2024-01-19T10:30:00Z" },
+        { "id": 25, "name": "Sylvie Moreau", "avatar": "SM", "date": "2024-01-19T11:15:00Z" },
+        { "id": 26, "name": "Antoine Girard", "avatar": "AG", "date": "2024-01-19T12:45:00Z" },
+        { "id": 27, "name": "Céline Lefebvre", "avatar": "CL", "date": "2024-01-19T13:20:00Z" },
+        { "id": 28, "name": "Olivier Dubois", "avatar": "OD", "date": "2024-01-19T15:20:00Z" },
+        { "id": 29, "name": "Martine Blanc", "avatar": "MB", "date": "2024-01-19T16:30:00Z" },
+        { "id": 30, "name": "Gérard Rousseau", "avatar": "GR", "date": "2024-01-19T17:45:00Z" },
+        { "id": 31, "name": "Nadia Laurent", "avatar": "NL", "date": "2024-01-19T18:10:00Z" },
+        { "id": 32, "name": "Fabrice Dumont", "avatar": "FD", "date": "2024-01-19T19:25:00Z" },
+        { "id": 33, "name": "Auteur - Claire Rousseau", "avatar": "CR", "date": "2024-01-20T08:30:00Z", "isAuthor": true },
+        { "id": 34, "name": "Simon Berger", "avatar": "SB", "date": "2024-01-20T10:45:00Z" },
+        { "id": 35, "name": "Vanessa Martin", "avatar": "VM", "date": "2024-01-20T12:30:00Z" },
+        { "id": 36, "name": "Philippe Noir", "avatar": "PN", "date": "2024-01-20T14:15:00Z" },
+        { "id": 37, "name": "Sandrine Vert", "avatar": "SV", "date": "2024-01-20T16:15:00Z" },
+        { "id": 38, "name": "Romain Bleu", "avatar": "RB", "date": "2024-01-20T18:20:00Z" },
+        { "id": 39, "name": "Estelle Rose", "avatar": "ER", "date": "2024-01-20T20:10:00Z" },
+        { "id": 40, "name": "Jérôme Gris", "avatar": "JG", "date": "2024-01-21T09:30:00Z" },
+        { "id": 41, "name": "Audrey Jaune", "avatar": "AJ", "date": "2024-01-21T11:20:00Z" },
+        { "id": 42, "name": "Christophe Orange", "avatar": "CO", "date": "2024-01-21T13:45:00Z" },
+        { "id": 43, "name": "Delphine Violet", "avatar": "DV", "date": "2024-01-21T15:20:00Z" },
+        { "id": 44, "name": "Hervé Cyan", "avatar": "HC", "date": "2024-01-21T17:10:00Z" },
+        { "id": 45, "name": "Laetitia Magenta", "avatar": "LM", "date": "2024-01-21T19:30:00Z" },
+        { "id": 46, "name": "Stéphane Indigo", "avatar": "SI", "date": "2024-01-21T21:15:00Z" }
+      ]
+    },
+    {
+      "id": 4,
+      "content": "Ce passage était confus, pouvez-vous clarifier ?",
+      "type": "chapter",
+      "targetTitle": "Chapter 1353: The Ancient Powers",
+      "targetId": 1353,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-18T20:22:00Z",
+      "status": "visible",
+      "likes": 4,
+      "replies": 2,
+      "reported": false
+    },
+    {
+      "id": 5,
+      "content": "Commentaire inapproprié qui a été signalé",
+      "type": "chapter",
+      "targetTitle": "Chapter 1352: Battle of Destinies",
+      "targetId": 1352,
+      "romanTitle": "Cyberpunk 2177",
+      "date": "2024-01-17T12:08:00Z",
+      "status": "hidden",
+      "likes": 0,
+      "replies": 0,
+      "reported": true
+    },
+    {
+      "id": 6,
+      "content": "Vivement la suite ! Cette histoire est addictive.",
+      "type": "novel",
+      "targetTitle": "Cyberpunk 2177",
+      "targetId": 2,
+      "romanTitle": "Cyberpunk 2177",
+      "date": "2024-01-16T09:33:00Z",
+      "status": "visible",
+      "likes": 12,
+      "replies": 4,
+      "reported": false
+    },
+    {
+      "id": 7,
+      "content": "Les descriptions sont magnifiques, on se croirait vraiment dans ce monde fantastique !",
+      "type": "chapter",
+      "targetTitle": "Chapter 1356: The Crystal Prophecy",
+      "targetId": 1356,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-15T14:20:00Z",
+      "status": "visible",
+      "likes": 18,
+      "replies": 5,
+      "reported": false
+    },
+    {
+      "id": 8,
+      "content": "L'évolution du personnage principal est très bien écrite.",
+      "type": "chapter",
+      "targetTitle": "Chapter 1357: Shadows and Light",
+      "targetId": 1357,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-14T11:45:00Z",
+      "status": "visible",
+      "likes": 14,
+      "replies": 2,
+      "reported": false
+    },
+    {
+      "id": 9,
+      "content": "Petit problème de cohérence dans ce chapitre, mais sinon très bon !",
+      "type": "chapter",
+      "targetTitle": "Chapter 1358: The Final Stand",
+      "targetId": 1358,
+      "romanTitle": "Cyberpunk 2177",
+      "date": "2024-01-13T16:30:00Z",
+      "status": "visible",
+      "likes": 7,
+      "replies": 1,
+      "reported": false
+    },
+    {
+      "id": 10,
+      "content": "Ce roman mérite plus de reconnaissance ! Partagez-le !",
+      "type": "novel",
+      "targetTitle": "Les Chroniques d'Eldoria",
+      "targetId": 1,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-12T08:15:00Z",
+      "status": "visible",
+      "likes": 25,
+      "replies": 8,
+      "reported": false
+    },
+    {
+      "id": 11,
+      "content": "La twist de la fin était complètement inattendue ! Bravo !",
+      "type": "chapter",
+      "targetTitle": "Chapter 1359: Revelations",
+      "targetId": 1359,
+      "romanTitle": "Cyberpunk 2177",
+      "date": "2024-01-11T19:50:00Z",
+      "status": "visible",
+      "likes": 31,
+      "replies": 12,
+      "reported": false,
+      "likedBy": [
+        { "id": 47, "name": "Gabriel Roussel", "avatar": "GR", "date": "2024-01-11T20:05:00Z" },
+        { "id": 48, "name": "Auteur - Alex Chen", "avatar": "AC", "date": "2024-01-11T20:20:00Z", "isAuthor": true },
+        { "id": 49, "name": "Lucie Bernard", "avatar": "LB", "date": "2024-01-11T21:30:00Z" },
+        { "id": 50, "name": "Vincent Legrand", "avatar": "VL", "date": "2024-01-11T22:15:00Z" },
+        { "id": 51, "name": "Amélie Roussel", "avatar": "AR", "date": "2024-01-11T23:15:00Z" },
+        { "id": 52, "name": "Maxime Blanc", "avatar": "MB", "date": "2024-01-12T06:30:00Z" },
+        { "id": 53, "name": "Caroline Petit", "avatar": "CP", "date": "2024-01-12T07:20:00Z" },
+        { "id": 54, "name": "Sandra Moreau", "avatar": "SM", "date": "2024-01-12T08:45:00Z" },
+        { "id": 55, "name": "François Dupuis", "avatar": "FD", "date": "2024-01-12T10:15:00Z" },
+        { "id": 56, "name": "Patricia Durand", "avatar": "PD", "date": "2024-01-12T11:30:00Z" },
+        { "id": 57, "name": "Benjamin Roux", "avatar": "BR", "date": "2024-01-12T12:45:00Z" },
+        { "id": 58, "name": "Sylvie Moreau", "avatar": "SM", "date": "2024-01-12T14:20:00Z" },
+        { "id": 59, "name": "Antoine Girard", "avatar": "AG", "date": "2024-01-12T15:45:00Z" },
+        { "id": 60, "name": "Céline Lefebvre", "avatar": "CL", "date": "2024-01-12T16:30:00Z" },
+        { "id": 61, "name": "Olivier Dubois", "avatar": "OD", "date": "2024-01-12T18:10:00Z" },
+        { "id": 62, "name": "Martine Blanc", "avatar": "MB", "date": "2024-01-12T19:25:00Z" },
+        { "id": 63, "name": "Gérard Rousseau", "avatar": "GR", "date": "2024-01-12T20:40:00Z" },
+        { "id": 64, "name": "Nadia Laurent", "avatar": "NL", "date": "2024-01-12T21:55:00Z" },
+        { "id": 65, "name": "Fabrice Dumont", "avatar": "FD", "date": "2024-01-13T08:15:00Z" },
+        { "id": 66, "name": "Simon Berger", "avatar": "SB", "date": "2024-01-13T09:30:00Z" },
+        { "id": 67, "name": "Vanessa Martin", "avatar": "VM", "date": "2024-01-13T10:45:00Z" },
+        { "id": 68, "name": "Philippe Noir", "avatar": "PN", "date": "2024-01-13T12:20:00Z" },
+        { "id": 69, "name": "Sandrine Vert", "avatar": "SV", "date": "2024-01-13T13:35:00Z" },
+        { "id": 70, "name": "Romain Bleu", "avatar": "RB", "date": "2024-01-13T14:50:00Z" },
+        { "id": 71, "name": "Estelle Rose", "avatar": "ER", "date": "2024-01-13T15:25:00Z" },
+        { "id": 72, "name": "Jérôme Gris", "avatar": "JG", "date": "2024-01-13T16:10:00Z" },
+        { "id": 73, "name": "Audrey Jaune", "avatar": "AJ", "date": "2024-01-13T16:45:00Z" },
+        { "id": 74, "name": "Christophe Orange", "avatar": "CO", "date": "2024-01-13T17:20:00Z" },
+        { "id": 75, "name": "Delphine Violet", "avatar": "DV", "date": "2024-01-13T18:35:00Z" },
+        { "id": 76, "name": "Hervé Cyan", "avatar": "HC", "date": "2024-01-13T19:10:00Z" },
+        { "id": 77, "name": "Laetitia Magenta", "avatar": "LM", "date": "2024-01-13T20:45:00Z" }
+      ]
+    },
+    {
+      "id": 12,
+      "content": "Commentaire en attente de modération",
+      "type": "chapter",
+      "targetTitle": "Chapter 1360: New Beginnings",
+      "targetId": 1360,
+      "romanTitle": "Les Chroniques d'Eldoria",
+      "date": "2024-01-10T13:25:00Z",
+      "status": "pending",
+      "likes": 2,
+      "replies": 0,
+      "reported": false
+    }
+  ],
+  "replies": {
+    "1": [
+      {
+        "id": 101,
+        "parentId": 1,
+        "author": "Pierre Martin",
+        "content": "Je suis totalement d'accord ! Ce chapitre était vraiment captivant.",
+        "date": "2024-01-21T15:15:00Z",
+        "likes": 5,
+        "likedBy": [
+          { "id": 101, "name": "Sophie Dubois", "avatar": "SD", "date": "2024-01-21T15:20:00Z" },
+          { "id": 102, "name": "Marc Laurent", "avatar": "ML", "date": "2024-01-21T15:25:00Z" },
+          { "id": 103, "name": "Emma Rousseau", "avatar": "ER", "date": "2024-01-21T16:10:00Z" },
+          { "id": 104, "name": "David Leroy", "avatar": "DL", "date": "2024-01-21T17:05:00Z" },
+          { "id": 105, "name": "Alice Martin", "avatar": "AM", "date": "2024-01-21T18:30:00Z" }
+        ]
+      },
+      {
+        "id": 102,
+        "parentId": 1,
+        "author": "Sophie Dubois",
+        "content": "L'évolution du personnage principal dans ce chapitre est remarquable.",
+        "date": "2024-01-21T16:22:00Z",
+        "likes": 8,
+        "likedBy": [
+          { "id": 106, "name": "Pierre Martin", "avatar": "PM", "date": "2024-01-21T16:30:00Z" },
+          { "id": 107, "name": "Marc Laurent", "avatar": "ML", "date": "2024-01-21T16:45:00Z" },
+          { "id": 108, "name": "Emma Rousseau", "avatar": "ER", "date": "2024-01-21T17:20:00Z" },
+          { "id": 109, "name": "Bob Dupont", "avatar": "BD", "date": "2024-01-21T18:15:00Z" },
+          { "id": 110, "name": "Marie Legrand", "avatar": "MG", "date": "2024-01-21T19:30:00Z" },
+          { "id": 111, "name": "Thomas Petit", "avatar": "TP", "date": "2024-01-21T20:10:00Z" },
+          { "id": 112, "name": "Julie Roux", "avatar": "JR", "date": "2024-01-22T08:45:00Z" },
+          { "id": 113, "name": "Nicolas Blanc", "avatar": "NB", "date": "2024-01-22T10:20:00Z" }
+        ]
+      },
+      {
+        "id": 103,
+        "parentId": 1,
+        "author": "Marc Laurent",
+        "content": "Merci pour cette analyse ! J'avais raté certains détails.",
+        "date": "2024-01-21T18:45:00Z",
+        "likes": 2,
+        "likedBy": [
+          { "id": 114, "name": "Sophie Dubois", "avatar": "SD", "date": "2024-01-21T19:00:00Z" },
+          { "id": 115, "name": "Pierre Martin", "avatar": "PM", "date": "2024-01-21T19:30:00Z" }
+        ]
+      }
+    ],
+    "2": [
+      {
+        "id": 104,
+        "parentId": 2,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci pour votre retour ! Ce personnage aura effectivement plus de développement dans les prochains chapitres.",
+        "date": "2024-01-20T17:30:00Z",
+        "likes": 12,
+        "likedBy": [
+          { "id": 116, "name": "François Dupuis", "avatar": "FD", "date": "2024-01-20T17:45:00Z" },
+          { "id": 117, "name": "Sandra Moreau", "avatar": "SM", "date": "2024-01-20T18:20:00Z" },
+          { "id": 118, "name": "Vincent Legrand", "avatar": "VL", "date": "2024-01-20T19:15:00Z" },
+          { "id": 119, "name": "Amélie Roussel", "avatar": "AR", "date": "2024-01-20T20:30:00Z" },
+          { "id": 120, "name": "Maxime Blanc", "avatar": "MB", "date": "2024-01-21T08:45:00Z" },
+          { "id": 121, "name": "Caroline Petit", "avatar": "CP", "date": "2024-01-21T09:20:00Z" },
+          { "id": 122, "name": "Julien Martin", "avatar": "JM", "date": "2024-01-21T10:15:00Z" },
+          { "id": 123, "name": "Patricia Durand", "avatar": "PD", "date": "2024-01-21T11:30:00Z" },
+          { "id": 124, "name": "Benjamin Roux", "avatar": "BR", "date": "2024-01-21T12:45:00Z" },
+          { "id": 125, "name": "Sylvie Moreau", "avatar": "SM", "date": "2024-01-21T14:10:00Z" },
+          { "id": 126, "name": "Antoine Girard", "avatar": "AG", "date": "2024-01-21T15:30:00Z" },
+          { "id": 127, "name": "Céline Lefebvre", "avatar": "CL", "date": "2024-01-21T16:45:00Z" }
+        ]
+      }
+    ],
+    "3": [
+      {
+        "id": 105,
+        "parentId": 3,
+        "author": "Emma Dubois",
+        "content": "Je partage votre avis ! Ce roman est vraiment exceptionnel.",
+        "date": "2024-01-19T11:30:00Z",
+        "likes": 6
+      },
+      {
+        "id": 106,
+        "parentId": 3,
+        "author": "David Leroy",
+        "content": "L'univers créé par l'auteur est vraiment immersif.",
+        "date": "2024-01-19T14:20:00Z",
+        "likes": 4
+      },
+      {
+        "id": 107,
+        "parentId": 3,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci beaucoup pour vos encouragements ! Cela me motive énormément.",
+        "date": "2024-01-19T19:45:00Z",
+        "likes": 15
+      },
+      {
+        "id": 108,
+        "parentId": 3,
+        "author": "Alice Martin",
+        "content": "Vivement la suite ! Vous avez un talent incroyable.",
+        "date": "2024-01-19T20:15:00Z",
+        "likes": 7
+      },
+      {
+        "id": 109,
+        "parentId": 3,
+        "author": "Bob Dupont",
+        "content": "Ce roman mérite vraiment plus de visibilité !",
+        "date": "2024-01-20T08:30:00Z",
+        "likes": 9
+      },
+      {
+        "id": 110,
+        "parentId": 3,
+        "author": "Marie Legrand",
+        "content": "J'ai dévoré tous les chapitres disponibles en une nuit !",
+        "date": "2024-01-20T22:10:00Z",
+        "likes": 11
+      },
+      {
+        "id": 111,
+        "parentId": 3,
+        "author": "Thomas Petit",
+        "content": "L'intrigue est vraiment bien ficelée, bravo !",
+        "date": "2024-01-21T09:45:00Z",
+        "likes": 3
+      }
+    ],
+    "4": [
+      {
+        "id": 112,
+        "parentId": 4,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci de me l'avoir signalé ! Je vais clarifier ce passage dans la prochaine révision.",
+        "date": "2024-01-18T21:00:00Z",
+        "likes": 6
+      },
+      {
+        "id": 113,
+        "parentId": 4,
+        "author": "Paul Moreau",
+        "content": "Je pense que le passage fait référence aux événements du chapitre précédent.",
+        "date": "2024-01-19T08:15:00Z",
+        "likes": 3
+      }
+    ],
+    "6": [
+      {
+        "id": 114,
+        "parentId": 6,
+        "author": "Julie Roux",
+        "content": "Pareil ! J'attends avec impatience chaque nouveau chapitre.",
+        "date": "2024-01-16T10:45:00Z",
+        "likes": 8
+      },
+      {
+        "id": 115,
+        "parentId": 6,
+        "author": "Nicolas Blanc",
+        "content": "Cette série est vraiment addictive, impossible de s'arrêter !",
+        "date": "2024-01-16T14:20:00Z",
+        "likes": 5
+      },
+      {
+        "id": 116,
+        "parentId": 6,
+        "author": "Auteur - Alex Chen",
+        "content": "Merci pour votre soutien ! Le prochain chapitre arrive bientôt.",
+        "date": "2024-01-16T18:30:00Z",
+        "likes": 12
+      },
+      {
+        "id": 117,
+        "parentId": 6,
+        "author": "Camille Durand",
+        "content": "L'univers cyberpunk est vraiment bien construit dans cette histoire.",
+        "date": "2024-01-17T07:50:00Z",
+        "likes": 7
+      }
+    ],
+    "7": [
+      {
+        "id": 118,
+        "parentId": 7,
+        "author": "Lucas Martin",
+        "content": "Les descriptions sont effectivement magnifiques ! On visualise parfaitement les scènes.",
+        "date": "2024-01-15T15:30:00Z",
+        "likes": 6
+      },
+      {
+        "id": 119,
+        "parentId": 7,
+        "author": "Isabelle Dumont",
+        "content": "L'auteur a vraiment un don pour créer des atmosphères immersives.",
+        "date": "2024-01-15T17:45:00Z",
+        "likes": 4
+      },
+      {
+        "id": 120,
+        "parentId": 7,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci ! J'essaie toujours de créer des images vivantes avec mes mots.",
+        "date": "2024-01-15T20:20:00Z",
+        "likes": 9
+      },
+      {
+        "id": 121,
+        "parentId": 7,
+        "author": "Kevin Leblanc",
+        "content": "Ce chapitre était particulièrement visuel, j'ai adoré !",
+        "date": "2024-01-16T06:15:00Z",
+        "likes": 5
+      },
+      {
+        "id": 122,
+        "parentId": 7,
+        "author": "Nathalie Girard",
+        "content": "Vos descriptions me rappellent les grands maîtres de la fantasy !",
+        "date": "2024-01-16T11:40:00Z",
+        "likes": 8
+      }
+    ],
+    "8": [
+      {
+        "id": 123,
+        "parentId": 8,
+        "author": "Gabriel Roussel",
+        "content": "L'arc de développement du protagoniste est vraiment bien pensé.",
+        "date": "2024-01-14T13:20:00Z",
+        "likes": 7
+      },
+      {
+        "id": 124,
+        "parentId": 8,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci ! C'était important pour moi de montrer cette évolution de manière naturelle.",
+        "date": "2024-01-14T19:10:00Z",
+        "likes": 10
+      }
+    ],
+    "9": [
+      {
+        "id": 125,
+        "parentId": 9,
+        "author": "Auteur - Alex Chen",
+        "content": "Merci pour votre retour constructif ! Je vais vérifier ce point dans la prochaine révision.",
+        "date": "2024-01-13T18:15:00Z",
+        "likes": 4
+      }
+    ],
+    "10": [
+      {
+        "id": 126,
+        "parentId": 10,
+        "author": "Sandra Moreau",
+        "content": "Totalement d'accord ! J'ai partagé sur tous mes réseaux.",
+        "date": "2024-01-12T09:30:00Z",
+        "likes": 8
+      },
+      {
+        "id": 127,
+        "parentId": 10,
+        "author": "François Dupuis",
+        "content": "Ce roman mérite vraiment d'être plus connu !",
+        "date": "2024-01-12T11:45:00Z",
+        "likes": 6
+      },
+      {
+        "id": 128,
+        "parentId": 10,
+        "author": "Auteur - Claire Rousseau",
+        "content": "Merci infiniment pour votre soutien ! Cela me touche énormément.",
+        "date": "2024-01-12T14:20:00Z",
+        "likes": 12
+      },
+      {
+        "id": 129,
+        "parentId": 10,
+        "author": "Lucie Bernard",
+        "content": "J'ai recommandé à tous mes amis, ils ont adoré aussi !",
+        "date": "2024-01-12T16:30:00Z",
+        "likes": 9
+      },
+      {
+        "id": 130,
+        "parentId": 10,
+        "author": "Vincent Legrand",
+        "content": "Excellent travail, continuez comme ça !",
+        "date": "2024-01-12T19:45:00Z",
+        "likes": 5
+      },
+      {
+        "id": 131,
+        "parentId": 10,
+        "author": "Amélie Roussel",
+        "content": "Hâte de voir la suite de cette saga !",
+        "date": "2024-01-13T07:20:00Z",
+        "likes": 7
+      },
+      {
+        "id": 132,
+        "parentId": 10,
+        "author": "Maxime Blanc",
+        "content": "Les personnages sont vraiment attachants.",
+        "date": "2024-01-13T10:15:00Z",
+        "likes": 6
+      },
+      {
+        "id": 133,
+        "parentId": 10,
+        "author": "Caroline Petit",
+        "content": "L'intrigue est captivante du début à la fin !",
+        "date": "2024-01-13T15:40:00Z",
+        "likes": 8
+      }
+    ],
+    "11": [
+      {
+        "id": 134,
+        "parentId": 11,
+        "author": "Julien Martin",
+        "content": "Cette révélation m'a laissé sans voix ! Brillant !",
+        "date": "2024-01-11T20:30:00Z",
+        "likes": 15
+      },
+      {
+        "id": 135,
+        "parentId": 11,
+        "author": "Auteur - Alex Chen",
+        "content": "J'ai travaillé dur sur cette révélation, merci pour vos encouragements !",
+        "date": "2024-01-11T22:15:00Z",
+        "likes": 18
+      },
+      {
+        "id": 136,
+        "parentId": 11,
+        "author": "Patricia Durand",
+        "content": "Je n'avais absolument rien vu venir, chapeau !",
+        "date": "2024-01-12T06:45:00Z",
+        "likes": 12
+      },
+      {
+        "id": 137,
+        "parentId": 11,
+        "author": "Benjamin Roux",
+        "content": "Ce retournement de situation était parfaitement amené.",
+        "date": "2024-01-12T09:20:00Z",
+        "likes": 10
+      },
+      {
+        "id": 138,
+        "parentId": 11,
+        "author": "Sylvie Moreau",
+        "content": "J'ai relu le chapitre trois fois tellement j'étais surprise !",
+        "date": "2024-01-12T12:30:00Z",
+        "likes": 14
+      },
+      {
+        "id": 139,
+        "parentId": 11,
+        "author": "Antoine Girard",
+        "content": "Maintenant j'ai encore plus hâte de connaître la suite !",
+        "date": "2024-01-12T15:45:00Z",
+        "likes": 11
+      },
+      {
+        "id": 140,
+        "parentId": 11,
+        "author": "Céline Lefebvre",
+        "content": "Les indices étaient là depuis le début, génial !",
+        "date": "2024-01-12T18:20:00Z",
+        "likes": 13
+      },
+      {
+        "id": 141,
+        "parentId": 11,
+        "author": "Olivier Dubois",
+        "content": "Cette twist va marquer l'histoire de la science-fiction !",
+        "date": "2024-01-12T20:10:00Z",
+        "likes": 16
+      },
+      {
+        "id": 142,
+        "parentId": 11,
+        "author": "Martine Blanc",
+        "content": "Bravo pour cette écriture magistrale !",
+        "date": "2024-01-13T08:30:00Z",
+        "likes": 9
+      },
+      {
+        "id": 143,
+        "parentId": 11,
+        "author": "Gérard Rousseau",
+        "content": "Même ma femme qui ne lit jamais de SF a adoré !",
+        "date": "2024-01-13T11:15:00Z",
+        "likes": 8
+      },
+      {
+        "id": 144,
+        "parentId": 11,
+        "author": "Nadia Laurent",
+        "content": "Ce niveau d'écriture mérite vraiment un prix littéraire !",
+        "date": "2024-01-13T14:45:00Z",
+        "likes": 17
+      },
+      {
+        "id": 145,
+        "parentId": 11,
+        "author": "Fabrice Dumont",
+        "content": "L'auteur maîtrise parfaitement son art !",
+        "date": "2024-01-13T17:20:00Z",
+        "likes": 12
+      }
+    ]
+  }
+} 

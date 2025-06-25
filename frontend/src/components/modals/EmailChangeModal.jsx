@@ -10,6 +10,7 @@ import {
   DialogFooter,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { FormValidation } from '../../utils/validation';
 
 const EmailChangeModal = ({ isOpen, onClose, email, onSuccess, onResend }) => {
   const [verificationDigits, setVerificationDigits] = useState(['', '', '', '', '', '']);
@@ -50,8 +51,11 @@ const EmailChangeModal = ({ isOpen, onClose, email, onSuccess, onResend }) => {
     try {
       const code = verificationDigits.join('');
       
-      if (code.length !== 6) {
-        setVerificationError('Le code doit contenir 6 chiffres');
+      // Valider avec Zod
+      const codeValidation = FormValidation.verificationCodeSchema.safeParse(code);
+      
+      if (!codeValidation.success) {
+        setVerificationError(codeValidation.error.errors[0]?.message || 'Code de vérification invalide');
         setIsLoading(false);
         return;
       }
@@ -66,25 +70,34 @@ const EmailChangeModal = ({ isOpen, onClose, email, onSuccess, onResend }) => {
   
   // Gérer le changement de chiffre dans le code
   const handleDigitChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return;
+    // Valider chaque digit avec Zod
+    const digitValidation = FormValidation.digitSchema.safeParse(value);
     
-    const newDigits = [...verificationDigits];
-    newDigits[index] = value;
-    setVerificationDigits(newDigits);
-    
-    if (value !== '' && index < 5) {
-      const nextInput = document.getElementById(`email-digit-${index + 1}`);
-      if (nextInput) nextInput.focus();
+    if (value === '' || digitValidation.success) {
+      const newDigits = [...verificationDigits];
+      newDigits[index] = value;
+      setVerificationDigits(newDigits);
+      
+      if (value !== '' && index < 5) {
+        const nextInput = document.getElementById(`email-digit-${index + 1}`);
+        if (nextInput) nextInput.focus();
+      }
+      
+      // Valider le code complet quand tous les champs sont remplis
+      if (newDigits.every(digit => digit !== '')) {
+        const fullCode = newDigits.join('');
+        const fullCodeValidation = FormValidation.verificationCodeSchema.safeParse(fullCode);
+        
+        if (fullCodeValidation.success) {
+          setTimeout(() => {
+            const form = document.getElementById('email-verification-form');
+            if (form) form.requestSubmit();
+          }, 300);
+        }
+      }
+      
+      if (verificationError) setVerificationError('');
     }
-    
-    if (newDigits.every(digit => digit !== '') && newDigits.join('').length === 6) {
-      setTimeout(() => {
-        const form = document.getElementById('email-verification-form');
-        if (form) form.requestSubmit();
-      }, 300);
-    }
-    
-    if (verificationError) setVerificationError('');
   };
   
   // Gérer le collage du code
@@ -92,7 +105,10 @@ const EmailChangeModal = ({ isOpen, onClose, email, onSuccess, onResend }) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
     
-    if (/^\d{6}$/.test(pastedData)) {
+    // Valider le code collé avec Zod
+    const pasteValidation = FormValidation.verificationCodeSchema.safeParse(pastedData);
+    
+    if (pasteValidation.success) {
       const newDigits = pastedData.split('');
       setVerificationDigits(newDigits);
       
@@ -105,6 +121,8 @@ const EmailChangeModal = ({ isOpen, onClose, email, onSuccess, onResend }) => {
         const form = document.getElementById('email-verification-form');
         if (form) form.requestSubmit();
       }, 500);
+    } else {
+      setVerificationError('Format de code invalide');
     }
   };
   

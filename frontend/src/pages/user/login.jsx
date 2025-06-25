@@ -180,17 +180,9 @@ const Login = () => {
     <div className="min-h-screen">
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
       
-      {/* Back button - Mobile only */}
-      <div className="md:hidden w-full px-4 py-2 bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <Link to="/optionLogin" className="flex items-center text-white/80 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="text-sm">Back to options</span>
-        </Link>
-      </div>
+
       
-      <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 pt-16 md:pt-24">
+              <div className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-16 md:pt-24">
         {/* Logo and site name */}
         <div className="flex flex-col items-center mb-8 md:mb-12 animate-fade-in-down">
           <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-500/20 to-white/20 rounded-2xl p-4 backdrop-blur-sm border border-white/20 shadow-[0_8px_32px_rgb(0_0_0/0.4)] hover:scale-105 transition-all duration-500 hover:shadow-purple-500/20">

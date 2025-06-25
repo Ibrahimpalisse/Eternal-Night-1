@@ -73,13 +73,8 @@ const SlideNav = ({ isOpen, onToggle }) => {
       icon: <Users className="w-5 h-5" />
     },
     {
-      name: 'Auteurs',
-      path: '/admin/authors',
-      icon: <PenTool className="w-5 h-5" />
-    },
-    {
       name: 'Contenus',
-      path: '/admin/content',
+      path: '/admin/authorsContent',
       icon: <BookOpen className="w-5 h-5" />
     },
     {

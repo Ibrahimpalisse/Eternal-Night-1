@@ -102,6 +102,7 @@ export const getStatusIcon = (status) => {
     case 'active': return <UserCheck className="w-4 h-4 text-green-400" />;
     case 'suspended': return <UserX className="w-4 h-4 text-red-400" />;
     case 'blocked': return <EyeOff className="w-4 h-4 text-gray-400" />;
+    case 'author_suspended': return <AlertTriangle className="w-4 h-4 text-orange-400" />;
     default: return <UsersIcon className="w-4 h-4 text-gray-400" />;
   }
 };
@@ -112,6 +113,7 @@ export const getStatusBadge = (status) => {
     case 'active': return `${baseClasses} bg-green-500/20 text-green-400 border border-green-500/30`;
     case 'suspended': return `${baseClasses} bg-red-500/20 text-red-400 border border-red-500/30`;
     case 'blocked': return `${baseClasses} bg-gray-500/20 text-gray-400 border border-gray-500/30`;
+    case 'author_suspended': return `${baseClasses} bg-orange-500/20 text-orange-400 border border-orange-500/30`;
     default: return `${baseClasses} bg-gray-500/20 text-gray-400 border border-gray-500/30`;
   }
 };
@@ -121,6 +123,7 @@ export const getStatusDisplayName = (status) => {
     case 'active': return 'Activé';
     case 'suspended': return 'Suspendu'; 
     case 'blocked': return 'Bloqué';
+    case 'author_suspended': return 'Auteur Suspendu';
     default: return status;
   }
 };
@@ -263,4 +266,57 @@ export const getPageNumbers = (currentPage, totalPages, maxVisiblePages = 5) => 
   }
   
   return pages;
+};
+
+// Fonction pour obtenir le rôle principal d'un utilisateur
+export const getPrimaryRole = (roles) => {
+  // Priorité des rôles : super_admin > admin > content_editor > author > user
+  const rolePriority = {
+    super_admin: 5,
+    admin: 4,
+    content_editor: 3,
+    author: 2,
+    user: 1,
+    blocked: 0,
+    author_suspended: 0
+  };
+  
+  return roles.reduce((primary, current) => {
+    return (rolePriority[current] || 0) > (rolePriority[primary] || 0) ? current : primary;
+  }, roles[0]);
+};
+
+// Fonction pour obtenir le label d'un rôle
+export const getRoleLabel = (role) => {
+  return getRoleDisplayName(role);
+};
+
+// Fonction pour obtenir les couleurs d'un rôle
+export const getRoleColors = (role) => {
+  switch(role) {
+    case 'super_admin': return 'bg-red-600/20 text-red-500 border-red-600/30';
+    case 'admin': return 'bg-red-500/20 text-red-400 border-red-500/30';
+    case 'content_editor': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    case 'author': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    case 'user': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+    case 'blocked': return 'bg-red-500/20 text-red-400 border-red-500/30';
+    case 'author_suspended': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+  }
+};
+
+// Fonction pour obtenir les couleurs d'un statut
+export const getStatusColors = (status) => {
+  switch(status) {
+    case 'active': return 'bg-green-500/20 text-green-400 border-green-500/30';
+    case 'suspended': return 'bg-red-500/20 text-red-400 border-red-500/30';
+    case 'blocked': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    case 'author_suspended': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+  }
+};
+
+// Fonction pour obtenir le label d'un statut
+export const getStatusLabel = (status) => {
+  return getStatusDisplayName(status);
 }; 

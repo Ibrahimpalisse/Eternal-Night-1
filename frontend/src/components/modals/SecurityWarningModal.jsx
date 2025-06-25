@@ -32,28 +32,28 @@ const SecurityWarningModal = ({ isOpen, onCountdownComplete, remainingTime = 10 
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="bg-red-900/95 backdrop-blur-xl border-red-500/30 text-white w-full max-w-md security-warning-modal">
+      <DialogContent className="bg-red-900/95 backdrop-blur-xl border-red-500/30 text-white max-w-sm sm:max-w-md security-warning-modal">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-red-100 text-center">
+          <DialogTitle className="text-lg sm:text-xl font-bold text-red-100 text-center">
             ⚠️ Avertissement de Sécurité
           </DialogTitle>
         </DialogHeader>
         
-        <div className="p-6 text-center space-y-4">
-          <div className="bg-red-800/50 rounded-lg p-4 border border-red-600/30">
-            <h3 className="text-lg font-semibold text-red-100 mb-2">
+        <div className="p-4 sm:p-6 text-center space-y-3 sm:space-y-4">
+          <div className="bg-red-800/50 rounded-lg p-3 sm:p-4 border border-red-600/30">
+            <h3 className="text-base sm:text-lg font-semibold text-red-100 mb-2">
               Trop de tentatives incorrectes
             </h3>
-            <p className="text-red-200 text-sm leading-relaxed">
+            <p className="text-red-200 text-xs sm:text-sm leading-relaxed">
               Pour votre sécurité, vous allez être déconnecté automatiquement dans :
             </p>
           </div>
           
-          <div className="flex items-center justify-center space-x-2">
-            <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center">
-              <span className="text-2xl font-bold">{countdown}</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+            <div className="bg-red-600 text-white rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+              <span className="text-xl sm:text-2xl font-bold">{countdown}</span>
             </div>
-            <span className="text-red-200">seconde{countdown > 1 ? 's' : ''}</span>
+            <span className="text-red-200 text-sm sm:text-base">seconde{countdown > 1 ? 's' : ''}</span>
           </div>
           
           <div className="bg-orange-900/30 rounded-lg p-3 border border-orange-600/30">
