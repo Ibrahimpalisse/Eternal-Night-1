@@ -292,6 +292,23 @@ const Navbar = () => {
                                                             <span>Rejoindre les auteurs</span>
                                                         </Link>
 
+                                                        {/* Lien Dashboard Auteur - visible pour les auteurs */}
+                                                        {user.roles?.includes('author') && (
+                                                            <Link 
+                                                                to="/author" 
+                                                                className="flex items-center space-x-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
+                                                                onClick={() => {
+                                                                    setIsMoreMenuOpen(false);
+                                                                    setIsMenuOpen(false);
+                                                                }}
+                                                            >
+                                                                <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 group-hover:border-blue-500/50 transition-colors">
+                                                                    <BookOpen className="w-4 h-4 text-blue-400" />
+                                                                </div>
+                                                                <span>Dashboard Auteur</span>
+                                                            </Link>
+                                                        )}
+
                                                         {/* Lien Admin - visible seulement pour les super admins */}
                                                         {user.roles?.includes('super_admin') && (
                                                             <Link 
@@ -527,6 +544,20 @@ const Navbar = () => {
                                         </div>
                                         <span>Rejoindre les auteurs</span>
                                     </Link>
+
+                                    {/* Lien Dashboard Auteur Mobile - visible pour les auteurs */}
+                                    {user?.roles?.includes('author') && (
+                                        <Link 
+                                            to="/author" 
+                                            className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/author') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <div className={`p-2 rounded-lg ${isActive('/author') ? 'bg-blue-500/20 border-blue-500/50' : 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 group-hover:border-blue-500/50'} transition-colors`}>
+                                                <BookOpen className="w-4 h-4 text-blue-400" />
+                                            </div>
+                                            <span>Dashboard Auteur</span>
+                                        </Link>
+                                    )}
 
                                     {/* Lien Admin Mobile - visible seulement pour les super admins */}
                                     {user?.roles?.includes('super_admin') && (

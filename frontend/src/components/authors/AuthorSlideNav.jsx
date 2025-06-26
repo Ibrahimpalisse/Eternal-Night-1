@@ -6,18 +6,20 @@ import openBookLogo from '../../assets/open-book.svg';
 import { 
   LayoutDashboard, 
   FileText, 
-  Users, 
-  PenTool, 
   BookOpen, 
   BarChart3, 
   Settings,
   Home,
   LogOut,
   X,
-  MessageSquare
+  MessageSquare,
+  Users,
+  Edit,
+  BookMarked,
+  TrendingUp
 } from 'lucide-react';
 
-const SlideNav = ({ isOpen, onToggle }) => {
+const AuthorSlideNav = ({ isOpen, onToggle }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   
@@ -67,39 +69,43 @@ const SlideNav = ({ isOpen, onToggle }) => {
   const menuItems = [
     {
       name: 'Dashboard',
-      path: '/admin',
+      path: '/author',
       icon: <LayoutDashboard className="w-5 h-5" />
     },
     {
-      name: 'Candidatures',
-      path: '/admin/applications',
-      icon: <FileText className="w-5 h-5" />,
-      badge: '3'
-    },
-    {
-      name: 'Utilisateurs',
-      path: '/admin/users',
-      icon: <Users className="w-5 h-5" />
-    },
-    {
-      name: 'Contenus',
-      path: '/admin/authorsContent',
+      name: 'Mes Romans',
+      path: '/author/novels',
       icon: <BookOpen className="w-5 h-5" />
     },
     {
+      name: 'Chapitres',
+      path: '/author/chapters',
+      icon: <BookMarked className="w-5 h-5" />
+    },
+    {
+      name: 'Écrire',
+      path: '/author/write',
+      icon: <Edit className="w-5 h-5" />
+    },
+    {
       name: 'Commentaires',
-      path: '/admin/reported-comments',
+      path: '/author/comments',
       icon: <MessageSquare className="w-5 h-5" />,
-      badge: '5'
+      badge: '12'
+    },
+    {
+      name: 'Lecteurs',
+      path: '/author/readers',
+      icon: <Users className="w-5 h-5" />
     },
     {
       name: 'Statistiques',
-      path: '/admin/stats',
+      path: '/author/stats',
       icon: <BarChart3 className="w-5 h-5" />
     },
     {
       name: 'Paramètres',
-      path: '/admin/settings',
+      path: '/author/settings',
       icon: <Settings className="w-5 h-5" />
     }
   ];
@@ -128,17 +134,17 @@ const SlideNav = ({ isOpen, onToggle }) => {
         />
       )}
       
-      <div className={`fixed left-0 top-0 h-full bg-gray-800/95 backdrop-blur-xl border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}`}>
+      <div className={`fixed left-0 top-0 h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}`}>
         {/* Logo */}
         <div className={`flex items-center p-4 border-b border-white/20 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
           <div className="flex items-center gap-3">
-            <div className={`w-8 h-8 bg-gradient-to-br from-purple-500/20 to-white/20 rounded-lg p-1.5 backdrop-blur-sm border border-white/20 transition-all duration-300 ${!isOpen ? 'hover:scale-110 hover:shadow-lg hover:shadow-purple-500/20' : ''}`}>
+            <div className={`w-8 h-8 bg-gradient-to-br from-blue-500/20 to-white/20 rounded-lg p-1.5 backdrop-blur-sm border border-white/20 transition-all duration-300 ${!isOpen ? 'hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20' : ''}`}>
               <img src={openBookLogo} alt="Night Novels" className="w-full h-full" />
             </div>
             {isOpen && (
               <div className="flex flex-col">
                 <span className="text-white font-bold text-sm">Night Novels</span>
-                <span className="text-gray-400 text-xs">Admin Panel</span>
+                <span className="text-gray-400 text-xs">Author Panel</span>
               </div>
             )}
           </div>
@@ -161,12 +167,12 @@ const SlideNav = ({ isOpen, onToggle }) => {
               <li key={item.path}>
                 <NavLink
                   to={item.path}
-                  end={item.path === '/admin'}
+                  end={item.path === '/author'}
                   onClick={handleMobileNavigation}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                    `flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
                       isActive
-                        ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-white border border-purple-500/50 shadow-lg shadow-purple-500/10'
+                        ? 'bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white border border-blue-500/50 shadow-lg shadow-blue-500/10'
                         : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
                     } ${!isOpen ? 'justify-center' : ''}`
                   }
@@ -178,7 +184,7 @@ const SlideNav = ({ isOpen, onToggle }) => {
                     <>
                       <span className="font-medium">{item.name}</span>
                       {item.badge && (
-                        <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+                        <span className="ml-auto bg-blue-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
                           {item.badge}
                         </span>
                       )}
@@ -191,7 +197,7 @@ const SlideNav = ({ isOpen, onToggle }) => {
                       <div className="flex items-center gap-2">
                         <span>{item.name}</span>
                         {item.badge && (
-                          <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
+                          <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
                             {item.badge}
                           </span>
                         )}
@@ -213,7 +219,7 @@ const SlideNav = ({ isOpen, onToggle }) => {
             <NavLink
               to="/"
               onClick={handleMobileNavigation}
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
+              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
             >
               <Home className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
               {isOpen && <span className="font-medium">Retour au site</span>}
@@ -257,4 +263,4 @@ const SlideNav = ({ isOpen, onToggle }) => {
   );
 };
 
-export default SlideNav; 
+export default AuthorSlideNav; 

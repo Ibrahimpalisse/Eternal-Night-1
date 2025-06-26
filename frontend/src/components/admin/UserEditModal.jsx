@@ -121,11 +121,16 @@ const UserEditModal = ({ user, isOpen, onClose, onSave, previousModal }) => {
     return colors[color] || colors.gray;
   };
 
-  if (!isOpen || !user) return null;
+  if (!isOpen || !user) {
+    console.log('UserEditModal not rendering:', { isOpen, user: !!user });
+    return null;
+  }
+
+  console.log('UserEditModal is rendering for user:', user.name);
 
   const modalContent = (
     <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100000] p-2 sm:p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           handleClose();

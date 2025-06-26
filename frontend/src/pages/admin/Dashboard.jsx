@@ -5,6 +5,8 @@ import { SlideNav, DashboardContent, UsersContent } from '../../components/admin
 import ContentAuthors from './ContentAuthors';
 import ChapterContent from './ChapterContent';
 import AuthorApplications from './AuthorApplications';
+import Stats from './Stats';
+import ReportedComments from './ReportedComments';
 import { ToastProvider } from '../../contexts/ToastContext';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { 
@@ -131,6 +133,8 @@ const Dashboard = () => {
           <Route path="/users" element={<UsersContent />} />
           <Route path="/authorsContent" element={<ContentAuthors />} />
           <Route path="/chapters" element={<ChapterContent />} />
+          <Route path="/reported-comments" element={<ReportedComments />} />
+          <Route path="/stats" element={<Stats />} />
         </Routes>
       </div>
       

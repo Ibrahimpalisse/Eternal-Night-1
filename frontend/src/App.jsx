@@ -9,6 +9,7 @@ import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
 import JoinAuthors from './pages/user/JoinAuthors';
 import AdminDashboard from './pages/admin/Dashboard';
+import AuthorDashboard from './pages/author/AuthorDashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
@@ -44,6 +45,9 @@ const AppContent = () => {
       <Routes>
         {/* Route for Admin Dashboard - Sans navbar/footer */}
         <Route path="/admin/*" element={<AdminDashboard />} />
+        
+        {/* Route for Author Dashboard - Sans navbar/footer */}
+        <Route path="/author/*" element={<AuthorDashboard />} />
         
         {/* Autres routes avec layout normal */}
         <Route path="*" element={

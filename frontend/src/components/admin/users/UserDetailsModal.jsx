@@ -29,7 +29,9 @@ import {
   Instagram,
   Twitter,
   Hash,
-  FileText
+  FileText,
+  Bell,
+  Send
 } from 'lucide-react';
 import { getRoleBadges, getRoleDisplayText, getStatusIcon, getStatusBadge, getStatusDisplayName, isAuthorUser } from './userUtils.jsx';
 import UserWorksSection from './UserWorksSection';
@@ -38,6 +40,15 @@ import UserWorksSection from './UserWorksSection';
 const UserDetailsModal = ({ user, isOpen, onClose, onEdit, onDelete, previousModal }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isMounted, setIsMounted] = useState(false);
+  
+  // États pour la section notifications
+  const [notificationData, setNotificationData] = useState({
+    title: '',
+    message: '',
+    type: 'info',
+    priority: 'normal'
+  });
+  const [isSendingNotification, setIsSendingNotification] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -111,9 +122,47 @@ const UserDetailsModal = ({ user, isOpen, onClose, onEdit, onDelete, previousMod
     return classMap[role] || 'bg-gray-500/20 text-gray-400 border-gray-500/30';
   };
 
+  // Fonctions pour les notifications
+  const handleNotificationChange = (field, value) => {
+    setNotificationData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSendNotification = async () => {
+    if (!notificationData.title.trim() || !notificationData.message.trim()) {
+      alert('Le titre et le message sont requis');
+      return;
+    }
+
+    setIsSendingNotification(true);
+    try {
+      console.log('Envoi de notification à:', user.name, notificationData);
+      // Ici vous implémenteriez l'API call pour envoyer la notification
+      // await sendNotificationToUser(user.id, notificationData);
+      
+      // Simulation d'envoi
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Réinitialiser le formulaire
+      setNotificationData({
+        title: '',
+        message: '',
+        type: 'info',
+        priority: 'normal'
+      });
+      
+      alert('Notification envoyée avec succès !');
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi:', error);
+      alert('Erreur lors de l\'envoi de la notification');
+    } finally {
+      setIsSendingNotification(false);
+    }
+  };
+
   // Onglets disponibles
   const tabs = [
     { id: 'overview', label: 'Vue d\'ensemble', icon: User },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'favorites', label: 'Favoris', icon: Activity },
     { id: 'novels', label: 'Romans réalisés', icon: BookOpen },
     { id: 'settings', label: 'Paramètres', icon: Settings }
@@ -163,7 +212,11 @@ const UserDetailsModal = ({ user, isOpen, onClose, onEdit, onDelete, previousMod
           <div className="flex items-center gap-2 self-end sm:self-auto">
             {onEdit && (
               <button
-                onClick={() => onEdit(user, previousModal)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Clic sur le bouton de modification');
+                  onEdit(user, previousModal);
+                }}
                 className="p-2.5 text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-indigo-600/20 rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-110 active:scale-95 ring-1 ring-transparent hover:ring-purple-500/30"
                 title="Modifier l'utilisateur"
               >
@@ -353,6 +406,160 @@ const UserDetailsModal = ({ user, isOpen, onClose, onEdit, onDelete, previousMod
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'notifications' && (
+            <div className="space-y-4 sm:space-y-6">
+              {/* Section d'envoi de notification */}
+              <div className="bg-slate-700/30 rounded-xl p-4 sm:p-6 border border-slate-600/30">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-purple-400" />
+                  Envoyer une notification à {user.name}
+                </h3>
+                
+                <div className="space-y-4">
+                  {/* Type et priorité */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Type de notification
+                      </label>
+                      <select
+                        value={notificationData.type}
+                        onChange={(e) => handleNotificationChange('type', e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                      >
+                        <option value="info">Information</option>
+                        <option value="warning">Avertissement</option>
+                        <option value="success">Félicitations</option>
+                        <option value="error">Alerte</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Priorité
+                      </label>
+                      <select
+                        value={notificationData.priority}
+                        onChange={(e) => handleNotificationChange('priority', e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                      >
+                        <option value="low">Faible</option>
+                        <option value="normal">Normale</option>
+                        <option value="high">Élevée</option>
+                        <option value="urgent">Urgente</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Titre */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Titre de la notification
+                    </label>
+                    <input
+                      type="text"
+                      value={notificationData.title}
+                      onChange={(e) => handleNotificationChange('title', e.target.value)}
+                      placeholder="Ex: Nouveau message important"
+                      className="w-full px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                      maxLength={100}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {notificationData.title.length}/100 caractères
+                    </p>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      value={notificationData.message}
+                      onChange={(e) => handleNotificationChange('message', e.target.value)}
+                      placeholder="Votre message détaillé ici..."
+                      rows={4}
+                      className="w-full px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm resize-none"
+                      maxLength={500}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {notificationData.message.length}/500 caractères
+                    </p>
+                  </div>
+
+                  {/* Aperçu */}
+                  {(notificationData.title || notificationData.message) && (
+                    <div className="p-4 bg-slate-800/30 border border-slate-600/30 rounded-lg">
+                      <h4 className="text-sm font-medium text-gray-300 mb-2">Aperçu de la notification :</h4>
+                      <div className={`p-3 rounded-lg border-l-4 ${
+                        notificationData.type === 'info' ? 'bg-blue-500/10 border-blue-500' :
+                        notificationData.type === 'warning' ? 'bg-yellow-500/10 border-yellow-500' :
+                        notificationData.type === 'success' ? 'bg-green-500/10 border-green-500' :
+                        'bg-red-500/10 border-red-500'
+                      }`}>
+                        {notificationData.title && (
+                          <h5 className="font-medium text-white text-sm mb-1">
+                            {notificationData.title}
+                          </h5>
+                        )}
+                        {notificationData.message && (
+                          <p className="text-gray-300 text-xs">
+                            {notificationData.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bouton d'envoi */}
+                  <div className="flex justify-end pt-2">
+                    <button
+                      onClick={handleSendNotification}
+                      disabled={isSendingNotification || !notificationData.title.trim() || !notificationData.message.trim()}
+                      className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-600 disabled:to-gray-600 text-white rounded-lg font-medium text-sm transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
+                    >
+                      {isSendingNotification ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          Envoi en cours...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          Envoyer la notification
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Historique des notifications (simulation) */}
+              <div className="bg-slate-700/30 rounded-xl p-4 sm:p-6 border border-slate-600/30">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-purple-400" />
+                  Historique des notifications
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-3 bg-slate-800/30 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-white font-medium text-sm">Bienvenue sur la plateforme</span>
+                      <span className="text-xs text-gray-400">Il y a 2 jours</span>
+                    </div>
+                    <p className="text-gray-300 text-xs">Message de bienvenue automatique envoyé lors de l'inscription.</p>
+                  </div>
+                  <div className="p-3 bg-slate-800/30 rounded-lg border-l-4 border-green-500">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-white font-medium text-sm">Profil vérifié</span>
+                      <span className="text-xs text-gray-400">Il y a 1 semaine</span>
+                    </div>
+                    <p className="text-gray-300 text-xs">Votre profil a été vérifié et approuvé par notre équipe.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
