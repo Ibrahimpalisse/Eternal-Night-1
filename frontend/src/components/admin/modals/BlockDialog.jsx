@@ -37,7 +37,7 @@ const BlockDialog = ({ isOpen, onClose, application, onConfirm, isLoading }) => 
 
   const modalContent = (
     <div 
-      className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black/70 backdrop-blur-sm z-[999999] flex items-center justify-center p-4"
+      className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4"
       style={{ 
         position: 'fixed',
         inset: '0',

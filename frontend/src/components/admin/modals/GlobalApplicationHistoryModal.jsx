@@ -576,41 +576,41 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
         {/* Barre de recherche principale - Toujours visible */}
         <div className="px-4 sm:px-6 py-4 border-b border-slate-700/30">
-          <div className="relative">
+            <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
-            <input
-              type="text"
-              placeholder="Rechercher par nom, email ou pseudo..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              <input
+                type="text"
+                placeholder="Rechercher par nom, email ou pseudo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-slate-800/50 border border-slate-600/30 rounded-lg 
                        text-white placeholder-gray-400 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20
                        transition-all duration-200 text-sm sm:text-base"
-            />
+              />
           </div>
-        </div>
+            </div>
 
         {/* Filtres collapsibles */}
         {showFilters && (
           <div className="px-4 sm:px-6 py-4 bg-slate-800/30 border-b border-slate-700/30 animate-in slide-in-from-top-2 duration-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
-              {/* Filtre par statut */}
+            {/* Filtre par statut */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Filtrer par statut</label>
-                <StatusFilter 
-                  selectedStatus={statusFilter}
-                  onStatusChange={setStatusFilter}
-                />
+            <StatusFilter 
+              selectedStatus={statusFilter}
+              onStatusChange={setStatusFilter}
+            />
               </div>
 
-              {/* Tri */}
+            {/* Tri */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Trier par</label>
-                <SortFilter 
-                  selectedSort={sortBy}
-                  onSortChange={setSortBy}
-                />
-              </div>
+            <SortFilter 
+              selectedSort={sortBy}
+              onSortChange={setSortBy}
+            />
+          </div>
             </div>
           </div>
         )}
@@ -621,12 +621,12 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
             <span className="bg-slate-700/50 px-2 py-1 rounded">Total: {filteredAndSortedApplications.length}</span>
             <span className="hidden sm:inline text-gray-600">|</span>
             <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded">
-              Refusées: {filteredAndSortedApplications.filter(app => app.status === 'rejected').length}
-            </span>
+                Refusées: {filteredAndSortedApplications.filter(app => app.status === 'rejected').length}
+              </span>
             <span className="hidden sm:inline text-gray-600">|</span>
             <span className="bg-gray-500/20 text-gray-400 px-2 py-1 rounded">
-              Bloquées: {filteredAndSortedApplications.filter(app => app.status === 'blocked').length}
-            </span>
+                Bloquées: {filteredAndSortedApplications.filter(app => app.status === 'blocked').length}
+              </span>
           </div>
         </div>
 

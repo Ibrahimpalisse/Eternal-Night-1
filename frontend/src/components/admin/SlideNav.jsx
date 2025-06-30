@@ -87,10 +87,10 @@ const SlideNav = ({ isOpen, onToggle }) => {
       icon: <BookOpen className="w-5 h-5" />
     },
     {
-      name: 'Commentaires',
-      path: '/admin/reported-comments',
+      name: 'Notifications',
+      path: '/admin/notifications',
       icon: <MessageSquare className="w-5 h-5" />,
-      badge: '5'
+      badge: '7'
     },
     {
       name: 'Statistiques',

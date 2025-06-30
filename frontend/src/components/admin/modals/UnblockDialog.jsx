@@ -37,21 +37,12 @@ const UnblockDialog = ({ isOpen, onClose, application, onConfirm, isLoading }) =
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md bg-slate-900/95 border-slate-700/50 backdrop-blur-sm animate-zoom-in [&>button]:hidden">
+      <DialogContent className="sm:max-w-md bg-slate-900/95 border-slate-700/50 backdrop-blur-sm animate-zoom-in">
         <DialogHeader className="border-b border-slate-700/50 pb-4">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-green-400 flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              Débloquer le candidat
-            </DialogTitle>
-            <button
-              onClick={handleClose}
-              disabled={isLoading}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+          <DialogTitle className="text-green-400 flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            Débloquer le candidat
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 pt-4">

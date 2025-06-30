@@ -7,15 +7,30 @@ class Profile {
   async fetchWithErrorHandling(url, options, errorMessage) {
     try {
       const response = await fetch(url, options);
+      const contentType = response.headers.get('content-type') || '';
       
       if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        if (contentType.includes('application/json')) {
+          errorData = await response.json();
+        } else {
+          const text = await response.text();
+          errorData = { message: text };
+        }
+        // Cas particulier 429
+        if (response.status === 429) {
+          throw new Error(errorData.message || 'Trop de requêtes, réessayez plus tard.');
+        }
         const error = new Error(errorData.message || errorMessage);
         error.status = response.status;
         throw error;
       }
       
+      if (contentType.includes('application/json')) {
       return await response.json();
+      } else {
+        return await response.text();
+      }
     } catch (error) {
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         throw new Error('Impossible de se connecter au serveur. Vérifiez votre connexion internet.');

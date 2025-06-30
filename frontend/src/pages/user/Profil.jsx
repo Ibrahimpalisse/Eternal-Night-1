@@ -19,30 +19,13 @@ const Profil = () => {
   const [activeTab, setActiveTab] = useState('settings');
   const [profileData, setProfileData] = useState(null);
 
-  // Charger les données du profil avec les descriptions des rôles
+  // Les données du profil sont déjà chargées dans AuthContext
+  // Plus besoin de faire un appel API supplémentaire ici
   useEffect(() => {
-    const loadProfileData = async () => {
       if (user) {
-        try {
-          const data = await Profile.getProfile();
-          if (data.success) {
-            setProfileData(data);
-            // Mettre à jour l'utilisateur avec les nouvelles données
-            setUser(prevUser => ({
-              ...prevUser,
-              ...data.user,
-              profile: data.profile
-            }));
-          }
-        } catch (error) {
-          console.error('Erreur lors du chargement du profil:', error);
-          toast.error('Erreur lors du chargement du profil');
+      setProfileData(user);
         }
-      }
-    };
-
-    loadProfileData();
-  }, [user?.id, setUser, toast]);
+  }, [user]);
 
   // Lire l'onglet depuis les paramètres URL
   useEffect(() => {

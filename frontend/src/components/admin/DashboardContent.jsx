@@ -176,15 +176,15 @@ const DashboardContent = () => {
             </button>
             
             <button 
-              onClick={() => navigate('/admin/reported-comments')}
+              onClick={() => navigate('/admin/notifications')}
               className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-all duration-300 text-gray-300 hover:text-white group"
             >
               <div className="p-2 bg-red-500/20 rounded-lg group-hover:scale-110 transition-transform duration-300">
                 <AlertTriangle className="w-5 h-5 text-red-400" />
               </div>
               <div className="text-left">
-                <div className="font-medium">Commentaires</div>
-                <div className="text-sm text-gray-400">5 signalements</div>
+                <div className="font-medium">Notifications</div>
+                <div className="text-sm text-gray-400">7 demandes</div>
               </div>
               <div className="ml-auto">
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -222,8 +222,8 @@ const DashboardContent = () => {
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-red-500 rounded-full mt-2 animate-pulse"></div>
                 <div className="flex-1">
-                  <div className="text-red-400 font-medium text-sm">Commentaires signalés</div>
-                  <div className="text-gray-400 text-xs mt-1">5 signalements à traiter</div>
+                  <div className="text-red-400 font-medium text-sm">Demandes en attente</div>
+                  <div className="text-gray-400 text-xs mt-1">7 demandes d'auteurs à traiter</div>
             </div>
           </div>
         </div>
@@ -311,8 +311,8 @@ const DashboardContent = () => {
             <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
               <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
               <div className="flex-1">
-                <div className="text-gray-300 text-sm">Commentaire signalé</div>
-                <div className="text-gray-500 text-xs">Contenu inapproprié signalé</div>
+                <div className="text-gray-300 text-sm">Nouvelle demande d'auteur</div>
+                <div className="text-gray-500 text-xs">Demande de modification</div>
               </div>
               <span className="text-gray-500 text-xs">Il y a 2h</span>
             </div>
