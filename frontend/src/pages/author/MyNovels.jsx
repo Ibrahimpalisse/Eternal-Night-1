@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Filter, Edit, Eye, BookOpen, Clock, Calendar, MoreVertical } from 'lucide-react';
 import { NovelStatusFilter, NovelCategoryFilter } from '../../components/authors/filters';
-import { NovelDetailsModal, NovelEditModal, RequestModal, CreateNovelModal } from '../../components/authors/modals';
+import { NovelModalManager } from '../../components/authors/modals';
 import { NovelPagination } from '../../components/authors/table';
 
 // Données mockées pour les romans - à remplacer par des vraies données API
@@ -196,12 +196,8 @@ const MyNovels = () => {
     ).filter(Boolean)
   )];
   
-  // États pour les modales
-  const [selectedNovel, setSelectedNovel] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showRequestModal, setShowRequestModal] = useState(false);
+  // Référence pour le gestionnaire de modales
+  const modalManagerRef = React.useRef(null);
 
   // Filtrer les romans
   useEffect(() => {
@@ -250,17 +246,49 @@ const MyNovels = () => {
     try {
       // Appeler votre API pour créer le roman
       console.log('Création du roman:', formData);
-      // Rafraîchir la liste des romans après création
+      
+      // Simuler un nouveau roman créé
+      const newNovel = {
+        id: Date.now(),
+        title: formData.title,
+        description: formData.description,
+        categories: formData.categories,
+        status: 'draft',
+        chapters: 0,
+        views: 0,
+        likes: 0,
+        comments: 0,
+        bookmarked: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        coverImage: null
+      };
+      
+      setNovels(prevNovels => [newNovel, ...prevNovels]);
     } catch (error) {
       console.error('Erreur lors de la création du roman:', error);
     }
   };
 
-  const handleSaveNovel = async (formData, novelId) => {
+  const handleSaveNovel = async (formData, novelId, selectedImage) => {
     try {
       // Appeler votre API pour sauvegarder les modifications
-      console.log('Sauvegarde du roman:', formData, novelId);
-      // Rafraîchir la liste des romans après modification
+      console.log('Sauvegarde du roman:', formData, novelId, selectedImage);
+      
+      // Mettre à jour le roman localement
+      setNovels(prevNovels => 
+        prevNovels.map(n => 
+          n.id === novelId 
+            ? { 
+                ...n, 
+                title: formData.title,
+                description: formData.description,
+                categories: formData.categories,
+                updatedAt: new Date().toISOString()
+              }
+            : n
+        )
+      );
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du roman:', error);
     }
@@ -270,8 +298,47 @@ const MyNovels = () => {
     try {
       // Appeler votre API pour soumettre la demande
       console.log('Soumission de la demande:', novel, requestType);
+      
+      // Mettre à jour le statut localement si nécessaire
+      if (requestType === 'publication') {
+        setNovels(prevNovels => 
+          prevNovels.map(n => 
+            n.id === novel.id 
+              ? { ...n, status: 'pending' }
+              : n
+          )
+        );
+      }
     } catch (error) {
       console.error('Erreur lors de la soumission de la demande:', error);
+    }
+  };
+
+  const handlePublishNovel = async (novel) => {
+    try {
+      // Appeler votre API pour publier le roman
+      console.log('Publication du roman:', novel);
+      // Mettre à jour le statut du roman localement
+      setNovels(prevNovels => 
+        prevNovels.map(n => 
+          n.id === novel.id 
+            ? { ...n, status: 'published', publishedAt: new Date().toISOString() }
+            : n
+        )
+      );
+    } catch (error) {
+      console.error('Erreur lors de la publication du roman:', error);
+    }
+  };
+
+  const handleDeleteNovel = async (novel) => {
+    try {
+      // Appeler votre API pour supprimer le roman
+      console.log('Suppression du roman:', novel);
+      // Retirer le roman de la liste localement
+      setNovels(prevNovels => prevNovels.filter(n => n.id !== novel.id));
+    } catch (error) {
+      console.error('Erreur lors de la suppression du roman:', error);
     }
   };
 
@@ -281,7 +348,10 @@ const MyNovels = () => {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-white">Mes Romans</h1>
           <button
-            onClick={() => setShowCreateModal(true)}
+            onClick={() => {
+              console.log('🔘 Create button clicked, modalManagerRef:', modalManagerRef.current);
+              modalManagerRef.current?.openModal('CREATE');
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors"
           >
             + Nouveau Roman
@@ -320,8 +390,8 @@ const MyNovels = () => {
                 key={novel.id}
                 className="group bg-slate-800/50 hover:bg-slate-800/80 border border-slate-700/50 rounded-xl p-4 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/5 cursor-pointer"
                 onClick={() => {
-                  setSelectedNovel(novel);
-                  setShowDetailsModal(true);
+                  console.log('📖 Novel clicked:', novel.title, 'modalManagerRef:', modalManagerRef.current);
+                  modalManagerRef.current?.openModal('DETAILS', novel);
                 }}
                     >
                 <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -406,36 +476,14 @@ const MyNovels = () => {
           )}
         </div>
 
-      {/* Modales */}
-      <CreateNovelModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSave={handleCreateNovel}
-      />
-
-      {showDetailsModal && (
-      <NovelDetailsModal
-        novel={selectedNovel}
-        isOpen={showDetailsModal}
-          onClose={() => setShowDetailsModal(false)}
-          setShowEditModal={setShowEditModal}
-          setShowDeleteModal={() => {/* TODO: Implement delete modal */}}
-      />
-      )}
-      {showEditModal && (
-      <NovelEditModal
-        novel={selectedNovel}
-        isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-        onSave={handleSaveNovel}
-      />
-      )}
-
-      <RequestModal
-        novel={selectedNovel}
-        isOpen={showRequestModal}
-        onClose={() => setShowRequestModal(false)}
-        onSubmit={handleSubmitRequest}
+      {/* Gestionnaire de modales */}
+      <NovelModalManager
+        ref={modalManagerRef}
+        onSaveNovel={handleSaveNovel}
+        onPublishNovel={handlePublishNovel}
+        onDeleteNovel={handleDeleteNovel}
+        onCreateNovel={handleCreateNovel}
+        onSubmitRequest={handleSubmitRequest}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, BookOpen, Edit, Trash2, Eye, Calendar, User, Heart, MessageCircle, Send, FileEdit, ChevronDown, Check, AlertCircle, Search, Upload, Star } from 'lucide-react';
+import { X, BookOpen, Edit, Trash2, Eye, Calendar, User, Heart, MessageCircle, Send, FileEdit, ChevronDown, Check, AlertCircle, Search, Upload, Star, Clock } from 'lucide-react';
 import { CommentsModal } from '../../common/CommentsModal';
 import { LikesModal } from '../../common/LikesModal';
 
@@ -121,7 +121,15 @@ const MultiSelectGenres = ({ selectedGenres, onGenresChange, availableGenres }) 
 };
 
 // Modal pour voir les détails d'un roman - Version améliorée
-export const NovelDetailsModal = ({ novel, isOpen, onClose, setShowEditModal, setShowDeleteModal }) => {
+export const NovelDetailsModal = ({ 
+  novel, 
+  isOpen, 
+  onClose, 
+  setShowEditModal, 
+  setShowDeleteModal, 
+  setShowRequestModal,
+  onPublish 
+}) => {
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [showLikesModal, setShowLikesModal] = useState(false);
 
@@ -140,14 +148,58 @@ export const NovelDetailsModal = ({ novel, isOpen, onClose, setShowEditModal, se
   const bookmarkedUsers = novel.bookmarked || Math.floor(novel.likes * 0.3); // Estimation basée sur les likes
   const releaseDate = novel.status === 'published' ? novel.publishedAt || novel.updatedAt : null;
 
+  // Déterminer les actions autorisées selon le statut
+  const getAvailableActions = (status) => {
+    switch (status) {
+      case 'published':
+        return {
+          canRequest: true,
+          canEdit: false,
+          canDelete: false,
+          canPublish: false
+        };
+      case 'accepted':
+        return {
+          canRequest: true,
+          canEdit: false,
+          canDelete: true,
+          canPublish: true
+        };
+      case 'pending':
+        return {
+          canRequest: false,
+          canEdit: false,
+          canDelete: false,
+          canPublish: false
+        };
+      case 'draft':
+      default:
+        return {
+          canRequest: true,
+          canEdit: true,
+          canDelete: true,
+          canPublish: false
+        };
+    }
+  };
+
+  const actions = getAvailableActions(novel.status);
+  console.log('🎯 Novel status:', novel.status, 'Available actions:', actions);
+
   const handleEdit = () => {
-    onClose();
-    setShowEditModal(true);
+    setShowEditModal && setShowEditModal();
   };
 
   const handleDelete = () => {
-    onClose();
-    setShowDeleteModal(true);
+    setShowDeleteModal && setShowDeleteModal();
+  };
+
+  const handleRequest = () => {
+    setShowRequestModal && setShowRequestModal();
+  };
+
+  const handlePublishAction = () => {
+    onPublish && onPublish();
   };
 
   return createPortal(
@@ -232,21 +284,56 @@ export const NovelDetailsModal = ({ novel, isOpen, onClose, setShowEditModal, se
             </div>
             
             {/* Boutons d'action */}
-            <div className="flex gap-3 justify-center mt-6">
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-                Supprimer
-              </button>
-            <button
-                onClick={handleEdit}
-                className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 rounded-lg flex items-center gap-2 transition-colors"
-            >
-                <Edit className="w-4 h-4" />
-                Modifier
-            </button>
+            <div className="flex gap-2 justify-center mt-6 flex-wrap">
+              {actions.canRequest && (
+                <button
+                  onClick={handleRequest}
+                  className="px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Send className="w-4 h-4" />
+                  Faire une demande
+                </button>
+              )}
+              
+              {actions.canPublish && (
+                <button
+                  onClick={handlePublishAction}
+                  className="px-4 py-2 bg-green-500/10 hover:bg-green-500/20 text-green-400 hover:text-green-300 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Publier
+                </button>
+              )}
+              
+              {actions.canEdit && (
+                <button
+                  onClick={handleEdit}
+                  className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                  Modifier
+                </button>
+              )}
+              
+              {actions.canDelete && (
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Supprimer
+                </button>
+              )}
+              
+              {/* Message pour les romans en attente */}
+              {novel.status === 'pending' && (
+                <div className="w-full text-center">
+                  <p className="text-yellow-400 text-sm bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <Clock className="w-4 h-4 inline mr-2" />
+                    Roman en cours d'examen. Aucune action disponible pour le moment.
+                  </p>
+                </div>
+              )}
             </div>
             
             {/* Date de création */}
@@ -529,16 +616,6 @@ export const NovelEditModal = ({ novel = null, isOpen, onClose, onSave, onReques
 
           {/* Boutons */}
           <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-6 sm:mt-8 pt-4 border-t border-white/10">
-            {isEdit && novel.status === 'draft' && (
-              <button
-                type="button"
-                onClick={() => onRequest && onRequest(novel)}
-                className="px-4 sm:px-6 py-2 sm:py-3 border border-blue-500/30 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors text-sm sm:text-base order-3 sm:order-1 flex items-center justify-center gap-2"
-              >
-                <Send className="w-4 h-4" />
-                Faire une demande
-              </button>
-            )}
             <button
               type="button"
               onClick={onClose}
@@ -712,159 +789,214 @@ export const CreateNovelModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    genres: [],
-    coverImage: null,
-    coverPreview: null
+    categories: [],
+    status: 'draft'
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
+  // Gérer le changement d'image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({
-        ...prev,
-        coverImage: file,
-        coverPreview: URL.createObjectURL(file)
-      }));
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
+
+  // Réinitialiser le formulaire quand la modal s'ouvre
+  React.useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        title: '',
+        description: '',
+        categories: [],
+        status: 'draft'
+      });
+      setImagePreview(null);
+      setSelectedImage(null);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validation : au moins un genre doit être sélectionné
+    if (formData.categories.length === 0) {
+      alert('Veuillez sélectionner au moins un genre');
+      return;
+    }
+    
+    setIsSaving(true);
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('genres', JSON.stringify(formData.genres));
-      if (formData.coverImage) {
-        formDataToSend.append('coverImage', formData.coverImage);
-      }
-
-      await onSave(formDataToSend);
+      await onSave(formData, null, selectedImage);
       onClose();
     } catch (error) {
-      console.error('Erreur lors de la création du roman:', error);
+      console.error('Erreur lors de la création:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  if (!isOpen) return null;
+  const categories = [
+    'Fantasy', 'Science-Fiction', 'Romance', 'Thriller', 'Mystère',
+    'Aventure', 'Historique', 'Contemporain', 'Young Adult', 'Horreur'
+  ];
 
   return createPortal(
-    <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed inset-0 flex items-center justify-center z-50 p-4 sm:p-6">
-        <div className="bg-gray-900 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white">Créer un nouveau roman</h2>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+      <div className="bg-gray-900 border border-white/10 rounded-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6">
+          <div className="flex justify-between items-center mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white pr-4">
+              Nouveau roman
+            </h2>
             <button
+              type="button"
               onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
             >
-              <X className="w-5 h-5 sm:w-6 sm:h-6" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-            {/* Champ du titre */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Couverture */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-white mb-2">
-                Titre
+              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+                Couverture
               </label>
-              <input
-                type="text"
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                required
-              />
-            </div>
-
-            {/* Champ de description */}
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-white mb-2">
-                Description
-              </label>
-              <textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                rows={4}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
-                required
-              />
-            </div>
-
-            {/* Sélection des genres */}
-            <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Genres
-              </label>
-              <MultiSelectGenres
-                selectedGenres={formData.genres}
-                onGenresChange={(genres) => setFormData(prev => ({ ...prev, genres }))}
-                availableGenres={[
-                  'Fantasy', 'Science-Fiction', 'Romance', 'Action', 'Aventure',
-                  'Mystère', 'Horreur', 'Thriller', 'Drame', 'Comédie',
-                  'Historique', 'Contemporain', 'Dystopie', 'Post-apocalyptique'
-                ]}
-              />
-            </div>
-
-            {/* Upload de couverture */}
-            <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Image de couverture
-              </label>
-              <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-white/10 border-dashed rounded-lg cursor-pointer bg-white/5 hover:bg-white/10 transition-colors">
-                  {formData.coverPreview ? (
-                    <img
-                      src={formData.coverPreview}
-                      alt="Aperçu"
-                      className="w-full h-full object-cover rounded-lg"
+              <div className="flex items-center gap-4">
+                <div className={`
+                  w-24 h-32 sm:w-32 sm:h-40 rounded-lg border-2 border-dashed
+                  ${imagePreview ? 'border-white/10' : 'border-white/20'}
+                  flex items-center justify-center overflow-hidden
+                  ${!imagePreview && 'hover:bg-white/5'} transition-colors
+                  relative group
+                `}>
+                  {imagePreview ? (
+                    <>
+                    <img 
+                      src={imagePreview} 
+                        alt="Couverture"
+                      className="w-full h-full object-cover"
                     />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <p className="text-white text-xs">Changer</p>
+                      </div>
+                    </>
                   ) : (
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg className="w-8 h-8 mb-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-400">
-                        <span className="font-semibold">Cliquez pour uploader</span> ou glissez et déposez
+                    <div className="text-center p-2">
+                      <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-400 text-xs sm:text-sm">
+                        Ajouter une couverture
                       </p>
-                      <p className="text-xs text-gray-400">PNG, JPG (MAX. 2MB)</p>
                     </div>
                   )}
                   <input
                     type="file"
-                    className="hidden"
-                    accept="image/*"
                     onChange={handleImageChange}
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                </label>
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-400 text-xs sm:text-sm mb-2">
+                    Format recommandé : JPG, PNG
+                  </p>
+                  <p className="text-gray-400 text-xs sm:text-sm">
+                    Taille maximale : 2 MB
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Boutons d'action */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-white bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors"
-              >
-                Créer
-              </button>
+            {/* Titre */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+                Nom du roman *
+              </label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm sm:text-base"
+                placeholder="Entrez le nom de votre roman..."
+                required
+              />
             </div>
-          </form>
+
+            {/* Genres/Catégories */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+                Genres *
+              </label>
+              <MultiSelectGenres
+                selectedGenres={formData.categories}
+                onGenresChange={(genres) => setFormData({ ...formData, categories: genres })}
+                availableGenres={categories}
+              />
+              {formData.categories.length === 0 && (
+                <p className="text-red-400 text-xs mt-1">Au moins un genre doit être sélectionné</p>
+              )}
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+                Description *
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={4}
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none text-sm sm:text-base"
+                placeholder="Décrivez votre roman..."
+                required
+              />
+            </div>
+          </div>
+
+          {/* Boutons */}
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-6 sm:mt-8 pt-4 border-t border-white/10">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSaving}
+              className="px-4 sm:px-6 py-2 sm:py-3 border border-white/20 text-white rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50 text-sm sm:text-base order-2"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base order-1 sm:order-2"
+            >
+              {isSaving ? (
+                <>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span className="hidden sm:inline">Création...</span>
+                  <span className="sm:hidden">Création</span>
+                </>
+              ) : (
+                <>
+                  <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Créer le roman</span>
+                  <span className="sm:hidden">Créer</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
-    </>,
+    </div>,
     document.body
   );
 }; 
