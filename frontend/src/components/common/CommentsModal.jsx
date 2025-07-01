@@ -31,7 +31,7 @@ export const CommentsModal = ({ isOpen, onClose, contentType, contentId, content
           </button>
         </div>
 
-        {/* Barre de recherche et filtres */}
+        {/* Barre de recherche et tri */}
         <div className="p-4 border-b border-white/10">
           <div className="flex gap-4">
             <div className="relative flex-1">
@@ -44,13 +44,6 @@ export const CommentsModal = ({ isOpen, onClose, contentType, contentId, content
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="px-4 py-2 bg-slate-800/50 border border-white/10 rounded-lg text-white flex items-center gap-2 hover:bg-slate-700/50 transition-colors"
-            >
-              <Filter className="w-4 h-4" />
-              Filtres
-            </button>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
               className="px-4 py-2 bg-slate-800/50 border border-white/10 rounded-lg text-white flex items-center gap-2 hover:bg-slate-700/50 transition-colors"
@@ -86,9 +79,7 @@ export const CommentsModal = ({ isOpen, onClose, contentType, contentId, content
                   </div>
                   <p className="text-gray-300">Contenu du commentaire...</p>
                 </div>
-                <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-red-400" />
-                </button>
+
               </div>
             </div>
           </div>

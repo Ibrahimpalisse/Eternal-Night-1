@@ -254,13 +254,13 @@ const MyNovels = () => {
         description: formData.description,
         categories: formData.categories,
         status: 'draft',
-        chapters: 0,
-        views: 0,
-        likes: 0,
-        comments: 0,
-        bookmarked: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+          chapters: 0,
+          views: 0,
+          likes: 0,
+          comments: 0,
+          bookmarked: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         coverImage: null
       };
       
@@ -352,9 +352,10 @@ const MyNovels = () => {
               console.log('🔘 Create button clicked, modalManagerRef:', modalManagerRef.current);
               modalManagerRef.current?.openModal('CREATE');
             }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25 flex items-center gap-2 group"
           >
-            + Nouveau Roman
+            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+            <span>Nouveau Roman</span>
           </button>
       </div>
 

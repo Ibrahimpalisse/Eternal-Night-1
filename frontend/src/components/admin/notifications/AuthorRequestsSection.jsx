@@ -339,13 +339,13 @@ const AuthorRequestsSection = () => {
             <DropdownFilter
               label="Type"
               options={typeOptions}
-              value={filterType}
+                value={filterType}
               onChange={setFilterType}
             />
             <DropdownFilter
               label="Statut"
               options={statusOptions}
-              value={filterStatus}
+                value={filterStatus}
               onChange={setFilterStatus}
             />
             <div className="flex items-end">

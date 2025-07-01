@@ -241,7 +241,7 @@ export const NovelDetailsModal = ({
               </span>
             </div>
 
-            <div className="text-gray-300 mb-6">{novel.description}</div>
+            <div className="text-gray-300 mb-6 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">{novel.description}</div>
                 
                 {/* Statut et catégories */}
             <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -286,13 +286,13 @@ export const NovelDetailsModal = ({
             {/* Boutons d'action */}
             <div className="flex gap-2 justify-center mt-6 flex-wrap">
               {actions.canRequest && (
-                <button
+            <button
                   onClick={handleRequest}
                   className="px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 rounded-lg flex items-center gap-2 transition-colors"
-                >
+            >
                   <Send className="w-4 h-4" />
                   Faire une demande
-                </button>
+            </button>
               )}
               
               {actions.canPublish && (
@@ -334,16 +334,16 @@ export const NovelDetailsModal = ({
                   </p>
                 </div>
               )}
-            </div>
-            
+              </div>
+              
             {/* Date de création */}
             <div className="flex items-center justify-center gap-2 text-gray-400 mt-6">
               <Calendar className="w-4 h-4" />
               <span>Créé le {new Date(novel.createdAt).toLocaleDateString()}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
       {/* Modales pour les commentaires et les likes */}
       {showCommentsModal && (
@@ -548,7 +548,7 @@ export const NovelEditModal = ({ novel = null, isOpen, onClose, onSave, onReques
                       <p className="text-gray-400 text-xs sm:text-sm">
                         Ajouter une couverture
                       </p>
-                    </div>
+                </div>
                   )}
                   <input
                     type="file"
@@ -865,7 +865,7 @@ export const CreateNovelModal = ({ isOpen, onClose, onSave }) => {
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             </button>
-          </div>
+    </div>
 
           <div className="space-y-4 sm:space-y-6">
             {/* Couverture */}
