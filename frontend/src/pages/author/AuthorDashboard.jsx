@@ -7,6 +7,7 @@ import TokenRefreshNotification from '../../components/ui/TokenRefreshNotificati
 import { Menu } from 'lucide-react';
 import MyNovels from './MyNovels';
 import MyChapters from './MyChapters';
+import AuthorStats from './AuthorStats';
 
 // Fonction pour obtenir l'avatar de l'utilisateur
 const getUserAvatar = (user) => {
@@ -117,24 +118,6 @@ const AuthorComments = () => (
     <h1 className="text-3xl font-bold text-white mb-6">Commentaires</h1>
     <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center">
       <p className="text-gray-400">Gestion des commentaires - En développement</p>
-    </div>
-  </div>
-);
-
-const AuthorReaders = () => (
-  <div className="p-6">
-    <h1 className="text-3xl font-bold text-white mb-6">Lecteurs</h1>
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center">
-      <p className="text-gray-400">Statistiques des lecteurs - En développement</p>
-    </div>
-  </div>
-);
-
-const AuthorStats = () => (
-  <div className="p-6">
-    <h1 className="text-3xl font-bold text-white mb-6">Statistiques</h1>
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center">
-      <p className="text-gray-400">Statistiques détaillées - En développement</p>
     </div>
   </div>
 );
@@ -266,11 +249,10 @@ const AuthorDashboard = () => {
           {/* Contenu des pages */}
           <Routes>
             <Route path="/" element={<AuthorDashboardContent />} />
-                            <Route path="/novels" element={<MyNovels />} />
+            <Route path="/novels" element={<MyNovels />} />
             <Route path="/chapters" element={<MyChapters />} />
             <Route path="/write" element={<AuthorWrite />} />
             <Route path="/comments" element={<AuthorComments />} />
-            <Route path="/readers" element={<AuthorReaders />} />
             <Route path="/stats" element={<AuthorStats />} />
             <Route path="/settings" element={<AuthorSettings />} />
           </Routes>

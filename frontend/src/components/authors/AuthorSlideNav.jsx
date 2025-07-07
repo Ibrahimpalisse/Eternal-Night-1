@@ -13,7 +13,6 @@ import {
   LogOut,
   X,
   MessageSquare,
-  Users,
   Edit,
   BookMarked,
   TrendingUp
@@ -81,11 +80,6 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
       name: 'Chapitres',
       path: '/author/chapters',
       icon: <BookMarked className="w-5 h-5" />
-    },
-    {
-      name: 'Lecteurs',
-      path: '/author/readers',
-      icon: <Users className="w-5 h-5" />
     },
     {
       name: 'Statistiques',
