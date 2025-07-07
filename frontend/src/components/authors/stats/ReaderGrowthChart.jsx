@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ReaderGrowthChart = ({ overallData, novels }) => {
   const [selectedNovel, setSelectedNovel] = useState('all');
@@ -40,23 +40,23 @@ const ReaderGrowthChart = ({ overallData, novels }) => {
   const chartData = getChartData();
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white">Progression des Lecteurs</h2>
+    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-white">Progression des Lecteurs</h2>
         
         {/* Dropdown pour sélectionner le roman */}
-        <div className="relative dropdown-container z-50">
+        <div className="relative dropdown-container z-50 w-full sm:w-auto">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white hover:bg-white/20 transition-colors"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 bg-white/10 border border-white/20 rounded-lg px-3 sm:px-4 py-2 text-white hover:bg-white/20 transition-colors"
           >
-            <span className="text-sm font-medium">{getTitle()}</span>
-            <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            <span className="text-sm font-medium truncate">{getTitle()}</span>
+            <ChevronDown className={`w-4 h-4 transition-transform flex-shrink-0 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isDropdownOpen && (
             <div 
-              className="absolute right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg shadow-xl z-[100] min-w-[200px] max-h-[300px] overflow-y-auto"
+              className="absolute right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg shadow-xl z-[100] w-full sm:w-[250px] max-h-[300px] overflow-y-auto"
               style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
             >
               <div className="py-1">
@@ -82,7 +82,7 @@ const ReaderGrowthChart = ({ overallData, novels }) => {
                       selectedNovel === novel.id.toString() ? 'text-blue-400 bg-white/5 font-medium' : 'text-gray-300'
                     }`}
                   >
-                    {novel.title}
+                    <span className="block truncate">{novel.title}</span>
                   </button>
                 ))}
               </div>
@@ -91,42 +91,51 @@ const ReaderGrowthChart = ({ overallData, novels }) => {
         </div>
       </div>
 
-      <div className="h-80 relative z-0">
+      <div className="h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] relative z-0">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
             <XAxis 
               dataKey="month" 
               stroke="#9CA3AF"
-              fontSize={12}
+              tick={{ fontSize: '10px', fill: '#9CA3AF' }}
+              tickMargin={8}
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              axisLine={false}
             />
             <YAxis 
               stroke="#9CA3AF"
-              fontSize={12}
+              tick={{ fontSize: '10px', fill: '#9CA3AF' }}
+              tickMargin={8}
+              width={40}
+              axisLine={false}
             />
             <Tooltip
+              cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
               contentStyle={{
                 backgroundColor: '#1F2937',
                 border: '1px solid #374151',
                 borderRadius: '8px',
-                color: '#F3F4F6'
+                color: '#F3F4F6',
+                fontSize: '12px',
+                padding: '8px 12px'
               }}
-              labelStyle={{ color: '#F3F4F6' }}
+              labelStyle={{ color: '#F3F4F6', marginBottom: '4px' }}
             />
-            <Line 
-              type="monotone" 
+            <Bar 
               dataKey="count" 
-              stroke="#3B82F6" 
-              strokeWidth={3}
-              dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }}
-              activeDot={{ r: 8, stroke: '#3B82F6', strokeWidth: 2, fill: '#1E40AF' }}
+              fill="#3B82F6"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={50}
             />
-          </LineChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
       
       <div className="mt-4 text-center">
-        <p className="text-gray-400 text-sm">
+        <p className="text-gray-400 text-xs sm:text-sm">
           {selectedNovel === 'all' 
             ? `Total: ${chartData[chartData.length - 1]?.count?.toLocaleString() || 0} lecteurs`
             : `Lecteurs de "${getTitle()}": ${chartData[chartData.length - 1]?.count?.toLocaleString() || 0}`
