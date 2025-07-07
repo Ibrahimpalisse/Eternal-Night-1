@@ -6,6 +6,7 @@ import { ToastProvider } from '../../contexts/ToastContext';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { Menu } from 'lucide-react';
 import MyNovels from './MyNovels';
+import MyChapters from './MyChapters';
 
 // Fonction pour obtenir l'avatar de l'utilisateur
 const getUserAvatar = (user) => {
@@ -100,14 +101,7 @@ const AuthorDashboardContent = () => (
 
 // AuthorNovels maintenant remplacé par le composant MyNovels importé
 
-const AuthorChapters = () => (
-  <div className="p-6">
-    <h1 className="text-3xl font-bold text-white mb-6">Chapitres</h1>
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center">
-      <p className="text-gray-400">Page "Chapitres" - En développement</p>
-    </div>
-  </div>
-);
+// AuthorChapters maintenant remplacé par le composant MyChapters importé
 
 const AuthorWrite = () => (
   <div className="p-6">
@@ -273,7 +267,7 @@ const AuthorDashboard = () => {
           <Routes>
             <Route path="/" element={<AuthorDashboardContent />} />
                             <Route path="/novels" element={<MyNovels />} />
-            <Route path="/chapters" element={<AuthorChapters />} />
+            <Route path="/chapters" element={<MyChapters />} />
             <Route path="/write" element={<AuthorWrite />} />
             <Route path="/comments" element={<AuthorComments />} />
             <Route path="/readers" element={<AuthorReaders />} />

@@ -83,17 +83,6 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
       icon: <BookMarked className="w-5 h-5" />
     },
     {
-      name: 'Écrire',
-      path: '/author/write',
-      icon: <Edit className="w-5 h-5" />
-    },
-    {
-      name: 'Commentaires',
-      path: '/author/comments',
-      icon: <MessageSquare className="w-5 h-5" />,
-      badge: '12'
-    },
-    {
       name: 'Lecteurs',
       path: '/author/readers',
       icon: <Users className="w-5 h-5" />
@@ -183,11 +172,6 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
                   {isOpen && (
                     <>
                       <span className="font-medium">{item.name}</span>
-                      {item.badge && (
-                        <span className="ml-auto bg-blue-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                          {item.badge}
-                        </span>
-                      )}
                     </>
                   )}
                   
@@ -196,11 +180,6 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
                     <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
                       <div className="flex items-center gap-2">
                         <span>{item.name}</span>
-                        {item.badge && (
-                          <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full animate-pulse">
-                            {item.badge}
-                          </span>
-                        )}
                       </div>
                       {/* Flèche du tooltip */}
                       <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>

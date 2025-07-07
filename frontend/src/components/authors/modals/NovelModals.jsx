@@ -264,7 +264,7 @@ export const NovelDetailsModal = ({
                 <BookOpen className="w-5 h-5 text-blue-400 mb-1" />
                 <span className="text-lg font-semibold text-white">{novel.chapters}</span>
                 <span className="text-sm text-gray-400">Chapitres</span>
-                  </div>
+              </div>
               <div 
                 className="flex flex-col items-center p-3 bg-slate-800/50 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors"
                 onClick={() => setShowLikesModal(true)}
@@ -272,7 +272,7 @@ export const NovelDetailsModal = ({
                 <Heart className="w-5 h-5 text-red-400 mb-1" />
                 <span className="text-lg font-semibold text-white">{novel.likes}</span>
                 <span className="text-sm text-gray-400">Favoris</span>
-                    </div>
+              </div>
               <div 
                 className="flex flex-col items-center p-3 bg-slate-800/50 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors"
                 onClick={() => setShowCommentsModal(true)}
@@ -282,7 +282,71 @@ export const NovelDetailsModal = ({
                 <span className="text-sm text-gray-400">Commentaires</span>
               </div>
             </div>
-            
+
+            {/* Informations détaillées */}
+            <div className="w-full space-y-4 mb-6 border-t border-white/10 pt-4">
+              {/* Dates */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <Clock className="w-4 h-4 text-blue-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Dernière mise à jour</span>
+                    <span className="text-sm">{new Date(novel.updatedAt).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <Calendar className="w-4 h-4 text-purple-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Date de création</span>
+                    <span className="text-sm">{new Date(novel.createdAt).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistiques supplémentaires */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <Eye className="w-4 h-4 text-green-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Vues</span>
+                    <span className="text-sm">{novel.views || 0}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <BookOpen className="w-4 h-4 text-yellow-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Marque-pages</span>
+                    <span className="text-sm">{novel.bookmarked || 0}</span>
+                  </div>
+                </div>
+                {novel.status === 'published' && (
+                  <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                    <Calendar className="w-4 h-4 text-blue-400" />
+                    <div className="flex flex-col">
+                      <span className="text-xs text-gray-400">Date de publication</span>
+                      <span className="text-sm">{new Date(novel.publishedAt).toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Boutons d'action */}
             <div className="flex gap-2 justify-center mt-6 flex-wrap">
               {actions.canRequest && (

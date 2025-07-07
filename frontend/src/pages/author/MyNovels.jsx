@@ -246,7 +246,7 @@ const MyNovels = () => {
     try {
       // Appeler votre API pour créer le roman
       console.log('Création du roman:', formData);
-      
+    
       // Simuler un nouveau roman créé
       const newNovel = {
         id: Date.now(),
@@ -343,149 +343,157 @@ const MyNovels = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-white">Mes Romans</h1>
-          <button
-            onClick={() => {
-              console.log('🔘 Create button clicked, modalManagerRef:', modalManagerRef.current);
-              modalManagerRef.current?.openModal('CREATE');
-            }}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25 flex items-center gap-2 group"
-          >
-            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-            <span>Nouveau Roman</span>
-          </button>
-      </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher un roman..."
-              className="w-full pl-14 pr-4 py-4 bg-slate-800/60 border border-slate-600/50 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:bg-slate-800/80 focus:border-purple-500/50 h-[53px] text-lg transition-all duration-200"
-            />
-            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 text-purple-300" />
+    <div className="min-h-screen w-full overflow-x-hidden">
+      <div className="px-2 sm:px-4 py-3 sm:py-6 max-w-full">
+        <div className="max-w-7xl mx-auto w-full">
+          {/* En-tête */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-4 sm:mb-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-white truncate">Mes Romans</h1>
+            <button
+              onClick={() => modalManagerRef.current?.openModal('CREATE')}
+              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25 flex items-center justify-center sm:justify-start gap-2 group"
+            >
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform duration-200" />
+              <span className="truncate">Nouveau Roman</span>
+            </button>
           </div>
 
-              <NovelStatusFilter
-            selectedStatus={selectedStatus}
-            onStatusChange={setSelectedStatus}
+          {/* Filtres et recherche */}
+          <div className="grid grid-cols-1 gap-2 sm:gap-4 mb-4 sm:mb-8 w-full">
+            {/* Barre de recherche */}
+            <div className="relative w-full">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher un roman..."
+                className="w-full pl-10 sm:pl-12 pr-4 py-2 sm:py-3 bg-slate-800/60 border border-slate-600/50 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:bg-slate-800/80 focus:border-purple-500/50 h-[38px] sm:h-[48px] text-sm sm:text-base transition-all duration-200"
               />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-purple-300" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full">
+              {/* Filtres */}
               <NovelCategoryFilter
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            categories={uniqueCategories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                categories={uniqueCategories}
               />
-      </div>
+              <NovelStatusFilter
+                selectedStatus={selectedStatus}
+                onStatusChange={setSelectedStatus}
+              />
+            </div>
+          </div>
 
-        {filteredNovels.length === 0 ? (
-          <NoResults searchQuery={searchQuery} />
-        ) : (
-          <div className="space-y-4">
-              {currentNovels.map((novel) => (
-              <div
-                key={novel.id}
-                className="group bg-slate-800/50 hover:bg-slate-800/80 border border-slate-700/50 rounded-xl p-4 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/5 cursor-pointer"
-                onClick={() => {
-                  console.log('📖 Novel clicked:', novel.title, 'modalManagerRef:', modalManagerRef.current);
-                  modalManagerRef.current?.openModal('DETAILS', novel);
-                }}
-                    >
-                <div className="flex flex-col sm:flex-row items-start gap-4">
-                  {/* Image de couverture ou placeholder */}
-                  <div className="relative w-[85px] aspect-[3/4] bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-lg overflow-hidden shadow-lg group-hover:shadow-purple-500/10 transition-all duration-200">
-                    {novel.coverImage ? (
-                      <img
-                        src={novel.coverImage}
-                        alt={novel.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/5 to-purple-500/5">
-                        <BookOpen className="w-8 h-8 text-slate-400/80" />
-                      </div>
-                    )}
-                    {/* Effet de brillance sur le bord */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                  </div>
-
-                  {/* Informations du roman */}
-                  <div className="flex-1 min-w-0 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <h3 className="text-lg font-semibold text-white truncate group-hover:text-purple-300 transition-colors duration-200">
-                          {novel.title}
-                        </h3>
-                        <StatusBadge status={novel.status} />
-                      </div>
-                    </div>
-
-                    <p className="text-slate-300 text-sm line-clamp-2 break-all overflow-hidden text-ellipsis max-w-full">
-                      {novel.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(novel.categories) ? (
-                        novel.categories.map((category, index) => (
-                          <span
-                            key={index}
-                            className="px-2.5 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap"
-                          >
-                            {category}
-                          </span>
-                        ))
+          {filteredNovels.length === 0 ? (
+            <NoResults searchQuery={searchQuery} />
+          ) : (
+            <div className="space-y-3 sm:space-y-4">
+                {currentNovels.map((novel) => (
+                <div
+                  key={novel.id}
+                  className="group bg-slate-800/50 hover:bg-slate-800/80 border border-slate-700/50 rounded-xl transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/5 cursor-pointer overflow-hidden"
+                  onClick={() => {
+                    console.log('📖 Novel clicked:', novel.title, 'modalManagerRef:', modalManagerRef.current);
+                    modalManagerRef.current?.openModal('DETAILS', novel);
+                  }}
+                      >
+                  <div className="flex flex-row items-stretch">
+                    {/* Image de couverture ou placeholder */}
+                    <div className="relative w-[100px] sm:w-[120px] bg-gradient-to-br from-slate-700/50 to-slate-800/50 shadow-lg group-hover:shadow-purple-500/10 transition-all duration-200">
+                      {novel.coverImage ? (
+                        <img
+                          src={novel.coverImage}
+                          alt={novel.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
                       ) : (
-                        novel.category && (
-                          <span className="px-2.5 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap">
-                            {novel.category}
-                          </span>
-                        )
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/5 to-purple-500/5">
+                          <BookOpen className="w-8 h-8 sm:w-12 sm:h-12 text-slate-400/80" />
+                        </div>
                       )}
+                      {/* Effet de brillance sur le bord */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      
+                      {/* Maintenir le ratio d'aspect */}
+                      <div className="pb-[150%]"></div>
                     </div>
 
-                    {/* Métriques et date */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400">
-                      <div className="flex items-center gap-1.5">
-                        <BookOpen className="w-4 h-4 flex-shrink-0" />
-                        <span className="whitespace-nowrap">{novel.chapters} chapitres</span>
+                    {/* Informations du roman */}
+                    <div className="flex-1 min-w-0 p-3 sm:p-5 flex flex-col">
+                      <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                          <h3 className="text-base sm:text-lg font-semibold text-white truncate group-hover:text-purple-300 transition-colors duration-200">
+                            {novel.title}
+                          </h3>
+                          <StatusBadge status={novel.status} />
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 flex-shrink-0" />
-                        <span className="whitespace-nowrap">Mis à jour le {new Date(novel.updatedAt).toLocaleDateString('fr-FR')}</span>
+
+                      <p className="hidden sm:block text-slate-300 text-sm line-clamp-2 mb-3 sm:mb-4">
+                        {novel.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                        {Array.isArray(novel.categories) ? (
+                          novel.categories.map((category, index) => (
+                            <span
+                              key={index}
+                              className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap"
+                            >
+                              {category}
+                            </span>
+                          ))
+                        ) : (
+                          novel.category && (
+                            <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap">
+                              {novel.category}
+                            </span>
+                          )
+                        )}
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 flex-shrink-0" />
-                        <span className="whitespace-nowrap">Créé le {new Date(novel.createdAt).toLocaleDateString('fr-FR')}</span>
+
+                      {/* Métriques et date */}
+                      <div className="mt-auto grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-400">
+                        <div className="flex items-center gap-1">
+                          <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">{novel.chapters} chapitres</span>
+                        </div>
+                        <div className="hidden sm:flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">Mis à jour {new Date(novel.updatedAt).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                        <div className="hidden sm:flex items-center gap-1">
+                          <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="truncate">Créé {new Date(novel.createdAt).toLocaleDateString('fr-FR')}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              ))}
+                ))}
 
-        {/* Pagination */}
-        <NovelPagination
-          currentPage={currentPage}
-              totalPages={Math.ceil(filteredNovels.length / novelsPerPage)}
-          onPageChange={setCurrentPage}
+          {/* Pagination */}
+          <NovelPagination
+            currentPage={currentPage}
+                totalPages={Math.ceil(filteredNovels.length / novelsPerPage)}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+            )}
+          </div>
+
+        {/* Gestionnaire de modales */}
+        <NovelModalManager
+          ref={modalManagerRef}
+          onSaveNovel={handleSaveNovel}
+          onPublishNovel={handlePublishNovel}
+          onDeleteNovel={handleDeleteNovel}
+          onCreateNovel={handleCreateNovel}
+          onSubmitRequest={handleSubmitRequest}
         />
       </div>
-          )}
-        </div>
-
-      {/* Gestionnaire de modales */}
-      <NovelModalManager
-        ref={modalManagerRef}
-        onSaveNovel={handleSaveNovel}
-        onPublishNovel={handlePublishNovel}
-        onDeleteNovel={handleDeleteNovel}
-        onCreateNovel={handleCreateNovel}
-        onSubmitRequest={handleSubmitRequest}
-      />
     </div>
   );
 };
