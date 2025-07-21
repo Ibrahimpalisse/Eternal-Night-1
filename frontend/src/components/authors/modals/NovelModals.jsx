@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, BookOpen, Edit, Trash2, Eye, Calendar, User, Heart, MessageCircle, Send, FileEdit, ChevronDown, Check, AlertCircle, Search, Upload, Star, Clock } from 'lucide-react';
-import { CommentsModal } from '../../common/CommentsModal';
-import { LikesModal } from '../../common/LikesModal';
 
 // Composant de sélection multiple pour les genres avec recherche
 const MultiSelectGenres = ({ selectedGenres, onGenresChange, availableGenres }) => {
@@ -141,6 +139,10 @@ export const NovelDetailsModal = ({
 
   const status = statusConfig[novel.status] || statusConfig.draft;
 
+  // Calculer les données supplémentaires
+  const bookmarkedUsers = novel.bookmarked || Math.floor(novel.likes * 0.3); // Estimation basée sur les likes
+  const releaseDate = novel.status === 'published' ? novel.publishedAt || novel.updatedAt : null;
+
   // Déterminer les actions autorisées selon le statut
   const getAvailableActions = (status) => {
     switch (status) {
@@ -177,6 +179,7 @@ export const NovelDetailsModal = ({
   };
 
   const actions = getAvailableActions(novel.status);
+  console.log('🎯 Novel status:', novel.status, 'Available actions:', actions);
 
   const handleEdit = () => {
     setShowEditModal && setShowEditModal();
@@ -198,121 +201,175 @@ export const NovelDetailsModal = ({
     <>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-[9999]">
         <div className="bg-gray-900 border border-white/10 rounded-xl w-full max-w-md max-h-[95vh] overflow-y-auto relative">
-          {/* Bouton de fermeture */}
-          <button
-            onClick={onClose}
+          {/* Bouton de fermeture fixe en haut à droite */}
+            <button
+              onClick={onClose}
             className="absolute top-2 right-2 p-2 rounded-lg hover:bg-white/10 transition-colors z-10 bg-gray-900/50 backdrop-blur-sm"
-          >
+            >
             <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 hover:text-white transition-colors" />
-          </button>
+            </button>
 
           <div className="p-6 flex flex-col items-center text-center">
-            {/* Image du roman */}
+              {/* Image du roman */}
             <div className="w-32 h-40 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg overflow-hidden mb-6">
-              {novel.coverImage ? (
-                <img 
-                  src={novel.coverImage} 
-                  alt={novel.title}
+                {novel.coverImage ? (
+                  <img 
+                    src={novel.coverImage} 
+                    alt={novel.title}
                   className="w-full h-full object-cover"
-                />
-              ) : (
+                  />
+                ) : (
                 <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-purple-400">
                   {novel.title.charAt(0)}
                 </div>
-              )}
-            </div>
+                )}
+              </div>
               
             {/* Titre et statut */}
             <h2 className="text-2xl font-bold text-white mb-2">{novel.title}</h2>
             
-            {/* Description */}
-            <div className="text-gray-300 mb-6 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
-              {novel.description}
+            {/* Note moyenne et vues */}
+            <div className="flex items-center gap-6 mb-4">
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                <span className="text-lg font-semibold text-white">
+                  {novel.rating ? `${novel.rating.toFixed(1)}/5` : 'Pas encore noté'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="w-5 h-5 text-green-400" />
+                <span className="text-lg font-semibold text-white">{novel.views || 0}</span>
+              </div>
             </div>
+
+            <div className="text-gray-300 mb-6 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">{novel.description}</div>
                 
-            {/* Statut et catégories */}
+                {/* Statut et catégories */}
             <div className="flex flex-wrap justify-center gap-2 mb-6">
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusConfig[novel.status].className}`}>
                 {statusConfig[novel.status].label}
-              </span>
-              {Array.isArray(novel.categories) ? (
-                novel.categories.map((category, index) => (
-                  <span 
-                    key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                  >
-                    {category}
                   </span>
-                ))
-              ) : novel.category && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                  {novel.category}
-                </span>
-              )}
-            </div>
+              {Array.isArray(novel.categories) && novel.categories.map((category, index) => (
+                <span 
+                  key={index}
+                  className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-sm"
+                >
+                        {category}
+                      </span>
+              ))}
+                </div>
 
-            {/* Statistiques */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-6">
-              <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg">
+            {/* Statistiques cliquables */}
+            <div className="grid grid-cols-3 gap-4 w-full mb-6">
+              <div className="flex flex-col items-center p-3 bg-slate-800/50 rounded-lg">
                 <BookOpen className="w-5 h-5 text-blue-400 mb-1" />
-                <span className="text-sm text-gray-400">Chapitres</span>
                 <span className="text-lg font-semibold text-white">{novel.chapters}</span>
+                <span className="text-sm text-gray-400">Chapitres</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg">
-                <Eye className="w-5 h-5 text-green-400 mb-1" />
-                <span className="text-sm text-gray-400">Vues</span>
-                <span className="text-lg font-semibold text-white">{novel.views.toLocaleString()}</span>
-              </div>
-              <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg">
+              <div className="flex flex-col items-center p-3 bg-slate-800/50 rounded-lg">
                 <Heart className="w-5 h-5 text-red-400 mb-1" />
+                <span className="text-lg font-semibold text-white">{novel.likes}</span>
                 <span className="text-sm text-gray-400">Favoris</span>
-                <span className="text-lg font-semibold text-white">{novel.likes.toLocaleString()}</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-white/5 rounded-lg">
-                <MessageCircle className="w-5 h-5 text-yellow-400 mb-1" />
+              <div className="flex flex-col items-center p-3 bg-slate-800/50 rounded-lg">
+                <MessageCircle className="w-5 h-5 text-green-400 mb-1" />
+                <span className="text-lg font-semibold text-white">{novel.comments}</span>
                 <span className="text-sm text-gray-400">Commentaires</span>
-                <span className="text-lg font-semibold text-white">{novel.comments.toLocaleString()}</span>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex flex-wrap justify-center gap-2">
-              {actions.canEdit && (
-                <button
-                  onClick={handleEdit}
-                  className="inline-flex items-center px-4 py-2 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Modifier
-                </button>
-              )}
+            {/* Informations détaillées */}
+            <div className="w-full space-y-4 mb-6 border-t border-white/10 pt-4">
+              {/* Dates */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <Clock className="w-4 h-4 text-blue-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Dernière mise à jour</span>
+                    <span className="text-sm">{new Date(novel.updatedAt).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300 bg-slate-800/30 p-3 rounded-lg">
+                  <Calendar className="w-4 h-4 text-purple-400" />
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-400">Date de création</span>
+                    <span className="text-sm">{new Date(novel.createdAt).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</span>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+            {/* Boutons d'action */}
+            <div className="flex gap-2 justify-center mt-6 flex-wrap">
               {actions.canRequest && (
-                <button
+            <button
                   onClick={handleRequest}
-                  className="inline-flex items-center px-4 py-2 bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors"
-                >
-                  <FileEdit className="w-4 h-4 mr-2" />
+                  className="px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 rounded-lg flex items-center gap-2 transition-colors"
+            >
+                  <Send className="w-4 h-4" />
                   Faire une demande
-                </button>
+            </button>
               )}
+              
               {actions.canPublish && (
                 <button
                   onClick={handlePublishAction}
-                  className="inline-flex items-center px-4 py-2 bg-green-500/20 text-green-300 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors"
+                  className="px-4 py-2 bg-green-500/10 hover:bg-green-500/20 text-green-400 hover:text-green-300 rounded-lg flex items-center gap-2 transition-colors"
                 >
-                  <Send className="w-4 h-4 mr-2" />
+                  <BookOpen className="w-4 h-4" />
                   Publier
                 </button>
               )}
+              
+              {actions.canEdit && (
+                <button
+                  onClick={handleEdit}
+                  className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                  Modifier
+                </button>
+              )}
+              
               {actions.canDelete && (
                 <button
                   onClick={handleDelete}
-                  className="inline-flex items-center px-4 py-2 bg-red-500/20 text-red-300 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors"
+                  className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-lg flex items-center gap-2 transition-colors"
                 >
-                  <Trash2 className="w-4 h-4 mr-2" />
+                  <Trash2 className="w-4 h-4" />
                   Supprimer
                 </button>
               )}
+              
+              {/* Message pour les romans en attente */}
+              {novel.status === 'pending' && (
+                <div className="w-full text-center">
+                  <p className="text-yellow-400 text-sm bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <Clock className="w-4 h-4 inline mr-2" />
+                    Roman en cours d'examen. Aucune action disponible pour le moment.
+                  </p>
+                </div>
+              )}
+              </div>
+              
+                        {/* Date de création */}
+            <div className="flex items-center justify-center gap-2 text-gray-400 mt-6">
+              <Calendar className="w-4 h-4" />
+              <span>Créé le {new Date(novel.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
         </div>

@@ -39,21 +39,34 @@ const DropdownFilter = ({ label, options, value, onChange, className = '' }) => 
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const dropdownWidth = buttonRect.width;
+      
+      // Hauteur estimée du dropdown (options * hauteur approximative par option)
+      const estimatedDropdownHeight = Math.min(options.length * 44 + 16, 288); // max-h-72 = 288px
+      
       let left = buttonRect.left;
       let top = buttonRect.bottom + 8;
+      
+      // Ajuster la position horizontale si débordement
       if (left + dropdownWidth > viewportWidth - 10) {
         left = viewportWidth - dropdownWidth - 10;
       }
-      if (top + 300 > viewportHeight) {
-        top = buttonRect.top - 300 - 8;
+      
+      // Ajuster la position verticale si débordement
+      const spaceBelow = viewportHeight - buttonRect.bottom - 8;
+      const spaceAbove = buttonRect.top - 8;
+      
+      if (estimatedDropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+        // Placer au-dessus si plus d'espace disponible en haut
+        top = buttonRect.top - estimatedDropdownHeight - 8;
       }
+      
       setDropdownPosition({
         top: Math.max(10, top),
         left: Math.max(10, left),
         width: dropdownWidth
       });
     }
-  }, [isOpen]);
+  }, [isOpen, options.length]);
 
   // Fermer sur scroll/resize
   useEffect(() => {
@@ -77,11 +90,12 @@ const DropdownFilter = ({ label, options, value, onChange, className = '' }) => 
   const dropdownContent = isOpen ? (
     <div
       ref={dropdownRef}
-      className="fixed bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl z-[9999] max-h-72 overflow-y-auto"
+      className="fixed bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl max-h-72 overflow-y-auto"
       style={{
         top: `${dropdownPosition.top}px`,
         left: `${dropdownPosition.left}px`,
         width: `${dropdownPosition.width}px`,
+        zIndex: 999999
       }}
     >
       <div className="py-2">

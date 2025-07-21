@@ -15,7 +15,8 @@ import {
   MessageSquare,
   Edit,
   BookMarked,
-  TrendingUp
+  TrendingUp,
+  PenTool
 } from 'lucide-react';
 
 const AuthorSlideNav = ({ isOpen, onToggle }) => {
@@ -67,6 +68,12 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
 
   const menuItems = [
     {
+      name: 'Retour au site',
+      path: '/',
+      icon: <Home className="w-5 h-5" />,
+      isSpecial: true
+    },
+    {
       name: 'Dashboard',
       path: '/author',
       icon: <LayoutDashboard className="w-5 h-5" />
@@ -87,6 +94,11 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
       icon: <BarChart3 className="w-5 h-5" />
     },
     {
+      name: 'Posts',
+      path: '/author/posts',
+      icon: <PenTool className="w-5 h-5" />
+    },
+    {
       name: 'Paramètres',
       path: '/author/settings',
       icon: <Settings className="w-5 h-5" />
@@ -96,9 +108,9 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
   // Gestion de la largeur responsive
   const getNavWidth = () => {
     if (isMobile) {
-      return 'w-80'; // Largeur fixe sur mobile (320px)
+      return 'w-[280px]'; // Largeur réduite sur mobile
     } else if (isTablet) {
-      return isOpen ? 'w-64' : 'w-14'; // Plus étroit sur tablette
+      return isOpen ? 'w-[250px]' : 'w-14'; // Plus étroit sur tablette
     } else {
       return isOpen ? 'w-64' : 'w-16'; // Largeur normale sur desktop
     }
@@ -112,14 +124,14 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
       {/* Overlay pour mobile */}
       {showOverlay && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={onToggle}
         />
       )}
       
-      <div className={`fixed left-0 top-0 h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}`}>
+      <aside className={`fixed left-0 top-0 h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-r border-white/20 transition-all duration-300 z-50 ${getNavWidth()} ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'} flex flex-col`}>
         {/* Logo */}
-        <div className={`flex items-center p-4 border-b border-white/20 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
+        <div className={`flex items-center p-4 border-b border-white/20 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'} shrink-0`}>
           <div className="flex items-center gap-3">
             <div className={`w-8 h-8 bg-gradient-to-br from-blue-500/20 to-white/20 rounded-lg p-1.5 backdrop-blur-sm border border-white/20 transition-all duration-300 ${!isOpen ? 'hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20' : ''}`}>
               <img src={openBookLogo} alt="Night Novels" className="w-full h-full" />
@@ -144,8 +156,8 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
+        <nav className="flex-1 py-4 px-2">
+          <ul className="space-y-1">
             {menuItems.map((item) => (
               <li key={item.path}>
                 <NavLink
@@ -153,29 +165,28 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
                   end={item.path === '/author'}
                   onClick={handleMobileNavigation}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${
                       isActive
                         ? 'bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white border border-blue-500/50 shadow-lg shadow-blue-500/10'
-                        : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
+                        : item.isSpecial 
+                          ? 'text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-green-600/20 hover:to-emerald-600/20 hover:border-green-500/50 border border-transparent'
+                          : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
                     } ${!isOpen ? 'justify-center' : ''}`
                   }
                 >
-                  <span className={`flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`}>
+                  <span className={`flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''} ${item.isSpecial ? 'text-green-400 group-hover:text-green-300' : ''}`}>
                     {item.icon}
                   </span>
                   {isOpen && (
-                    <>
-                      <span className="font-medium">{item.name}</span>
-                    </>
+                    <span className="font-medium truncate">{item.name}</span>
                   )}
                   
-                  {/* Tooltip amélioré pour mode réduit - affiché seulement en mode réduit */}
-                  {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
+                  {/* Tooltip amélioré pour mode réduit */}
+                  {!isOpen && !isMobile && (
                     <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
                       <div className="flex items-center gap-2">
                         <span>{item.name}</span>
                       </div>
-                      {/* Flèche du tooltip */}
                       <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
                     </div>
                   )}
@@ -183,48 +194,28 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
               </li>
             ))}
           </ul>
-        </nav>
 
-        {/* Actions du bas */}
-        <div className="p-4 border-t border-white/20">
-          <div className="space-y-2">
-            {/* Retour au site */}
-            <NavLink
-              to="/"
-              onClick={handleMobileNavigation}
-              className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
-            >
-              <Home className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
-              {isOpen && <span className="font-medium">Retour au site</span>}
-              
-              {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
-                <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
-                  Retour au site
-                  {/* Flèche du tooltip */}
-                  <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
-                </div>
-              )}
-            </NavLink>
-
-            {/* Déconnexion */}
+          {/* Séparateur et déconnexion */}
+          <div className="mt-6 pt-4 border-t border-white/20">
             <button
               onClick={handleLogoutClick}
-              className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-gray-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent group relative focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-gray-800 ${!isOpen ? 'justify-center' : ''}`}
             >
               <LogOut className={`w-5 h-5 flex-shrink-0 transition-all duration-200 ${!isOpen ? 'group-hover:scale-110' : ''}`} />
-              {isOpen && <span className="font-medium">Déconnexion</span>}
+              {isOpen && <span className="font-medium truncate">Déconnexion</span>}
               
-              {!isOpen && !isMobile && (isTablet || (!isMobile && !isTablet)) && (
+              {!isOpen && !isMobile && (
                 <div className="absolute left-full ml-3 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap z-[60] shadow-xl border border-white/10 transform scale-95 group-hover:scale-100 group-focus:scale-100">
                   Déconnexion
-                  {/* Flèche du tooltip */}
                   <div className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900/95 border-l border-b border-white/10 rotate-45"></div>
                 </div>
               )}
             </button>
           </div>
-        </div>
-      </div>
+        </nav>
+
+
+      </aside>
 
       {/* Modal de confirmation de déconnexion */}
       <LogoutConfirmDialog

@@ -22,10 +22,10 @@ const mockStats = {
     totalNovels: 8,
     totalChapters: 69,
     totalWords: 245000,
-    totalReaders: 2400,
-    totalLikes: 1033,
-    totalComments: 205,
-    totalBookmarks: 154
+    totalReaders: 12500,
+    totalLikes: 3033,
+    totalComments: 505,
+    totalBookmarks: 454
   },
   novelsByStatus: {
     draft: 2,
@@ -40,85 +40,126 @@ const mockStats = {
     published: 20
   },
   readerGrowth: [
-    { month: 'Jan', count: 2400 },
-    { month: 'Dec', count: 2273 },
-    { month: 'Nov', count: 2146 },
-    { month: 'Oct', count: 1892 },
-    { month: 'Sep', count: 1654 },
-    { month: 'Août', count: 1423 }
+    { month: 'Jan 2024', count: 12500 },
+    { month: 'Déc 2023', count: 11200 },
+    { month: 'Nov 2023', count: 9800 },
+    { month: 'Oct 2023', count: 8100 },
+    { month: 'Sep 2023', count: 6700 },
+    { month: 'Aoû 2023', count: 5500 },
+    { month: 'Jui 2023', count: 4200 },
+    { month: 'Jun 2023', count: 3100 },
+    { month: 'Mai 2023', count: 2300 },
+    { month: 'Avr 2023', count: 1800 },
+    { month: 'Mar 2023', count: 1200 },
+    { month: 'Fév 2023', count: 800 }
   ],
-  // Nouvelles données pour les romans
   novels: [
     {
       id: 1,
       title: "Les Chroniques d'Aether",
       readerGrowth: [
-        { month: 'Jan', count: 520 },
-        { month: 'Dec', count: 480 },
-        { month: 'Nov', count: 445 },
-        { month: 'Oct', count: 392 },
-        { month: 'Sep', count: 334 },
-        { month: 'Août', count: 280 }
+        { month: 'Jan 2024', count: 4200 },
+        { month: 'Déc 2023', count: 3800 },
+        { month: 'Nov 2023', count: 3300 },
+        { month: 'Oct 2023', count: 2800 },
+        { month: 'Sep 2023', count: 2200 },
+        { month: 'Aoû 2023', count: 1800 },
+        { month: 'Jui 2023', count: 1400 },
+        { month: 'Jun 2023', count: 1100 },
+        { month: 'Mai 2023', count: 800 },
+        { month: 'Avr 2023', count: 600 },
+        { month: 'Mar 2023', count: 400 },
+        { month: 'Fév 2023', count: 200 }
       ]
     },
     {
       id: 2,
       title: "L'Empire des Ombres",
       readerGrowth: [
-        { month: 'Jan', count: 680 },
-        { month: 'Dec', count: 643 },
-        { month: 'Nov', count: 598 },
-        { month: 'Oct', count: 512 },
-        { month: 'Sep', count: 467 },
-        { month: 'Août', count: 401 }
+        { month: 'Jan 2024', count: 3800 },
+        { month: 'Déc 2023', count: 3400 },
+        { month: 'Nov 2023', count: 2900 },
+        { month: 'Oct 2023', count: 2400 },
+        { month: 'Sep 2023', count: 2000 },
+        { month: 'Aoû 2023', count: 1600 },
+        { month: 'Jui 2023', count: 1200 },
+        { month: 'Jun 2023', count: 900 },
+        { month: 'Mai 2023', count: 700 },
+        { month: 'Avr 2023', count: 500 },
+        { month: 'Mar 2023', count: 300 },
+        { month: 'Fév 2023', count: 150 }
       ]
     },
     {
       id: 3,
       title: "La Prophétie Oubliée",
       readerGrowth: [
-        { month: 'Jan', count: 430 },
-        { month: 'Dec', count: 395 },
-        { month: 'Nov', count: 367 },
-        { month: 'Oct', count: 324 },
-        { month: 'Sep', count: 289 },
-        { month: 'Août', count: 245 }
+        { month: 'Jan 2024', count: 2500 },
+        { month: 'Déc 2023', count: 2200 },
+        { month: 'Nov 2023', count: 1900 },
+        { month: 'Oct 2023', count: 1600 },
+        { month: 'Sep 2023', count: 1300 },
+        { month: 'Aoû 2023', count: 1100 },
+        { month: 'Jui 2023', count: 900 },
+        { month: 'Jun 2023', count: 700 },
+        { month: 'Mai 2023', count: 500 },
+        { month: 'Avr 2023', count: 400 },
+        { month: 'Mar 2023', count: 300 },
+        { month: 'Fév 2023', count: 200 }
       ]
     },
     {
       id: 4,
       title: "Les Gardiens du Temps",
       readerGrowth: [
-        { month: 'Jan', count: 380 },
-        { month: 'Dec', count: 352 },
-        { month: 'Nov', count: 318 },
-        { month: 'Oct', count: 284 },
-        { month: 'Sep', count: 251 },
-        { month: 'Août', count: 213 }
+        { month: 'Jan 2024', count: 1800 },
+        { month: 'Déc 2023', count: 1600 },
+        { month: 'Nov 2023', count: 1400 },
+        { month: 'Oct 2023', count: 1200 },
+        { month: 'Sep 2023', count: 1000 },
+        { month: 'Aoû 2023', count: 800 },
+        { month: 'Jui 2023', count: 600 },
+        { month: 'Jun 2023', count: 400 },
+        { month: 'Mai 2023', count: 300 },
+        { month: 'Avr 2023', count: 200 },
+        { month: 'Mar 2023', count: 150 },
+        { month: 'Fév 2023', count: 100 }
       ]
     },
     {
       id: 5,
       title: "Le Royaume Perdu",
       readerGrowth: [
-        { month: 'Jan', count: 290 },
-        { month: 'Dec', count: 268 },
-        { month: 'Nov', count: 241 },
-        { month: 'Oct', count: 215 },
-        { month: 'Sep', count: 189 },
-        { month: 'Août', count: 164 }
+        { month: 'Jan 2024', count: 1200 },
+        { month: 'Déc 2023', count: 1000 },
+        { month: 'Nov 2023', count: 850 },
+        { month: 'Oct 2023', count: 700 },
+        { month: 'Sep 2023', count: 600 },
+        { month: 'Aoû 2023', count: 500 },
+        { month: 'Jui 2023', count: 400 },
+        { month: 'Jun 2023', count: 300 },
+        { month: 'Mai 2023', count: 250 },
+        { month: 'Avr 2023', count: 200 },
+        { month: 'Mar 2023', count: 150 },
+        { month: 'Fév 2023', count: 100 }
       ]
     },
     {
       id: 6,
       title: "La Légende de Zara",
       readerGrowth: [
-        { month: 'Jan', count: 100 },
-        { month: 'Dec', count: 85 },
-        { month: 'Nov', count: 72 },
-        { month: 'Oct', count: 58 },
-        { month: 'Sep', count: 45 },
-        { month: 'Août', count: 32 }
+        { month: 'Jan 2024', count: 800 },
+        { month: 'Déc 2023', count: 700 },
+        { month: 'Nov 2023', count: 600 },
+        { month: 'Oct 2023', count: 500 },
+        { month: 'Sep 2023', count: 400 },
+        { month: 'Aoû 2023', count: 300 },
+        { month: 'Jui 2023', count: 250 },
+        { month: 'Jun 2023', count: 200 },
+        { month: 'Mai 2023', count: 150 },
+        { month: 'Avr 2023', count: 100 },
+        { month: 'Mar 2023', count: 75 },
+        { month: 'Fév 2023', count: 50 }
       ]
     }
   ],
@@ -439,15 +480,9 @@ const StatusBreakdown = ({ novelStats, chapterStats }) => (
 const AuthorStats = () => {
   const [stats, setStats] = useState(mockStats);
 
-  // À remplacer par un appel API réel
   useEffect(() => {
-    // Simulation d'un appel API
-    const fetchStats = async () => {
-      // En production, remplacer par un vrai appel API
-      setStats(mockStats);
-    };
-
-    fetchStats();
+    console.log('Initial stats:', mockStats);
+    setStats(mockStats);
   }, []);
 
   const formatNumber = (num) => {
@@ -458,14 +493,14 @@ const AuthorStats = () => {
   };
 
   return (
-    <div className="p-6 space-y-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Statistiques</h1>
+    <div className="p-4 md:p-6 space-y-6 md:space-y-8 min-w-0 overflow-hidden">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Statistiques</h1>
         <p className="text-gray-400">Vue d'ensemble de vos performances</p>
       </div>
 
       {/* Cartes de statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <StatCard
           title="Total Romans"
           value={stats.overview.totalNovels}
@@ -497,12 +532,13 @@ const AuthorStats = () => {
       </div>
 
       {/* Graphique de progression */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8 min-w-0">
+        {console.log('Stats data:', stats)}
         <ReaderGrowthChart overallData={stats.readerGrowth} novels={stats.novels} />
       </div>
 
       {/* Répartition des statuts */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <StatusBreakdown 
           novelStats={stats.novelsByStatus}
           chapterStats={stats.chaptersByStatus}

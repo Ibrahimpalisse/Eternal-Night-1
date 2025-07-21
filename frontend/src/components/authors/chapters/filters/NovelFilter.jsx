@@ -123,45 +123,45 @@ const NovelFilter = ({ selectedNovel, onNovelChange, novels = [], className = ""
         zIndex: 50
       }}
     >
-      <div className="p-3">
-        {/* Barre de recherche */}
-        <div className="relative mb-3">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Rechercher un roman..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500/40 text-sm"
-          />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-        </div>
-        
-        {/* Liste des romans */}
-        <div className="space-y-2">
-          {filteredOptions.length === 0 ? (
-            <div className="text-gray-400 text-sm text-center py-4">
-              Aucun roman trouvé
+          <div className="p-3">
+            {/* Barre de recherche */}
+            <div className="relative mb-3">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Rechercher un roman..."
+                className="w-full pl-9 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500/40 text-sm"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
-          ) : (
-            filteredOptions.map((option) => (
-              <button
-                key={option.value}
+            
+            {/* Liste des romans */}
+        <div className="space-y-2">
+              {filteredOptions.length === 0 ? (
+                <div className="text-gray-400 text-sm text-center py-4">
+                  Aucun roman trouvé
+                </div>
+              ) : (
+                filteredOptions.map((option) => (
+                  <button
+                    key={option.value}
                 type="button"
                 onClick={() => handleSelect(option.value)}
                 className={`dropdown-item w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-all text-left ${
-                  selectedNovel === option.value
-                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                    : 'text-gray-300 hover:bg-slate-700/50 hover:text-white'
-                }`}
-              >
+                      selectedNovel === option.value
+                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                        : 'text-gray-300 hover:bg-slate-700/50 hover:text-white'
+                    }`}
+                  >
                 <option.icon className="w-6 h-6 flex-shrink-0" />
                 <span className="font-medium truncate">{option.label}</span>
-              </button>
-            ))
-          )}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
   ) : null;
 
   return (

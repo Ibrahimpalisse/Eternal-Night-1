@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { AuthorRequestsSection, ReportedCommentsSection } from '../../components/admin/notifications';
-import { FileEdit, MessageSquare } from 'lucide-react';
+import { AuthorRequestsSection, ReportedCommentsSection, AdminAuthorPostsSection } from '../../components/admin/notifications';
+import { FileEdit, MessageSquare, PenTool } from 'lucide-react';
 
 const Notifications = () => {
   const [activeTab, setActiveTab] = useState('author-requests');
@@ -17,6 +17,12 @@ const Notifications = () => {
       label: 'Commentaires Signalés',
       icon: <MessageSquare className="w-4 h-4" />,
       component: <ReportedCommentsSection />
+    },
+    {
+      id: 'author-posts',
+      label: 'Posts d\'Auteurs',
+      icon: <PenTool className="w-4 h-4" />,
+      component: <AdminAuthorPostsSection />
     }
   ];
 
@@ -34,21 +40,21 @@ const Notifications = () => {
 
       {/* Onglets */}
       <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-slate-700/50 overflow-hidden">
-        <div className="flex border-b border-slate-700/50">
+        <div className="flex flex-col sm:flex-row border-b border-slate-700/50 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium transition-all duration-200 relative ${
+              className={`flex items-center gap-2 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 text-xs sm:text-sm md:text-base font-medium transition-all duration-200 relative whitespace-nowrap border-b-2 sm:border-b-0 sm:border-r last:border-r-0 flex-1 sm:flex-none ${
                 activeTab === tab.id
-                  ? 'text-white bg-slate-700/50 border-b-2 border-blue-500'
-                  : 'text-gray-400 hover:text-white hover:bg-slate-700/30'
+                  ? 'text-white bg-slate-700/50 border-blue-500 sm:border-b-2 sm:border-r-0'
+                  : 'text-gray-400 hover:text-white hover:bg-slate-700/30 border-transparent'
               }`}
             >
-              <span className={activeTab === tab.id ? 'text-blue-400' : 'text-gray-500'}>
+              <span className={`flex-shrink-0 ${activeTab === tab.id ? 'text-blue-400' : 'text-gray-500'}`}>
                 {tab.icon}
               </span>
-              {tab.label}
+              <span className="truncate">{tab.label}</span>
             </button>
           ))}
         </div>

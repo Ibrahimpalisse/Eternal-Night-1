@@ -90,91 +90,91 @@ const MyChapters = () => {
     <div className="min-h-screen w-full overflow-x-hidden">
       <div className="p-3 sm:p-6 max-w-full">
         <div className="max-w-7xl mx-auto w-full">
-          {/* En-tête */}
+        {/* En-tête */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
             <h1 className="text-2xl font-bold text-white truncate">Mes Chapitres</h1>
-            <button
-              onClick={handleCreateChapter}
+          <button
+            onClick={handleCreateChapter}
               className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25 flex items-center justify-center sm:justify-start gap-2 group"
-            >
-              <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+          >
+            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
               <span className="truncate">Nouveau Chapitre</span>
-            </button>
-          </div>
+          </button>
+        </div>
 
-          {/* Filtres et recherche */}
+        {/* Filtres et recherche */}
           <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-6 sm:mb-8 w-full">
-            {/* Barre de recherche */}
+          {/* Barre de recherche */}
             <div className="relative w-full">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un chapitre..."
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Rechercher un chapitre..."
                 className="w-full pl-12 pr-4 py-2.5 sm:py-3 bg-slate-800/60 border border-slate-600/50 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:bg-slate-800/80 focus:border-purple-500/50 h-[42px] sm:h-[48px] text-sm sm:text-base transition-all duration-200"
-              />
+            />
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
-            </div>
+          </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
-              {/* Filtre par roman */}
-              <NovelFilter
-                selectedNovel={selectedNovel}
-                onNovelChange={setSelectedNovel}
-                novels={mockNovels}
-              />
-
-              {/* Filtre par statut */}
-              <ChapterStatusFilter
-                selectedStatus={selectedStatus}
-                onStatusChange={setSelectedStatus}
-              />
-            </div>
-          </div>
-
-          {/* Liste des chapitres */}
-          <div className="w-full">
-            {filteredChapters.length === 0 ? (
-              <NoResults searchQuery={searchQuery} selectedNovel={selectedNovel} />
-            ) : (
-              <div className="space-y-3 sm:space-y-4 w-full">
-                {currentChapters.map((chapter) => (
-                  <ChapterCard
-                    key={chapter.id}
-                    chapter={chapter}
-                    onChapterClick={handleOpenChapter}
-                    formatWordCount={formatWordCount}
-                  />
-                ))}
-
-                {/* Pagination */}
-                <div className="mt-6 sm:mt-8 w-full">
-                  <NovelPagination
-                    currentPage={currentPage}
-                    totalPages={Math.ceil(filteredChapters.length / chaptersPerPage)}
-                    onPageChange={setCurrentPage}
-                    totalItems={filteredChapters.length}
-                    itemsPerPage={chaptersPerPage}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Modal de création de chapitre */}
-          <CreateChapterModal
-            isOpen={showCreateModal}
-            onClose={() => setShowCreateModal(false)}
+          {/* Filtre par roman */}
+          <NovelFilter
+            selectedNovel={selectedNovel}
+            onNovelChange={setSelectedNovel}
             novels={mockNovels}
-            onCreateChapter={handleNewChapterCreated}
           />
 
-          {/* Modal d'affichage/édition de chapitre */}
-          <ChapterViewModal
-            isOpen={showChapterModal}
-            onClose={() => setShowChapterModal(false)}
-            chapter={selectedChapter}
+          {/* Filtre par statut */}
+          <ChapterStatusFilter
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
           />
+            </div>
+        </div>
+
+        {/* Liste des chapitres */}
+          <div className="w-full">
+        {filteredChapters.length === 0 ? (
+          <NoResults searchQuery={searchQuery} selectedNovel={selectedNovel} />
+        ) : (
+              <div className="space-y-3 sm:space-y-4 w-full">
+            {currentChapters.map((chapter) => (
+              <ChapterCard
+                key={chapter.id}
+                chapter={chapter}
+                onChapterClick={handleOpenChapter}
+                formatWordCount={formatWordCount}
+              />
+            ))}
+
+            {/* Pagination */}
+                <div className="mt-6 sm:mt-8 w-full">
+            <NovelPagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredChapters.length / chaptersPerPage)}
+              onPageChange={setCurrentPage}
+              totalItems={filteredChapters.length}
+              itemsPerPage={chaptersPerPage}
+            />
+                </div>
+          </div>
+        )}
+          </div>
+
+        {/* Modal de création de chapitre */}
+        <CreateChapterModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          novels={mockNovels}
+          onCreateChapter={handleNewChapterCreated}
+        />
+
+        {/* Modal d'affichage/édition de chapitre */}
+        <ChapterViewModal
+          isOpen={showChapterModal}
+          onClose={() => setShowChapterModal(false)}
+          chapter={selectedChapter}
+        />
         </div>
       </div>
     </div>

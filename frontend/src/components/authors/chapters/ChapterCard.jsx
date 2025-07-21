@@ -27,14 +27,14 @@ const ChapterCard = ({ chapter, onChapterClick, formatWordCount }) => {
                 {chapter.title}
               </h3>
               <StatusBadge status={chapter.status} />
-            </div>
+          </div>
 
-            {/* Roman parent */}
-            <div className="flex items-center gap-2">
+          {/* Roman parent */}
+          <div className="flex items-center gap-2">
               <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
               <span className="text-[11px] sm:text-sm text-gray-400 truncate">
                 Roman: <span className="text-purple-300 truncate">{chapter.novelTitle}</span>
-              </span>
+            </span>
             </div>
           </div>
 

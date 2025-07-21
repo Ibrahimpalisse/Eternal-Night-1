@@ -191,18 +191,12 @@ const AuthorRequestsSection = () => {
       value: 'processed',
       label: 'Traitées',
       icon: CheckCircle,
-      color: 'text-blue-400'
-    },
-    {
-      value: 'published',
-      label: 'Publié',
-      icon: Check,
       color: 'text-green-400'
     },
     {
       value: 'rejected',
-      label: 'Dépublié',
-      icon: Slash,
+      label: 'Rejetées',
+      icon: XCircle,
       color: 'text-red-400'
     }
   ];
@@ -366,126 +360,217 @@ const AuthorRequestsSection = () => {
 
       {/* Liste des demandes */}
       <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-slate-700/50 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-700/50 border-b border-slate-600/50">
-              <tr>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Type</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Roman</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-600/30">
-              {currentRequests.map((request) => {
-                const typeConfig = requestTypes[request.type];
-                const statusConf = statusConfig[request.status];
+        {/* Vue Mobile - Cartes */}
+        <div className="block lg:hidden">
+          <div className="divide-y divide-slate-600/30">
+            {currentRequests.map((request) => {
+              const typeConfig = requestTypes[request.type];
+              const statusConf = statusConfig[request.status];
 
-                return (
-                  <tr key={request.id} className="hover:bg-slate-700/30 transition-colors">
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div className={`inline-flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${typeConfig.bg} ${typeConfig.border}`}>
-                        <div className={typeConfig.color}>
-                          {React.createElement(typeConfig.icon, { className: "w-4 h-4" })}
-                        </div>
-                        <span className={typeConfig.color}>{typeConfig.label}</span>
+              return (
+                <div key={request.id} className="p-4 hover:bg-slate-700/30 transition-colors">
+                  {/* Header avec type et statut */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium border ${typeConfig.bg} ${typeConfig.border}`}>
+                      <div className={typeConfig.color}>
+                        {React.createElement(typeConfig.icon, { className: "w-3 h-3" })}
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-8 h-10 sm:w-10 sm:h-12 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                          <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
-                        </div>
-                        <div>
-                          <p className="text-white font-medium text-xs sm:text-sm truncate max-w-32 sm:max-w-48">
-                            {request.novelTitle}
-                          </p>
-                          <p className="text-gray-400 text-xs">
-                            ID: {request.novelId}
-                          </p>
-                        </div>
+                      <span className={typeConfig.color}>{typeConfig.label}</span>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${statusConf.bg} ${statusConf.border}`}>
+                      <span className={statusConf.color}>{statusConf.label}</span>
+                    </span>
+                  </div>
+
+                  {/* Contenu principal */}
+                  <div className="space-y-3">
+                    {/* Roman */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-3 h-3 text-purple-400" />
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white font-medium text-sm truncate">
+                          {request.novelTitle}
+                        </p>
+                        <p className="text-gray-400 text-xs">
+                          ID: {request.novelId}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Auteur et Date */}
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <User className="w-3 h-3 text-white" />
                         </div>
-                        <span className="text-white text-xs sm:text-sm">{request.authorName}</span>
+                        <span className="text-white text-sm">{request.authorName}</span>
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
-                        <span className={statusConf.color}>{statusConf.label}</span>
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div>
-                        <p className="text-white text-xs sm:text-sm">{getTimeAgo(request.createdAt)}</p>
+                      <div className="text-right">
+                        <p className="text-white text-xs">{getTimeAgo(request.createdAt)}</p>
                         <p className="text-gray-400 text-xs">{formatDate(request.createdAt)}</p>
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div className="flex items-center gap-1 sm:gap-2">
-                        <button
-                          onClick={() => handleViewDetails(request)}
-                          className="p-1 sm:p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
-                          title="Voir les détails"
-                        >
-                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </button>
-                        {request.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => handleProcessRequest(request.id, 'approve')}
-                              className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
-                              title="Approuver"
-                            >
-                              <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleProcessRequest(request.id, 'reject')}
-                              className="p-1 sm:p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-colors"
-                              title="Rejeter"
-                            >
-                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+
+                                         {/* Actions */}
+                     <div className="pt-2 border-t border-slate-600/30 space-y-2">
+                       <button
+                         onClick={() => handleViewDetails(request)}
+                         className="flex items-center gap-2 px-3 py-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded text-sm transition-colors w-full justify-center"
+                       >
+                         <Eye className="w-4 h-4" />
+                         Voir les détails
+                       </button>
+                       {request.status === 'pending' && (
+                         <div className="flex gap-2">
+                           <button
+                             onClick={() => handleProcessRequest(request.id, 'approve')}
+                             className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded text-sm transition-colors flex-1 justify-center"
+                           >
+                             <Check className="w-4 h-4" />
+                             Approuver
+                           </button>
+                           <button
+                             onClick={() => handleProcessRequest(request.id, 'reject')}
+                             className="flex items-center gap-2 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded text-sm transition-colors flex-1 justify-center"
+                           >
+                             <X className="w-4 h-4" />
+                             Rejeter
+                           </button>
+                         </div>
+                       )}
+                     </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Vue Desktop - Tableau */}
+        <div className="hidden lg:block">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-700/50 border-b border-slate-600/50">
+                <tr>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Type</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Roman</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Auteur</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Statut</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Date</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-600/30">
+                {currentRequests.map((request) => {
+                  const typeConfig = requestTypes[request.type];
+                  const statusConf = statusConfig[request.status];
+
+                  return (
+                    <tr key={request.id} className="hover:bg-slate-700/30 transition-colors">
+                      <td className="px-4 xl:px-6 py-4">
+                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${typeConfig.bg} ${typeConfig.border}`}>
+                          <div className={typeConfig.color}>
+                            {React.createElement(typeConfig.icon, { className: "w-4 h-4" })}
+                          </div>
+                          <span className={typeConfig.color}>{typeConfig.label}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 xl:px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-12 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
+                            <BookOpen className="w-4 h-4 text-purple-400" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium text-sm truncate max-w-48">
+                              {request.novelTitle}
+                            </p>
+                            <p className="text-gray-400 text-xs">
+                              ID: {request.novelId}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 xl:px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <User className="w-4 h-4 text-white" />
+                          </div>
+                          <span className="text-white text-sm">{request.authorName}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 xl:px-6 py-4">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
+                          <span className={statusConf.color}>{statusConf.label}</span>
+                        </span>
+                      </td>
+                      <td className="px-4 xl:px-6 py-4">
+                        <div>
+                          <p className="text-white text-sm">{getTimeAgo(request.createdAt)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(request.createdAt)}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 xl:px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleViewDetails(request)}
+                            className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
+                            title="Voir les détails"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          {request.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleProcessRequest(request.id, 'approve')}
+                                className="p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
+                                title="Approuver"
+                              >
+                                <Check className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleProcessRequest(request.id, 'reject')}
+                                className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-colors"
+                                title="Rejeter"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="border-t border-slate-600/30 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+          <div className="border-t border-slate-600/30 px-4 py-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs sm:text-sm text-gray-400">
                 Affichage de {indexOfFirstItem + 1} à {Math.min(indexOfLastItem, filteredRequests.length)} sur {filteredRequests.length} demandes
               </div>
-              <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
-                  className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
+                  className="px-3 py-2 text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
                 >
                   Précédent
                 </button>
-                <span className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white bg-blue-600 rounded">
+                <span className="px-3 py-2 text-sm text-white bg-blue-600 rounded">
                   {currentPage}
                 </span>
-                <span className="text-gray-400 text-xs sm:text-sm">sur {totalPages}</span>
+                <span className="text-gray-400 text-sm">sur {totalPages}</span>
                 <button
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
+                  className="px-3 py-2 text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
                 >
                   Suivant
                 </button>

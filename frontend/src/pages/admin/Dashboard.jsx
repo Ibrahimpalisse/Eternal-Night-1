@@ -117,10 +117,29 @@ const Dashboard = () => {
               </button>
               <h1 className="text-lg md:text-2xl font-bold text-white">Dashboard Admin</h1>
             </div>
-            <div className="flex items-center gap-2 md:gap-4">
-              <span className="text-gray-300 text-sm md:text-base hidden sm:block">Bienvenue, {user.name}</span>
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">{user.name?.charAt(0).toUpperCase()}</span>
+            <div className="flex items-center gap-3">
+              <span className="text-gray-300 text-sm md:text-base hidden sm:block">{user.name}</span>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-white/10 rounded-full blur-lg"></div>
+                <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-white/5 backdrop-blur-sm border border-white/10 overflow-hidden">
+                  {user.profile?.avatarUrl || user.avatar || user.avatarUrl ? (
+                    <img 
+                      src={user.profile?.avatarUrl || user.avatar || user.avatarUrl}
+                      alt={`${user.name || user.username}'s profile`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <span 
+                    className="w-full h-full flex items-center justify-center text-white/90 font-medium text-sm md:text-base" 
+                    style={user.profile?.avatarUrl || user.avatar || user.avatarUrl ? {display: 'none'} : {}}
+                  >
+                    {user.name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

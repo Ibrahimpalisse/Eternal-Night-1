@@ -436,137 +436,244 @@ const ReportedCommentsSection = () => {
 
       {/* Liste des signalements */}
       <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-slate-700/50 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-700/50 border-b border-slate-600/50">
-              <tr>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Commentaire</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Roman</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Raison</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-600/30">
-              {currentReports.map((report) => {
-                const reasonConf = reasonConfig[report.reason];
-                const statusConf = statusConfig[report.status];
+        
+        {/* Mobile View - Cards */}
+        <div className="block lg:hidden">
+          <div className="divide-y divide-slate-600/30">
+            {currentReports.map((report) => {
+              const reasonConf = reasonConfig[report.reason];
+              const statusConf = statusConfig[report.status];
 
-                return (
-                  <tr key={report.id} className="hover:bg-slate-700/30 transition-colors">
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div className="max-w-xs">
-                        <p className="text-white text-xs sm:text-sm leading-relaxed">
-                          "{truncateText(report.content, 60)}"
-                        </p>
-                        <p className="text-gray-400 text-xs mt-1">
-                          ID: {report.commentId}
-                        </p>
+              return (
+                <div key={report.id} className="p-4 hover:bg-slate-700/30 transition-colors">
+                  {/* Header with reason and status */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium border ${reasonConf.bg} ${reasonConf.border}`}>
+                      <span className={reasonConf.color}>{reasonConf.label}</span>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${statusConf.bg} ${statusConf.border}`}>
+                      <span className={statusConf.color}>{statusConf.label}</span>
+                    </span>
+                  </div>
+
+                  {/* Comment content */}
+                  <div className="mb-3">
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                      <p className="text-white text-sm leading-relaxed mb-2">
+                        "{truncateText(report.content, 120)}"
+                      </p>
+                      <p className="text-gray-400 text-xs">ID: {report.commentId}</p>
+                    </div>
+                  </div>
+
+                  {/* Author and Novel info */}
+                  <div className="space-y-3">
+                    {/* Author */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-4 h-4 text-white" />
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-sm font-medium">{report.authorName}</p>
+                        <p className="text-gray-400 text-xs">ID: {report.authorId}</p>
+                      </div>
+                    </div>
+
+                    {/* Novel */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-4 h-4 text-purple-400" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-sm font-medium truncate">{report.novelTitle}</p>
+                        <p className="text-gray-400 text-xs truncate">{report.chapterTitle}</p>
+                      </div>
+                    </div>
+
+                    {/* Date and reported by */}
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                        </div>
+                        <Calendar className="w-4 h-4 text-gray-400" />
                         <div>
-                          <span className="text-white text-xs sm:text-sm">{report.authorName}</span>
-                          <p className="text-gray-400 text-xs">ID: {report.authorId}</p>
+                          <p className="text-white text-xs">{getTimeAgo(report.reportedAt)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(report.reportedAt)}</p>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                          <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
-                        </div>
-                        <div>
-                          <p className="text-white text-xs sm:text-sm font-medium truncate max-w-32">
-                            {report.novelTitle}
-                          </p>
-                          <p className="text-gray-400 text-xs truncate max-w-32">
-                            {report.chapterTitle}
-                          </p>
-                        </div>
+                        <Shield className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-400 text-xs">Par {report.reportedBy}</span>
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${reasonConf.bg} ${reasonConf.border}`}>
-                        <span className={reasonConf.color}>{reasonConf.label}</span>
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
-                        <span className={statusConf.color}>{statusConf.label}</span>
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div>
-                        <p className="text-white text-xs sm:text-sm">{getTimeAgo(report.reportedAt)}</p>
-                        <p className="text-gray-400 text-xs">{formatDate(report.reportedAt)}</p>
-                      </div>
-                    </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                      <div className="flex items-center gap-1 sm:gap-2">
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-3 border-t border-slate-600/30 space-y-2 mt-3">
+                    <button
+                      onClick={() => handleViewDetails(report)}
+                      className="flex items-center gap-2 px-3 py-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded text-sm transition-colors w-full justify-center"
+                    >
+                      <Eye className="w-4 h-4" />
+                      Voir les détails
+                    </button>
+                    {report.status === 'pending' && (
+                      <div className="flex gap-2">
                         <button
-                          onClick={() => handleViewDetails(report)}
-                          className="p-1 sm:p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
-                          title="Voir les détails"
+                          onClick={() => handleProcessReport(report.id, 'resolve')}
+                          className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded text-sm transition-colors flex-1 justify-center"
                         >
-                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <Check className="w-4 h-4" />
+                          Supprimer
                         </button>
-                        {report.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => handleProcessReport(report.id, 'resolve')}
-                              className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
-                              title="Résoudre (supprimer)"
-                            >
-                              <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleProcessReport(report.id, 'dismiss')}
-                              className="p-1 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-500/20 rounded transition-colors"
-                              title="Rejeter"
-                            >
-                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </button>
-                          </>
-                        )}
+                        <button
+                          onClick={() => handleProcessReport(report.id, 'dismiss')}
+                          className="flex items-center gap-2 px-3 py-2 text-gray-400 hover:text-gray-300 hover:bg-gray-500/20 rounded text-sm transition-colors flex-1 justify-center"
+                        >
+                          <X className="w-4 h-4" />
+                          Rejeter
+                        </button>
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop View - Table */}
+        <div className="hidden lg:block">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-700/50 border-b border-slate-600/50">
+                <tr>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Commentaire</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Roman</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Raison</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-600/30">
+                {currentReports.map((report) => {
+                  const reasonConf = reasonConfig[report.reason];
+                  const statusConf = statusConfig[report.status];
+
+                  return (
+                    <tr key={report.id} className="hover:bg-slate-700/30 transition-colors">
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="max-w-xs">
+                          <p className="text-white text-xs sm:text-sm leading-relaxed">
+                            "{truncateText(report.content, 60)}"
+                          </p>
+                          <p className="text-gray-400 text-xs mt-1">
+                            ID: {report.commentId}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                          </div>
+                          <div>
+                            <span className="text-white text-xs sm:text-sm">{report.authorName}</span>
+                            <p className="text-gray-400 text-xs">ID: {report.authorId}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
+                            <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
+                          </div>
+                          <div>
+                            <p className="text-white text-xs sm:text-sm font-medium truncate max-w-32">
+                              {report.novelTitle}
+                            </p>
+                            <p className="text-gray-400 text-xs truncate max-w-32">
+                              {report.chapterTitle}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${reasonConf.bg} ${reasonConf.border}`}>
+                          <span className={reasonConf.color}>{reasonConf.label}</span>
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
+                          <span className={statusConf.color}>{statusConf.label}</span>
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div>
+                          <p className="text-white text-xs sm:text-sm">{getTimeAgo(report.reportedAt)}</p>
+                          <p className="text-gray-400 text-xs">{formatDate(report.reportedAt)}</p>
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <button
+                            onClick={() => handleViewDetails(report)}
+                            className="p-1 sm:p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
+                            title="Voir les détails"
+                          >
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </button>
+                          {report.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleProcessReport(report.id, 'resolve')}
+                                className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
+                                title="Résoudre (supprimer)"
+                              >
+                                <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleProcessReport(report.id, 'dismiss')}
+                                className="p-1 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-500/20 rounded transition-colors"
+                                title="Rejeter"
+                              >
+                                <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="border-t border-slate-600/30 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+          <div className="border-t border-slate-600/30 px-4 py-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs sm:text-sm text-gray-400">
                 Affichage de {indexOfFirstItem + 1} à {Math.min(indexOfLastItem, filteredReports.length)} sur {filteredReports.length} signalements
               </div>
-              <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
-                  className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
+                  className="px-3 py-2 text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
                 >
                   Précédent
                 </button>
-                <span className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-white bg-red-600 rounded">
+                <span className="px-3 py-2 text-sm text-white bg-red-600 rounded">
                   {currentPage}
                 </span>
-                <span className="text-gray-400 text-xs sm:text-sm">sur {totalPages}</span>
+                <span className="text-gray-400 text-sm">sur {totalPages}</span>
                 <button
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
+                  className="px-3 py-2 text-sm text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600/50 rounded hover:bg-slate-700/50 transition-colors"
                 >
                   Suivant
                 </button>
@@ -726,13 +833,13 @@ const ReportedCommentsSection = () => {
               </div>
 
               {selectedReport.status === 'pending' && (
-                <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-white/10">
                   <button
                     onClick={() => {
                       handleProcessReport(selectedReport.id, 'dismiss');
                       setShowDetailsModal(false);
                     }}
-                    className="px-4 py-2 border border-gray-500/50 text-gray-400 rounded-lg hover:bg-gray-500/10 transition-colors"
+                    className="w-full sm:w-auto px-4 py-2 border border-gray-500/50 text-gray-400 rounded-lg hover:bg-gray-500/10 transition-colors text-sm sm:text-base"
                   >
                     Rejeter
                   </button>
@@ -741,7 +848,7 @@ const ReportedCommentsSection = () => {
                       handleProcessReport(selectedReport.id, 'resolve');
                       setShowDetailsModal(false);
                     }}
-                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-lg transition-colors"
+                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-lg transition-colors text-sm sm:text-base"
                   >
                     Supprimer le commentaire
                   </button>
