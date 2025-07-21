@@ -2,7 +2,7 @@ import React from 'react';
 
 const HeroSection = () => {
   return (
-    <div className="min-h-screen w-full">
+    <div className="w-full">
       {/* Container principal pour l'image hero */}
       <div className="w-full h-[50vh] md:h-[70vh] lg:h-[50vh] overflow-hidden group" style={{ position: 'relative' }}>
         {/* Image de fond avec effet hover */}
