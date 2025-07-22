@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, BookOpen, Edit, Trash2, Eye, Calendar, User, Heart, MessageCircle, Send, FileEdit, ChevronDown, Check, AlertCircle, Search, Upload, Star, Clock } from 'lucide-react';
+import { X, BookOpen, Edit, Trash2, Eye, Calendar, User, Heart, MessageCircle, Send, FileEdit, ChevronDown, Check, AlertCircle, Search, Upload, Clock } from 'lucide-react';
 
 // Composant de sélection multiple pour les genres avec recherche
 const MultiSelectGenres = ({ selectedGenres, onGenresChange, availableGenres }) => {
@@ -228,14 +228,8 @@ export const NovelDetailsModal = ({
             {/* Titre et statut */}
             <h2 className="text-2xl font-bold text-white mb-2">{novel.title}</h2>
             
-            {/* Note moyenne et vues */}
-            <div className="flex items-center gap-6 mb-4">
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                <span className="text-lg font-semibold text-white">
-                  {novel.rating ? `${novel.rating.toFixed(1)}/5` : 'Pas encore noté'}
-                </span>
-              </div>
+            {/* Vues */}
+            <div className="flex items-center justify-center mb-4">
               <div className="flex items-center gap-2">
                 <Eye className="w-5 h-5 text-green-400" />
                 <span className="text-lg font-semibold text-white">{novel.views || 0}</span>

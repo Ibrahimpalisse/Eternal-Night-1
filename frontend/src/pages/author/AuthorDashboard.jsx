@@ -115,8 +115,8 @@ const StatCard = ({ title, value, change, changeType, icon: Icon, color, href })
               <span className="text-gray-400 text-sm">cette semaine</span>
             </div>
           )}
-        </div>
-        
+    </div>
+
         {/* Icône avec effet de halo */}
         <div className="relative">
           <div className={`absolute inset-0 bg-${color}-400/20 rounded-xl blur-lg scale-150`} />
@@ -125,8 +125,8 @@ const StatCard = ({ title, value, change, changeType, icon: Icon, color, href })
           </div>
         </div>
       </div>
-    </div>
-    
+      </div>
+
     {/* Effet de bordure animé au hover */}
     <div className={`absolute inset-0 border-2 border-${color}-500/0 group-hover:border-${color}-500/30 rounded-2xl transition-all duration-300`} />
   </div>
@@ -178,7 +178,7 @@ const AuthorDashboardContent = () => {
     <div className="p-4 md:p-6 space-y-6 md:space-y-8">
       {/* En-tête avec actions rapides */}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        <div>
+          <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Dashboard Auteur</h1>
           <p className="text-gray-400">Bienvenue dans votre espace créatif</p>
         </div>
@@ -253,7 +253,7 @@ const AuthorDashboardContent = () => {
           color="orange"
           href="/author/posts"
         />
-      </div>
+          </div>
 
 
 
@@ -274,9 +274,9 @@ const AuthorDashboardContent = () => {
         >
           Voir tous les romans →
         </button>
-      </div>
     </div>
-  );
+  </div>
+);
 };
 
 // AuthorNovels maintenant remplacé par le composant MyNovels importé

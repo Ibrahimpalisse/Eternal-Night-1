@@ -542,112 +542,112 @@ const ReportedCommentsSection = () => {
 
         {/* Desktop View - Table */}
         <div className="hidden lg:block">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-700/50 border-b border-slate-600/50">
-                <tr>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Commentaire</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Roman</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Raison</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
-                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-600/30">
-                {currentReports.map((report) => {
-                  const reasonConf = reasonConfig[report.reason];
-                  const statusConf = statusConfig[report.status];
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-700/50 border-b border-slate-600/50">
+              <tr>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Commentaire</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Roman</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Raison</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-600/30">
+              {currentReports.map((report) => {
+                const reasonConf = reasonConfig[report.reason];
+                const statusConf = statusConfig[report.status];
 
-                  return (
-                    <tr key={report.id} className="hover:bg-slate-700/30 transition-colors">
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <div className="max-w-xs">
-                          <p className="text-white text-xs sm:text-sm leading-relaxed">
-                            "{truncateText(report.content, 60)}"
-                          </p>
-                          <p className="text-gray-400 text-xs mt-1">
-                            ID: {report.commentId}
-                          </p>
+                return (
+                  <tr key={report.id} className="hover:bg-slate-700/30 transition-colors">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="max-w-xs">
+                        <p className="text-white text-xs sm:text-sm leading-relaxed">
+                          "{truncateText(report.content, 60)}"
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">
+                          ID: {report.commentId}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                          <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                         </div>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                            <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                          </div>
-                          <div>
-                            <span className="text-white text-xs sm:text-sm">{report.authorName}</span>
-                            <p className="text-gray-400 text-xs">ID: {report.authorId}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                            <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
-                          </div>
-                          <div>
-                            <p className="text-white text-xs sm:text-sm font-medium truncate max-w-32">
-                              {report.novelTitle}
-                            </p>
-                            <p className="text-gray-400 text-xs truncate max-w-32">
-                              {report.chapterTitle}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${reasonConf.bg} ${reasonConf.border}`}>
-                          <span className={reasonConf.color}>{reasonConf.label}</span>
-                        </span>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
-                          <span className={statusConf.color}>{statusConf.label}</span>
-                        </span>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                         <div>
-                          <p className="text-white text-xs sm:text-sm">{getTimeAgo(report.reportedAt)}</p>
-                          <p className="text-gray-400 text-xs">{formatDate(report.reportedAt)}</p>
+                          <span className="text-white text-xs sm:text-sm">{report.authorName}</span>
+                          <p className="text-gray-400 text-xs">ID: {report.authorId}</p>
                         </div>
-                      </td>
-                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <button
-                            onClick={() => handleViewDetails(report)}
-                            className="p-1 sm:p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
-                            title="Voir les détails"
-                          >
-                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </button>
-                          {report.status === 'pending' && (
-                            <>
-                              <button
-                                onClick={() => handleProcessReport(report.id, 'resolve')}
-                                className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
-                                title="Résoudre (supprimer)"
-                              >
-                                <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </button>
-                              <button
-                                onClick={() => handleProcessReport(report.id, 'dismiss')}
-                                className="p-1 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-500/20 rounded transition-colors"
-                                title="Rejeter"
-                              >
-                                <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </button>
-                            </>
-                          )}
+                      </div>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
+                          <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
                         </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        <div>
+                          <p className="text-white text-xs sm:text-sm font-medium truncate max-w-32">
+                            {report.novelTitle}
+                          </p>
+                          <p className="text-gray-400 text-xs truncate max-w-32">
+                            {report.chapterTitle}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${reasonConf.bg} ${reasonConf.border}`}>
+                        <span className={reasonConf.color}>{reasonConf.label}</span>
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
+                        <span className={statusConf.color}>{statusConf.label}</span>
+                      </span>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div>
+                        <p className="text-white text-xs sm:text-sm">{getTimeAgo(report.reportedAt)}</p>
+                        <p className="text-gray-400 text-xs">{formatDate(report.reportedAt)}</p>
+                      </div>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <button
+                          onClick={() => handleViewDetails(report)}
+                          className="p-1 sm:p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
+                          title="Voir les détails"
+                        >
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
+                        {report.status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleProcessReport(report.id, 'resolve')}
+                              className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
+                              title="Résoudre (supprimer)"
+                            >
+                              <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleProcessReport(report.id, 'dismiss')}
+                              className="p-1 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-500/20 rounded transition-colors"
+                              title="Rejeter"
+                            >
+                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           </div>
         </div>
 

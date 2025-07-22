@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Filter, Edit, Eye, BookOpen, Clock, Calendar, MoreVertical } from 'lucide-react';
+import { Search, Plus, Filter, Edit, Eye, BookOpen, Clock, Calendar, MoreVertical, Heart } from 'lucide-react';
 import { NovelStatusFilter, NovelCategoryFilter } from '../../components/authors/filters';
 import { NovelModalManager } from '../../components/authors/modals';
 import { NovelPagination } from '../../components/authors/table';
@@ -178,7 +178,7 @@ const NoResults = ({ searchQuery }) => {
 };
 
 // Composant principal
-const MyNovels = () => {
+function MyNovels() {
   const [novels, setNovels] = useState(mockNovels);
   const [filteredNovels, setFilteredNovels] = useState(mockNovels);
   const [searchQuery, setSearchQuery] = useState('');
@@ -240,7 +240,7 @@ const MyNovels = () => {
   const indexOfLastNovel = currentPage * novelsPerPage;
   const indexOfFirstNovel = indexOfLastNovel - novelsPerPage;
   const currentNovels = filteredNovels.slice(indexOfFirstNovel, indexOfLastNovel);
-  const totalPages = Math.ceil(filteredNovels.length / novelsPerPage);
+  // const totalPages = Math.ceil(filteredNovels.length / novelsPerPage);
 
   const handleCreateNovel = async (formData) => {
     try {
@@ -455,18 +455,22 @@ const MyNovels = () => {
                       </div>
 
                       {/* Métriques et date */}
-                      <div className="mt-auto grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-400">
+                      <div className="mt-auto grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-400">
                         <div className="flex items-center gap-1">
                           <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="truncate">{novel.chapters} chapitres</span>
+                          <span className="truncate">{novel.chapters} ch.</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-blue-400" />
+                          <span className="truncate">{novel.views?.toLocaleString() || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-red-400" />
+                          <span className="truncate">{novel.likes?.toLocaleString() || 0}</span>
                         </div>
                         <div className="hidden sm:flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                           <span className="truncate">Mis à jour {new Date(novel.updatedAt).toLocaleDateString('fr-FR')}</span>
-                        </div>
-                        <div className="hidden sm:flex items-center gap-1">
-                          <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="truncate">Créé {new Date(novel.createdAt).toLocaleDateString('fr-FR')}</span>
                         </div>
                       </div>
                     </div>
@@ -496,6 +500,6 @@ const MyNovels = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MyNovels; 

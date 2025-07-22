@@ -10,7 +10,6 @@ import {
   Search,
   SortAsc,
   SortDesc,
-  Eye,
   Trash2,
   BookOpen,
   User,
@@ -1736,11 +1735,6 @@ const UserCommentsHistoryModal = ({ user, isOpen, onClose, onUserClick }) => {
 
 
 
-  const handleViewComment = (comment) => {
-    console.log('Voir le commentaire:', comment);
-    // Ici vous pourriez ouvrir une modale de détail ou naviguer vers le contenu
-  };
-
   const handleDeleteComment = (comment) => {
     setSelectedCommentForDelete(comment);
     setShowDeleteCommentDialog(true);
@@ -2087,13 +2081,6 @@ const UserCommentsHistoryModal = ({ user, isOpen, onClose, onUserClick }) => {
 
                     {/* Actions */}
                     <div className="flex flex-col gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => handleViewComment(comment)}
-                        className="p-2 sm:p-2.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 hover:border-blue-500/50 text-blue-400 hover:text-blue-300 transition-all hover:scale-105"
-                        title="Voir les détails"
-                      >
-                        <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </button>
                       <button
                         onClick={() => handleDeleteComment(comment)}
                         className="p-2 sm:p-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 hover:text-red-300 transition-all hover:scale-105"

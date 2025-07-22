@@ -170,7 +170,7 @@ const AuthorSlideNav = ({ isOpen, onToggle }) => {
                         ? 'bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white border border-blue-500/50 shadow-lg shadow-blue-500/10'
                         : item.isSpecial 
                           ? 'text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-green-600/20 hover:to-emerald-600/20 hover:border-green-500/50 border border-transparent'
-                          : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
+                        : 'text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/10 border border-transparent'
                     } ${!isOpen ? 'justify-center' : ''}`
                   }
                 >

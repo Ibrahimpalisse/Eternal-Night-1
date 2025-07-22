@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
-import { BookOpen, Heart, MessageCircle, CheckCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, Heart, MessageCircle, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+import ResponsiveStatusBadge from './ui/ResponsiveStatusBadge';
 
 // Données mockées pour les romans terminés
 const completedBooks = [
@@ -11,6 +13,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop",
     category: "Fantasy",
     chapters: 45,
+    views: 18500,
     favorites: 2847,
     comments: 892,
     status: "Terminé"
@@ -22,6 +25,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop",
     category: "Romance",
     chapters: 32,
+    views: 14200,
     favorites: 1923,
     comments: 567,
     status: "Terminé"
@@ -33,6 +37,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop",
     category: "Aventure",
     chapters: 38,
+    views: 22100,
     favorites: 3156,
     comments: 1024,
     status: "Terminé"
@@ -44,6 +49,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop",
     category: "Drame",
     chapters: 28,
+    views: 11800,
     favorites: 1456,
     comments: 432,
     status: "Terminé"
@@ -55,6 +61,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=300&h=400&fit=crop",
     category: "Fantasy",
     chapters: 52,
+    views: 28900,
     favorites: 4234,
     comments: 1567,
     status: "Terminé"
@@ -66,6 +73,7 @@ const completedBooks = [
     image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=400&fit=crop",
     category: "Romance",
     chapters: 25,
+    views: 13400,
     favorites: 1789,
     comments: 634,
     status: "Terminé"
@@ -140,38 +148,41 @@ const CompletedBooks = () => {
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          <div ref={scrollRef} className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div ref={scrollRef} className="flex gap-0 sm:gap-6 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {completedBooks.map((book) => (
-                              <div
-                  key={book.id}
-                  className="flex-none w-full sm:w-64 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden hover:scale-105 hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-300 group cursor-pointer snap-center"
-                >
+              <div 
+                key={book.id}
+                className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer w-full min-w-full flex-shrink-0 sm:w-[12rem] sm:min-w-[12rem] sm:gap-6"
+              >
                 {/* Image du livre */}
                 <div className="relative h-80 overflow-hidden">
-                  <img
+                  <img 
                     src={book.image}
                     alt={book.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/300x400/1f2937/ffffff?text=' + encodeURIComponent(book.title);
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
                     }}
                   />
+                  {/* Placeholder CSS quand l'image ne charge pas */}
+                  <div 
+                    className="w-full h-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-white font-bold text-2xl sm:text-4xl hidden"
+                    style={{ display: 'none' }}
+                  >
+                    {book.title.slice(0, 2).toUpperCase()}
+                  </div>
+
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
 
-                  {/* Badge catégorie */}
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2 py-1 bg-green-600/80 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-                      {book.category}
-                    </span>
-                  </div>
-
                   {/* Badge statut terminé */}
                   <div className="absolute top-3 right-3">
-                    <span className="px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold rounded-full flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Terminé
-                    </span>
+                    <ResponsiveStatusBadge 
+                      status="terminé" 
+                      size="small"
+                      className="backdrop-blur-sm"
+                    />
                   </div>
                 </div>
 
@@ -186,18 +197,22 @@ const CompletedBooks = () => {
                   </div>
 
                   {/* Statistiques */}
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-1 text-blue-400">
-                      <BookOpen className="w-4 h-4" />
-                      <span className="font-medium">{book.chapters}</span>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm mt-3">
+                    <div className="flex items-center justify-start gap-2 text-blue-400 hover:text-blue-300 transition-colors duration-200 min-w-0">
+                      <BookOpen className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+                      <span className="font-medium truncate">{book.chapters}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-red-400">
-                      <Heart className="w-4 h-4" />
-                      <span className="font-medium">{book.favorites}</span>
+                    <div className="flex items-center justify-start gap-2 text-purple-400 hover:text-purple-300 transition-colors duration-200 min-w-0">
+                      <Eye className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+                      <span className="font-medium truncate">{book.views?.toLocaleString() || 0}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-green-400">
-                      <MessageCircle className="w-4 h-4" />
-                      <span className="font-medium">{book.comments}</span>
+                    <div className="flex items-center justify-start gap-2 text-red-400 hover:text-red-300 transition-colors duration-200 min-w-0">
+                      <Heart className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+                      <span className="font-medium truncate">{book.favorites?.toLocaleString() || 0}</span>
+                    </div>
+                    <div className="flex items-center justify-start gap-2 text-green-400 hover:text-green-300 transition-colors duration-200 min-w-0">
+                      <MessageCircle className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+                      <span className="font-medium truncate">{book.comments}</span>
                     </div>
                   </div>
                 </div>

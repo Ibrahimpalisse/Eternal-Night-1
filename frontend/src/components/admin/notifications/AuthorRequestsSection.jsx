@@ -450,101 +450,101 @@ const AuthorRequestsSection = () => {
 
         {/* Vue Desktop - Tableau */}
         <div className="hidden lg:block">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-700/50 border-b border-slate-600/50">
-                <tr>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-700/50 border-b border-slate-600/50">
+              <tr>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Type</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Roman</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Auteur</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Statut</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Date</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-600/30">
-                {currentRequests.map((request) => {
-                  const typeConfig = requestTypes[request.type];
-                  const statusConf = statusConfig[request.status];
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-600/30">
+              {currentRequests.map((request) => {
+                const typeConfig = requestTypes[request.type];
+                const statusConf = statusConfig[request.status];
 
-                  return (
-                    <tr key={request.id} className="hover:bg-slate-700/30 transition-colors">
+                return (
+                  <tr key={request.id} className="hover:bg-slate-700/30 transition-colors">
                       <td className="px-4 xl:px-6 py-4">
                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${typeConfig.bg} ${typeConfig.border}`}>
-                          <div className={typeConfig.color}>
-                            {React.createElement(typeConfig.icon, { className: "w-4 h-4" })}
-                          </div>
-                          <span className={typeConfig.color}>{typeConfig.label}</span>
+                        <div className={typeConfig.color}>
+                          {React.createElement(typeConfig.icon, { className: "w-4 h-4" })}
                         </div>
-                      </td>
+                        <span className={typeConfig.color}>{typeConfig.label}</span>
+                      </div>
+                    </td>
                       <td className="px-4 xl:px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-12 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
                             <BookOpen className="w-4 h-4 text-purple-400" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium text-sm truncate max-w-48">
-                              {request.novelTitle}
-                            </p>
-                            <p className="text-gray-400 text-xs">
-                              ID: {request.novelId}
-                            </p>
-                          </div>
                         </div>
-                      </td>
+                        <div>
+                            <p className="text-white font-medium text-sm truncate max-w-48">
+                            {request.novelTitle}
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            ID: {request.novelId}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
                       <td className="px-4 xl:px-6 py-4">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                             <User className="w-4 h-4 text-white" />
-                          </div>
-                          <span className="text-white text-sm">{request.authorName}</span>
                         </div>
-                      </td>
+                          <span className="text-white text-sm">{request.authorName}</span>
+                      </div>
+                    </td>
                       <td className="px-4 xl:px-6 py-4">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${statusConf.bg} ${statusConf.border}`}>
-                          <span className={statusConf.color}>{statusConf.label}</span>
-                        </span>
-                      </td>
+                        <span className={statusConf.color}>{statusConf.label}</span>
+                      </span>
+                    </td>
                       <td className="px-4 xl:px-6 py-4">
-                        <div>
+                      <div>
                           <p className="text-white text-sm">{getTimeAgo(request.createdAt)}</p>
-                          <p className="text-gray-400 text-xs">{formatDate(request.createdAt)}</p>
-                        </div>
-                      </td>
+                        <p className="text-gray-400 text-xs">{formatDate(request.createdAt)}</p>
+                      </div>
+                    </td>
                       <td className="px-4 xl:px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleViewDetails(request)}
+                        <button
+                          onClick={() => handleViewDetails(request)}
                             className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded transition-colors"
-                            title="Voir les détails"
-                          >
+                          title="Voir les détails"
+                        >
                             <Eye className="w-4 h-4" />
-                          </button>
-                          {request.status === 'pending' && (
-                            <>
-                              <button
-                                onClick={() => handleProcessRequest(request.id, 'approve')}
+                        </button>
+                        {request.status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleProcessRequest(request.id, 'approve')}
                                 className="p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
-                                title="Approuver"
-                              >
+                              title="Approuver"
+                            >
                                 <Check className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => handleProcessRequest(request.id, 'reject')}
+                            </button>
+                            <button
+                              onClick={() => handleProcessRequest(request.id, 'reject')}
                                 className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-colors"
-                                title="Rejeter"
-                              >
+                              title="Rejeter"
+                            >
                                 <X className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import ResetPassword from './pages/user/ResetPassword';
 import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
 import JoinAuthors from './pages/user/JoinAuthors';
+import Library from './pages/user/Library';
 import AdminDashboard from './pages/admin/Dashboard';
 import AuthorDashboard from './pages/author/AuthorDashboard';
 import Navbar from './components/Navbar';
@@ -71,6 +72,8 @@ const AppContent = () => {
                 <Route path="/user/profil" element={<Profil />} />
                 {/* Route for Join Authors page */}
                 <Route path="/join-authors" element={<JoinAuthors />} />
+                {/* Route for Library page */}
+                <Route path="/library" element={<Library />} />
               </Routes>
           </main>
       <Footer />

@@ -13,8 +13,8 @@ const Home = () => {
       <OngoingBooks />
       <CompletedBooks />
       <NewChapters />
-    </div>
-  );
-};
-
-export default Home; 
+      </div>
+    );
+  };
+  
+  export default Home; 

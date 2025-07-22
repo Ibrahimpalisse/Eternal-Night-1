@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Search, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getStatusBadgeForWork, getPageNumbers } from './userUtils.jsx';
 
 const UserWorksSection = ({ userWorks = [] }) => {
@@ -145,15 +145,7 @@ const UserWorksSection = ({ userWorks = [] }) => {
                           <span className="text-gray-400">Vues :</span>
                           <span className="text-gray-300 font-medium">{work.views.toLocaleString()}</span>
                         </div>
-                        {work.rating && (
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-400">Note :</span>
-                            <div className="flex items-center gap-1">
-                              <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                              <span className="text-gray-300 font-medium">{work.rating}/5</span>
-                            </div>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   </div>
