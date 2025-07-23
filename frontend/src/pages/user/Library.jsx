@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FilterBar, BookGrid, BookList, ViewToggle, Pagination } from '../../components/library';
 import { useViewMode } from '../../hooks/useLocalStorage';
 
@@ -111,6 +112,8 @@ const libraryBooks = [
 ];
 
 const Library = () => {
+  const navigate = useNavigate();
+  
   // États pour les filtres et la recherche
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -163,7 +166,7 @@ const Library = () => {
 
   const handleBookClick = (book) => {
     console.log('Livre cliqué:', book);
-    // Ici vous pourriez naviguer vers la page de détail du livre
+    navigate(`/novel/${book.id}`);
   };
 
   return (

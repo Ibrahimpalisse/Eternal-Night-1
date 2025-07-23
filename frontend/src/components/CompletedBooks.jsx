@@ -86,7 +86,13 @@ const CompletedBooks = () => {
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
+    console.log('Voir plus de romans terminés...');
+    // Redirection vers la page des romans terminés
     navigate('/completed-novels'); // Redirection vers la page des romans terminés
+  };
+
+  const handleBookClick = (book) => {
+    navigate(`/novel/${book.id}`);
   };
 
   const scrollLeft = () => {
@@ -153,6 +159,7 @@ const CompletedBooks = () => {
               <div 
                 key={book.id}
                 className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer w-full min-w-full flex-shrink-0 sm:w-[12rem] sm:min-w-[12rem] sm:gap-6"
+                onClick={() => handleBookClick(book)}
               >
                 {/* Image du livre */}
                 <div className="relative h-80 overflow-hidden">
