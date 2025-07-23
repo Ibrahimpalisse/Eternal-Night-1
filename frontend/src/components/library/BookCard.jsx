@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Heart, MessageCircle, Clock, CheckCircle, Eye } from 'lucide-react';
+import { BookOpen, Heart, MessageCircle, Clock, CheckCircle, Eye, Calendar, User } from 'lucide-react';
 import ResponsiveStatusBadge from '../ui/ResponsiveStatusBadge';
 
 const BookCard = ({ book, onClick }) => {
@@ -29,6 +29,7 @@ const BookCard = ({ book, onClick }) => {
     <div
       onClick={() => onClick && onClick(book)}
       className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer max-w-[12rem] w-full mx-auto sm:max-w-none"
+      style={{ cursor: 'pointer' }}
     >
       {/* Image du livre */}
       <div className="relative h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden">

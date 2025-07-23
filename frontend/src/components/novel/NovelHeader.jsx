@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useNavigation } from '../NavigationManager';
 import { 
   ArrowLeft, 
   BookOpen, 
@@ -14,10 +15,17 @@ import {
 import { ResponsiveStatusBadge } from '../ui';
 
 const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onStartReading }) => {
-  const navigate = useNavigate();
+  const { goBack } = useNavigation();
+  const location = useLocation();
 
   const getAvatarInitials = (title) => {
     return title.split(' ').map(word => word[0]).join('').slice(0, 2);
+  };
+
+  // Fonction pour gérer le retour de manière prévisible
+  const handleBack = () => {
+    const from = location.state?.from;
+    goBack(from);
   };
 
   return (
@@ -25,7 +33,7 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
       
       {/* Bouton retour */}
       <button
-        onClick={() => navigate(-1)}
+        onClick={handleBack}
         className="flex items-center gap-2 px-3 py-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-xl border border-slate-600/50 text-gray-300 hover:text-white transition-colors mb-4 sm:mb-6"
       >
         <ArrowLeft className="w-4 h-4" />

@@ -18,6 +18,7 @@ import Footer from './components/Footer';
 import TokenRefreshNotification from './components/ui/TokenRefreshNotification';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { NavigationProvider } from './components/NavigationManager';
 import Profile from './services/Profile';
 
 // Composant wrapper pour s'assurer que tout est correctement initialisé
@@ -45,7 +46,8 @@ const AppContent = () => {
 
   return (
     <ToastProvider>
-      <Routes>
+      <NavigationProvider>
+        <Routes>
         {/* Route for Admin Dashboard - Sans navbar/footer */}
         <Route path="/admin/*" element={<AdminDashboard />} />
         
@@ -87,6 +89,7 @@ const AppContent = () => {
         </div>
         } />
       </Routes>
+        </NavigationProvider>
     </ToastProvider>
   );
 };

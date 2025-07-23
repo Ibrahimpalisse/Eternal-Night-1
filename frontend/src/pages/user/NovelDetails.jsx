@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useNavigation } from '../../components/NavigationManager';
 import { useScrollToTop } from '../../hooks';
 import {
   NovelHeader,
@@ -257,7 +258,7 @@ const mockComments = [
 
 const NovelDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const { navigateToChapter } = useNavigation();
   useScrollToTop();
   
   // États pour les filtres des chapitres
@@ -389,16 +390,16 @@ const NovelDetails = () => {
   // Handlers
   const handleChapterClick = (chapter) => {
     console.log('Lecture du chapitre:', chapter.title);
-    navigate(`/read/${id}/chapter/${chapter.number}`);
+    navigateToChapter(id, chapter.number);
   };
 
   const handleStartReading = () => {
     if (mockNovel.lastReadChapter) {
       // Continuer la lecture au dernier chapitre lu
-      navigate(`/read/${id}/chapter/${mockNovel.lastReadChapter + 1}`);
+      navigateToChapter(id, mockNovel.lastReadChapter + 1);
     } else {
       // Commencer par le premier chapitre
-      navigate(`/read/${id}/chapter/1`);
+      navigateToChapter(id, 1);
     }
   };
 

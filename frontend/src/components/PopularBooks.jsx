@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { BookOpen, Heart, MessageCircle, Star, ArrowRight, Clock, CheckCircle, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigation } from './NavigationManager';
 
 import ResponsiveStatusBadge from './ui/ResponsiveStatusBadge';
 
@@ -82,7 +82,7 @@ const popularBooks = [
 
 const PopularBooks = () => {
   console.log('PopularBooks component is rendering'); // Debug log
-  const navigate = useNavigate();
+  const { navigateToNovel } = useNavigation();
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
@@ -92,7 +92,7 @@ const PopularBooks = () => {
   };
 
   const handleBookClick = (book) => {
-    navigate(`/novel/${book.id}`);
+    navigateToNovel(book.id, 'home');
   };
 
   const scrollLeft = () => {

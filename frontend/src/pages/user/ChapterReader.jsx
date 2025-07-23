@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useNavigation } from '../../components/NavigationManager';
 import { useScrollToTopOnChange } from '../../hooks';
 import {
   ChapterHeader,
@@ -184,7 +185,7 @@ const mockChapterReplies = {
 
 const ChapterReader = () => {
   const { novelId, chapterNumber } = useParams();
-  const navigate = useNavigate();
+  const { navigateToChapter, navigateToNovel, goBack } = useNavigation();
 
   // États pour la lecture
   const [readingProgress, setReadingProgress] = useState(0);
@@ -285,22 +286,22 @@ const ChapterReader = () => {
   // Fonctions de navigation
   const goToPreviousChapter = () => {
     if (chapterData.previousChapter) {
-      navigate(`/read/${novelId}/chapter/${chapterData.previousChapter}`);
+      navigateToChapter(novelId, chapterData.previousChapter);
     }
   };
 
   const goToNextChapter = () => {
     if (chapterData.nextChapter) {
-      navigate(`/read/${novelId}/chapter/${chapterData.nextChapter}`);
+      navigateToChapter(novelId, chapterData.nextChapter);
     }
   };
 
   const goBackToNovel = () => {
-    navigate(`/novel/${novelId}`);
+    goBack('chapter');
   };
 
   const goToChapter = (chapterNum) => {
-    navigate(`/read/${novelId}/chapter/${chapterNum}`);
+    navigateToChapter(novelId, chapterNum);
     setIsChaptersMenuOpen(false);
     setChapterSearch('');
     

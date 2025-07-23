@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigation } from '../../components/NavigationManager';
 import { useScrollToTop } from '../../hooks';
 import { FilterBar, BookGrid, BookList, ViewToggle, Pagination } from '../../components/library';
 import { useViewMode } from '../../hooks/useLocalStorage';
@@ -113,7 +113,7 @@ const libraryBooks = [
 ];
 
 const Library = () => {
-  const navigate = useNavigate();
+  const { navigateToNovel } = useNavigation();
   useScrollToTop();
   
   // États pour les filtres et la recherche
@@ -168,7 +168,7 @@ const Library = () => {
 
   const handleBookClick = (book) => {
     console.log('Livre cliqué:', book);
-    navigate(`/novel/${book.id}`);
+    navigateToNovel(book.id, 'library');
   };
 
   return (
