@@ -10,6 +10,7 @@ import Profil from './pages/user/Profil';
 import JoinAuthors from './pages/user/JoinAuthors';
 import Library from './pages/user/Library';
 import NovelDetails from './pages/user/NovelDetails';
+import ChapterReader from './pages/user/ChapterReader';
 import AdminDashboard from './pages/admin/Dashboard';
 import AuthorDashboard from './pages/author/AuthorDashboard';
 import Navbar from './components/Navbar';
@@ -77,15 +78,8 @@ const AppContent = () => {
                 <Route path="/library" element={<Library />} />
                 {/* Route for Novel Details page */}
                 <Route path="/novel/:id" element={<NovelDetails />} />
-                {/* Route for Chapter Reading page (temporary) */}
-                <Route path="/read/:novelId/chapter/:chapterNumber" element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-2xl font-bold text-white mb-4">Lecture du chapitre</h1>
-                      <p className="text-gray-400">Page de lecture en cours de développement...</p>
-                    </div>
-                  </div>
-                } />
+                {/* Route for Chapter Reading page */}
+                <Route path="/read/:novelId/chapter/:chapterNumber" element={<ChapterReader />} />
               </Routes>
           </main>
       <Footer />

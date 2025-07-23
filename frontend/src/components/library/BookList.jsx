@@ -45,7 +45,7 @@ const BookList = ({ books, onBookClick }) => {
         <div
           key={book.id}
           onClick={() => onBookClick && onBookClick(book)}
-          className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl p-2 sm:p-4 hover:bg-slate-700/30 transition-all duration-300 group cursor-pointer w-full mx-auto sm:max-w-none"
+          className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 flex items-center"
         >
           <div className="flex gap-2 sm:gap-4">
             {/* Image */}
@@ -123,7 +123,7 @@ const BookList = ({ books, onBookClick }) => {
       ))}
 
       {/* CSS pour line-clamp */}
-      <style jsx>{`
+      <style>{`
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;

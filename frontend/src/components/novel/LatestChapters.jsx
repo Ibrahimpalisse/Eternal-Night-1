@@ -55,7 +55,7 @@ const LatestChapters = ({
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
-      <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+      <div className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 sm:p-6 mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
             <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />

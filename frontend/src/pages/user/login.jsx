@@ -7,6 +7,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useAuth } from '../../contexts/AuthContext';
 import EmailVerificationDialog from '../../components/EmailVerificationDialog';
 import CodeVerificationDialog from '../../components/CodeVerificationDialog';
+import { useScrollToTop } from '../../hooks';
 
 
 // Composants pour les icônes d'œil
@@ -47,6 +48,7 @@ const ValidationIndicator = ({ isValid, hasError, isEmpty, className = '' }) => 
 };
 
 const Login = () => {
+  useScrollToTop();
   // États séparés et stables
   const [formData, setFormData] = useState({
     email: '',

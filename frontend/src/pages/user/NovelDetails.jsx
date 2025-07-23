@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
+import { useScrollToTop } from '../../hooks';
+import {
   NovelHeader,
   LatestChapters,
   ChapterList,
@@ -257,6 +258,7 @@ const mockComments = [
 const NovelDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  useScrollToTop();
   
   // États pour les filtres des chapitres
   const [chapterFilter, setChapterFilter] = useState('all');

@@ -28,7 +28,7 @@ const BookCard = ({ book, onClick }) => {
   return (
     <div
       onClick={() => onClick && onClick(book)}
-      className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer max-w-[12rem] w-full mx-auto sm:max-w-none"
+      className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer max-w-[12rem] w-full mx-auto sm:max-w-none"
     >
       {/* Image du livre */}
       <div className="relative h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden">
@@ -101,7 +101,7 @@ const BookCard = ({ book, onClick }) => {
       </div>
 
       {/* CSS pour line-clamp */}
-      <style jsx>{`
+      <style>{`
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;

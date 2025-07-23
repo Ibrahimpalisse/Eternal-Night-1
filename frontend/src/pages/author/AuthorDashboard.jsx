@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useScrollToTop } from '../../hooks';
 import AuthorSlideNav from '../../components/authors/AuthorSlideNav';
 import { ToastProvider } from '../../contexts/ToastContext';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
-import { Menu } from 'lucide-react';
-import MyNovels from './MyNovels';
-import MyChapters from './MyChapters';
-import AuthorStats from './AuthorStats';
-import AuthorPosts from './AuthorPosts';
 import { useNavigate } from 'react-router-dom';
 import { 
+  Menu,
   BookOpen, 
   FileText, 
   Users, 
@@ -23,6 +20,10 @@ import {
   Plus,
   BarChart3
 } from 'lucide-react';
+import MyNovels from './MyNovels';
+import MyChapters from './MyChapters';
+import AuthorStats from './AuthorStats';
+import AuthorPosts from './AuthorPosts';
 
 // Fonction pour obtenir l'avatar de l'utilisateur
 const getUserAvatar = (user) => {
@@ -311,6 +312,7 @@ const AuthorSettings = () => (
 );
 
 const AuthorDashboard = () => {
+  useScrollToTop();
   const { user, loading } = useAuth();
   
   // TOUS les hooks doivent être ici, AVANT tout return conditionnel

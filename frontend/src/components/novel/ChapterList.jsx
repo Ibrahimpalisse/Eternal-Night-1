@@ -134,7 +134,7 @@ const ChapterList = ({
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
-      <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+      <div className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 sm:p-6 mb-8">
         
         {/* Header de la section chapitres avec bouton toggle filtres */}
         <div className="flex flex-col gap-4 mb-6">

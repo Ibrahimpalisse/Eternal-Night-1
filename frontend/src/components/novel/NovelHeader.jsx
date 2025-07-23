@@ -33,7 +33,7 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
       </button>
 
       {/* Header du roman */}
-      <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden mb-6 sm:mb-8">
+      <div className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 sm:p-6 mb-8">
         <div className="flex flex-col md:flex-row">
           
           {/* Image de couverture avec badges en responsive */}

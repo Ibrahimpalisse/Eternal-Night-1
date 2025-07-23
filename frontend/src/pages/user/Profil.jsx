@@ -9,8 +9,10 @@ import User from '../../services/User';
 import Profile from '../../services/Profile';
 import { useToast } from '../../contexts/ToastContext';
 import { securityStorage } from '../../utils/securityStorage';
+import { useScrollToTop } from '../../hooks';
 
 const Profil = () => {
+  useScrollToTop();
   const { user, setUser, loading } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();

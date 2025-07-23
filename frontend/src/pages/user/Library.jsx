@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useScrollToTop } from '../../hooks';
 import { FilterBar, BookGrid, BookList, ViewToggle, Pagination } from '../../components/library';
 import { useViewMode } from '../../hooks/useLocalStorage';
 
@@ -113,6 +114,7 @@ const libraryBooks = [
 
 const Library = () => {
   const navigate = useNavigate();
+  useScrollToTop();
   
   // États pour les filtres et la recherche
   const [searchTerm, setSearchTerm] = useState('');

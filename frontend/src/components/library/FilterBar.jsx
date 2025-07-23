@@ -18,7 +18,7 @@ const FilterBar = ({
   const [showFilters, setShowFilters] = useFilterState();
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6 lg:mb-8">
+    <div className="bg-gray-900/50 rounded-lg border border-white/10 backdrop-blur-sm p-4 sm:p-6 mb-8">
       {/* Titre, compteur et bouton filtres */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">

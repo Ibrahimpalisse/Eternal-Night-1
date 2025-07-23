@@ -8,8 +8,10 @@ import { Button } from '../../components/ui/button';
 import AuthorService from '../../services/Author';
 import useAuthorStatus from '../../hooks/useAuthorStatus';
 import openBookLogo from '../../assets/open-book.svg';
+import { useScrollToTop } from '../../hooks';
 
 const JoinAuthors = () => {
+  useScrollToTop();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
