@@ -159,14 +159,8 @@ const AuthorPosts = () => {
       subtitle: '+8 aujourd\'hui',
       icon: Heart,
       color: 'pink'
-    },
-    {
-      title: 'Abonnés',
-      value: activeSubscribers.length,
-      subtitle: '+3 cette semaine',
-      icon: Users,
-      color: 'purple'
     }
+    // Abonnés supprimé
   ];
 
   return (
@@ -187,7 +181,7 @@ const AuthorPosts = () => {
       </div>
 
       {/* Statistiques */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center items-stretch mb-4">
         {statsData.map((stat, index) => (
           <StatsCard
             key={index}

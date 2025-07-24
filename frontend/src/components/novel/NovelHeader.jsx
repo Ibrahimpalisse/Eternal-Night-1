@@ -14,7 +14,7 @@ import {
 import { ResponsiveStatusBadge } from '../ui';
 import ReportButton from '../ReportButton';
 
-const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onAuthorClick }) => {
+const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onAuthorClick, onLikeClick, currentChapterId }) => {
   const { goBack } = useNavigation();
   const location = useLocation();
 
@@ -166,7 +166,7 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
             {/* Boutons d'action secondaires */}
             <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6 justify-center md:justify-start">
               <button
-                onClick={() => setIsFavorited(!isFavorited)}
+                onClick={onLikeClick}
                 className={`flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl transition-all text-sm ${
                   isFavorited 
                     ? 'bg-red-500/20 text-red-400 border border-red-500/30' 

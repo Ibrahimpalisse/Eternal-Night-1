@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { X, AlertTriangle, Eye, MessageSquare, Flag, Slash, Filter, Check } from 'lucide-react';
 
 const ReportModal = ({ isOpen, onClose, onReport, contentType = 'comment', contentId }) => {
@@ -42,14 +43,13 @@ const ReportModal = ({ isOpen, onClose, onReport, contentType = 'comment', conte
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={handleClose}
       />
-      
       {/* Modal */}
       <div className="relative bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-2xl w-full max-w-md mx-auto">
         {/* Header */}
@@ -135,7 +135,8 @@ const ReportModal = ({ isOpen, onClose, onReport, contentType = 'comment', conte
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

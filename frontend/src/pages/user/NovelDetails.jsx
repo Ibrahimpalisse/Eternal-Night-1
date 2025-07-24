@@ -9,6 +9,7 @@ import {
   CommentsSection
 } from '../../components/novel';
 import UserNovelsModal from '../../components/members/UserNovelsModal';
+import LikeConfirmModal from '../../components/novel/LikeConfirmModal';
 
 // Données mockées - à remplacer par des vraies données API
 const mockNovel = {
@@ -361,6 +362,7 @@ const NovelDetails = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedNovels, setSelectedNovels] = useState([]);
+  const [openLikeModal, setOpenLikeModal] = useState(false);
 
   // Filtrage et tri des chapitres
   const filteredAndSortedChapters = useMemo(() => {
@@ -513,6 +515,22 @@ const NovelDetails = () => {
     setOpenModal(true);
   };
 
+  // Handler pour le like avec confirmation
+  const handleLikeClick = () => {
+    if (isFavorited) {
+      setIsFavorited(false);
+    } else {
+      setOpenLikeModal(true);
+    }
+  };
+  const handleLikeConfirm = () => {
+    setIsFavorited(true);
+    setOpenLikeModal(false);
+  };
+  const handleLikeCancel = () => {
+    setOpenLikeModal(false);
+  };
+
   return (
     <div className="min-h-screen">
       
@@ -526,6 +544,8 @@ const NovelDetails = () => {
           setIsBookmarked={setIsBookmarked}
           onStartReading={handleStartReading}
           onAuthorClick={handleAuthorClick}
+          onLikeClick={handleLikeClick}
+          currentChapterId={mockChapters[0]?.id}
         />
       </div>
 
@@ -585,6 +605,7 @@ const NovelDetails = () => {
       />
       {/* Popup romans de l'auteur */}
       <UserNovelsModal open={openModal} onClose={() => setOpenModal(false)} user={selectedUser} novels={selectedNovels} />
+      <LikeConfirmModal open={openLikeModal} onConfirm={handleLikeConfirm} onCancel={handleLikeCancel} />
 
     </div>
   );

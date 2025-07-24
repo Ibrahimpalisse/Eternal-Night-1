@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import ReportButton from '../ReportButton';
 import { 
   ArrowLeft, 
   Settings, 
@@ -174,6 +175,9 @@ const ChapterHeader = ({
             >
               <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
             </button>
+
+            {/* Bouton de signalement du chapitre */}
+            <ReportButton contentType="chapter" contentId={chapterData.id} size="md" />
 
             {/* Plein écran / Immersive mode */}
             {typeof setIsImmersive === 'function' && !isImmersive && (
