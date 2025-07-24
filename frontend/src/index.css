@@ -472,6 +472,38 @@
     width: 100%;
     max-width: 100%;
   }
+  
+  /* Correction spécifique pour la page notifications */
+  .admin-page .space-y-3 > *,
+  .admin-page .space-y-4 > *,
+  .admin-page .space-y-6 > * {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Grilles de statistiques sur mobile */
+  .admin-page .grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  
+  /* Onglets de navigation */
+  .admin-page .flex.rounded-t-2xl {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .admin-page .flex.rounded-t-2xl::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Boutons d'onglets */
+  .admin-page .flex.rounded-t-2xl button {
+    min-width: 120px;
+    flex-shrink: 0;
+  }
 }
 
 /* Correction pour les très petits téléphones */
@@ -484,6 +516,19 @@
   /* Réduire encore plus les gaps */
   .admin-page .space-y-3 > :not([hidden]) ~ :not([hidden]) {
     margin-top: 8px;
+  }
+  
+  /* Grilles encore plus compactes */
+  .admin-page .grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px;
+  }
+  
+  /* Boutons d'onglets plus petits */
+  .admin-page .flex.rounded-t-2xl button {
+    min-width: 100px;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
   }
 }
 

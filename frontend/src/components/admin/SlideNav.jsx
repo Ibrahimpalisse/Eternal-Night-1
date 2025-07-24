@@ -93,6 +93,11 @@ const SlideNav = ({ isOpen, onToggle }) => {
       badge: '7'
     },
     {
+      name: 'Posts d\'Auteurs',
+      path: '/admin/author-posts',
+      icon: <PenTool className="w-5 h-5" />
+    },
+    {
       name: 'Statistiques',
       path: '/admin/stats',
       icon: <BarChart3 className="w-5 h-5" />

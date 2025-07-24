@@ -154,10 +154,6 @@ const PostCard = ({ post, onEdit, onDelete }) => {
             <Heart size={16} />
             <span className="text-sm">{post.likes || 0}</span>
           </div>
-          <div className="flex items-center gap-1 text-gray-400">
-            <MessageCircle size={16} />
-            <span className="text-sm">{post.comments || 0}</span>
-          </div>
         </div>
         
         <div className="flex items-center gap-1 text-gray-500 text-sm">

@@ -146,7 +146,7 @@ const mockAllAuthorPosts = [
   }
 ];
 
-const AdminAuthorPostsSection = () => {
+export default function AdminAuthorPostsSection() {
   const [posts, setPosts] = useState(mockAllAuthorPosts);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAuthor, setFilterAuthor] = useState('all');
@@ -199,12 +199,6 @@ const AdminAuthorPostsSection = () => {
       label: 'Plus aimés',
       icon: Heart,
       color: 'text-red-400'
-    },
-    { 
-      value: 'comments_desc', 
-      label: 'Plus commentés',
-      icon: MessageSquare,
-      color: 'text-green-400'
     },
     { 
       value: 'author_asc', 
@@ -317,55 +311,46 @@ const AdminAuthorPostsSection = () => {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="p-2 sm:p-4 md:p-6 lg:p-8 w-full min-w-0 overflow-hidden">
       {/* Statistiques */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <MessageSquare className="w-4 h-4 text-blue-400" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
+        <div className="bg-slate-800/80 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center border border-white/10 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl group cursor-pointer">
+          <div className="flex items-center mb-1">
             <span className="text-xs sm:text-sm text-gray-400">Total Posts</span>
           </div>
-          <p className="text-lg sm:text-xl font-bold text-white">{totalPosts}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-white">{totalPosts}</p>
         </div>
         
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
+        <div className="bg-slate-800/80 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center border border-white/10 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl group cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
             <span className="text-xs sm:text-sm text-gray-400">Publiés</span>
           </div>
-          <p className="text-lg sm:text-xl font-bold text-green-400">{publishedPosts}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-green-400">{publishedPosts}</p>
         </div>
         
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
+        <div className="bg-slate-800/80 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center border border-white/10 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl group cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
             <span className="text-xs sm:text-sm text-gray-400">Brouillons</span>
           </div>
-          <p className="text-lg sm:text-xl font-bold text-yellow-400">{draftPosts}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-yellow-400">{draftPosts}</p>
         </div>
         
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
+        <div className="bg-slate-800/80 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center border border-white/10 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl group cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
-            <Eye className="w-4 h-4 text-blue-400" />
+            <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
             <span className="text-xs sm:text-sm text-gray-400">Vues</span>
           </div>
-          <p className="text-lg sm:text-xl font-bold text-blue-400">{totalViews.toLocaleString()}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-blue-400">{totalViews.toLocaleString()}</p>
         </div>
         
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
+        <div className="bg-slate-800/80 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center border border-white/10 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl group cursor-pointer">
           <div className="flex items-center gap-2 mb-1">
-            <Heart className="w-4 h-4 text-pink-400" />
+            <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-pink-400" />
             <span className="text-xs sm:text-sm text-gray-400">Likes</span>
           </div>
-          <p className="text-lg sm:text-xl font-bold text-pink-400">{totalLikes.toLocaleString()}</p>
-        </div>
-        
-        <div className="bg-slate-700/50 rounded-lg p-3 sm:p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <MessageSquare className="w-4 h-4 text-purple-400" />
-            <span className="text-xs sm:text-sm text-gray-400">Commentaires</span>
-          </div>
-          <p className="text-lg sm:text-xl font-bold text-purple-400">{totalComments.toLocaleString()}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-pink-400">{totalLikes.toLocaleString()}</p>
         </div>
       </div>
 
@@ -384,30 +369,30 @@ const AdminAuthorPostsSection = () => {
             />
           </div>
 
-                     {/* Filtres */}
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-             <DropdownFilter
-               label="Auteur"
-               options={authorOptions}
-               value={filterAuthor}
-               onChange={setFilterAuthor}
-             />
-             <DropdownFilter
-               label="Tri"
-               options={sortOptions}
-               value={sortBy}
-               onChange={setSortBy}
-             />
-             <div className="flex items-end">
-               <button
-                 onClick={handleClearFilters}
-                 disabled={!hasActiveFilters}
-                 className="w-full px-4 py-2 bg-gray-600/50 hover:bg-gray-600/70 disabled:bg-gray-700/30 disabled:text-gray-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm sm:text-base"
-               >
-                 Réinitialiser
-               </button>
-             </div>
-           </div>
+          {/* Filtres */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <DropdownFilter
+              label="Auteur"
+              options={authorOptions}
+              value={filterAuthor}
+              onChange={setFilterAuthor}
+            />
+            <DropdownFilter
+              label="Tri"
+              options={sortOptions}
+              value={sortBy}
+              onChange={setSortBy}
+            />
+            <div className="flex items-end">
+              <button
+                onClick={handleClearFilters}
+                disabled={!hasActiveFilters}
+                className="w-full px-3 sm:px-4 py-2 bg-gray-600/50 hover:bg-gray-600/70 disabled:bg-gray-700/30 disabled:text-gray-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm sm:text-base"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          </div>
 
           {/* Filtres actifs */}
           {hasActiveFilters && (
@@ -418,18 +403,18 @@ const AdminAuthorPostsSection = () => {
                   "{searchTerm}"
                 </span>
               )}
-                             {filterAuthor !== 'all' && (
-                 <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs">
-                   {authorOptions.find(opt => opt.value === filterAuthor)?.label}
-                 </span>
-               )}
+              {filterAuthor !== 'all' && (
+                <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs">
+                  {authorOptions.find(opt => opt.value === filterAuthor)?.label}
+                </span>
+              )}
             </div>
           )}
         </div>
       </div>
 
       {/* Compteur de résultats */}
-      <div className="flex items-center justify-between text-sm text-gray-400">
+      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-400 mt-3 sm:mt-4">
         <span>
           {filteredAndSortedPosts.length} post{filteredAndSortedPosts.length !== 1 ? 's' : ''} trouvé{filteredAndSortedPosts.length !== 1 ? 's' : ''}
           {hasActiveFilters && ` (sur ${totalPosts} au total)`}
@@ -440,7 +425,7 @@ const AdminAuthorPostsSection = () => {
       </div>
 
       {/* Liste des posts */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => (
             <div key={post.id} className="relative">
@@ -452,18 +437,18 @@ const AdminAuthorPostsSection = () => {
                 </div>
               </div>
               
-                             <PostCard
-                 post={post}
-                 onEdit={handleEditPost}
-                 onDelete={handleDeletePost}
-               />
+              <PostCard
+                post={post}
+                onEdit={handleEditPost}
+                onDelete={handleDeletePost}
+              />
             </div>
           ))
         ) : (
-          <div className="text-center py-12">
-            <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-400 text-lg mb-2">Aucun post trouvé</p>
-            <p className="text-gray-500 text-sm">
+          <div className="text-center py-8 sm:py-12">
+            <MessageSquare className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+            <p className="text-gray-400 text-base sm:text-lg mb-2">Aucun post trouvé</p>
+            <p className="text-gray-500 text-xs sm:text-sm">
               {hasActiveFilters 
                 ? 'Essayez de modifier vos filtres de recherche'
                 : 'Aucun post d\'auteur disponible'
@@ -475,32 +460,30 @@ const AdminAuthorPostsSection = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4 sm:mt-6">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
-                 </div>
-       )}
+        </div>
+      )}
 
-       {/* Modals */}
-       <PostModal
-         isOpen={isEditModalOpen}
-         onClose={() => setIsEditModalOpen(false)}
-         onSubmit={handleUpdatePost}
-         post={selectedPost}
-         title="Modifier le post"
-       />
+      {/* Modals */}
+      <PostModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleUpdatePost}
+        post={selectedPost}
+        title="Modifier le post"
+      />
 
-       <DeletePostModal
-         isOpen={isDeleteModalOpen}
-         onClose={() => setIsDeleteModalOpen(false)}
-         post={selectedPost}
-         onConfirm={confirmDeletePost}
-       />
-     </div>
-   );
- };
- 
- export default AdminAuthorPostsSection; 
+      <DeletePostModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        post={selectedPost}
+        onConfirm={confirmDeletePost}
+      />
+    </div>
+  );
+}; 

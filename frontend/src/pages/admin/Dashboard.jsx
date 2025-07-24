@@ -12,6 +12,7 @@ import TokenRefreshNotification from '../../components/ui/TokenRefreshNotificati
 import { 
   Menu
 } from 'lucide-react';
+import AdminAuthorPostsSection from '../../components/admin/notifications/AdminAuthorPostsSection';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -154,6 +155,7 @@ const Dashboard = () => {
           <Route path="/chapters" element={<ChapterContent />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/author-posts" element={<AdminAuthorPostsSection />} />
         </Routes>
       </div>
       

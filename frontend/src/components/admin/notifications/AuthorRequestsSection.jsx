@@ -24,8 +24,11 @@ const mockAuthorRequests = [
   {
     id: 1,
     type: 'verification',
+    contentType: 'novel',
     novelId: 1,
     novelTitle: 'Les Gardiens de l\'Ombre',
+    chapterId: null,
+    chapterTitle: null,
     authorName: 'Marie Dubois',
     authorId: 'author_1',
     status: 'pending',
@@ -35,8 +38,11 @@ const mockAuthorRequests = [
   {
     id: 2,
     type: 'modification',
+    contentType: 'novel',
     novelId: 2,
     novelTitle: 'Chroniques Urbaines',
+    chapterId: null,
+    chapterTitle: null,
     authorName: 'Jean Martin',
     authorId: 'author_2',
     status: 'pending',
@@ -46,8 +52,11 @@ const mockAuthorRequests = [
   {
     id: 3,
     type: 'verification',
+    contentType: 'chapter',
     novelId: 3,
     novelTitle: 'Le Dernier Voyage',
+    chapterId: 'chapter_1',
+    chapterTitle: 'Chapitre 5 - La révélation',
     authorName: 'Sophie Chen',
     authorId: 'author_3',
     status: 'processed',
@@ -59,8 +68,11 @@ const mockAuthorRequests = [
   {
     id: 4,
     type: 'modification',
+    contentType: 'chapter',
     novelId: 4,
     novelTitle: 'Mémoires Perdues',
+    chapterId: 'chapter_2',
+    chapterTitle: 'Chapitre 12 - Le choix',
     authorName: 'Lucas Moreau',
     authorId: 'author_4',
     status: 'pending',
@@ -70,8 +82,11 @@ const mockAuthorRequests = [
   {
     id: 5,
     type: 'verification',
+    contentType: 'novel',
     novelId: 5,
     novelTitle: 'L\'Écho des Anciens',
+    chapterId: null,
+    chapterTitle: null,
     authorName: 'Emma Rodriguez',
     authorId: 'author_5',
     status: 'rejected',
@@ -80,6 +95,34 @@ const mockAuthorRequests = [
     processedBy: 'Admin',
     rejectionReason: 'Contenu non conforme aux guidelines',
     message: null
+  },
+  {
+    id: 6,
+    type: 'modification',
+    contentType: 'chapter',
+    novelId: 6,
+    novelTitle: 'Les Mystères de Paris',
+    chapterId: 'chapter_3',
+    chapterTitle: 'Chapitre 8 - L\'enquête',
+    authorName: 'Pierre Durand',
+    authorId: 'author_6',
+    status: 'pending',
+    createdAt: '2024-01-18T13:45:00Z',
+    message: null
+  },
+  {
+    id: 7,
+    type: 'verification',
+    contentType: 'novel',
+    novelId: 7,
+    novelTitle: 'L\'Aube Nouvelle',
+    chapterId: null,
+    chapterTitle: null,
+    authorName: 'Claire Moreau',
+    authorId: 'author_7',
+    status: 'pending',
+    createdAt: '2024-01-18T11:20:00Z',
+    message: null
   }
 ];
 
@@ -87,6 +130,7 @@ const AuthorRequestsSection = () => {
   const [requests, setRequests] = useState(mockAuthorRequests);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [filterContentType, setFilterContentType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -97,12 +141,14 @@ const AuthorRequestsSection = () => {
   const filteredRequests = requests.filter(request => {
     const matchesSearch = 
       request.novelTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (request.chapterTitle && request.chapterTitle.toLowerCase().includes(searchTerm.toLowerCase())) ||
       request.authorName.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesType = filterType === 'all' || request.type === filterType;
+    const matchesContentType = filterContentType === 'all' || request.contentType === filterContentType;
     const matchesStatus = filterStatus === 'all' || request.status === filterStatus;
     
-    return matchesSearch && matchesType && matchesStatus;
+    return matchesSearch && matchesType && matchesContentType && matchesStatus;
   });
 
   // Pagination
@@ -170,6 +216,28 @@ const AuthorRequestsSection = () => {
       label: 'Modification',
       icon: FileEdit,
       color: 'text-orange-400'
+    }
+  ];
+
+  // Options pour le dropdown de type de contenu
+  const contentTypeOptions = [
+    {
+      value: 'all',
+      label: 'Tous les contenus',
+      icon: Filter,
+      color: 'text-gray-400'
+    },
+    {
+      value: 'novel',
+      label: 'Romans',
+      icon: BookOpen,
+      color: 'text-purple-400'
+    },
+    {
+      value: 'chapter',
+      label: 'Chapitres',
+      icon: FileEdit,
+      color: 'text-green-400'
     }
   ];
 
@@ -242,30 +310,30 @@ const AuthorRequestsSection = () => {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-3 sm:space-y-4 md:space-y-6 w-full min-w-0 overflow-hidden">
       {/* En-tête de section */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-500/30">
-          <FileEdit className="w-5 h-5 text-blue-400" />
+          <FileEdit className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
         </div>
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-white">Demandes d'Auteurs</h2>
-          <p className="text-sm text-gray-400">Demandes de vérification et modification</p>
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white">Demandes d'Auteurs</h2>
+          <p className="text-xs sm:text-sm text-gray-400">Demandes de vérification et modification</p>
         </div>
       </div>
 
       {/* Statistiques */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
         <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-yellow-500/30">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-yellow-300 text-xs sm:text-sm font-medium">En attente</p>
-              <p className="text-lg sm:text-xl font-bold text-white">
+              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
                 {requests.filter(r => r.status === 'pending').length}
               </p>
             </div>
             <div className="p-2 bg-yellow-500/20 rounded-lg">
-              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400" />
             </div>
           </div>
         </div>
@@ -274,12 +342,12 @@ const AuthorRequestsSection = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-300 text-xs sm:text-sm font-medium">Vérifications</p>
-              <p className="text-lg sm:text-xl font-bold text-white">
+              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
                 {requests.filter(r => r.type === 'verification').length}
               </p>
             </div>
             <div className="p-2 bg-blue-500/20 rounded-lg">
-              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400" />
             </div>
           </div>
         </div>
@@ -288,12 +356,26 @@ const AuthorRequestsSection = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-300 text-xs sm:text-sm font-medium">Modifications</p>
-              <p className="text-lg sm:text-xl font-bold text-white">
+              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
                 {requests.filter(r => r.type === 'modification').length}
               </p>
             </div>
             <div className="p-2 bg-orange-500/20 rounded-lg">
-              <FileEdit className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
+              <FileEdit className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-orange-400" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-purple-500/30">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-300 text-xs sm:text-sm font-medium">Romans</p>
+              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
+                {requests.filter(r => r.contentType === 'novel').length}
+              </p>
+            </div>
+            <div className="p-2 bg-purple-500/20 rounded-lg">
+              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-purple-400" />
             </div>
           </div>
         </div>
@@ -301,13 +383,13 @@ const AuthorRequestsSection = () => {
         <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-green-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-green-300 text-xs sm:text-sm font-medium">Traitées</p>
-              <p className="text-lg sm:text-xl font-bold text-white">
-                {requests.filter(r => r.status === 'processed').length}
+              <p className="text-green-300 text-xs sm:text-sm font-medium">Chapitres</p>
+              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
+                {requests.filter(r => r.contentType === 'chapter').length}
               </p>
             </div>
             <div className="p-2 bg-green-500/20 rounded-lg">
-              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+              <FileEdit className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-400" />
             </div>
           </div>
         </div>
@@ -329,17 +411,23 @@ const AuthorRequestsSection = () => {
           </div>
 
           {/* Filtres */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <DropdownFilter
               label="Type"
               options={typeOptions}
-                value={filterType}
+              value={filterType}
               onChange={setFilterType}
+            />
+            <DropdownFilter
+              label="Contenu"
+              options={contentTypeOptions}
+              value={filterContentType}
+              onChange={setFilterContentType}
             />
             <DropdownFilter
               label="Statut"
               options={statusOptions}
-                value={filterStatus}
+              value={filterStatus}
               onChange={setFilterStatus}
             />
             <div className="flex items-end">
@@ -347,9 +435,10 @@ const AuthorRequestsSection = () => {
                 onClick={() => {
                   setSearchTerm('');
                   setFilterType('all');
+                  setFilterContentType('all');
                   setFilterStatus('all');
                 }}
-                className="w-full px-4 py-2 bg-gray-600/50 hover:bg-gray-600/70 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2 bg-gray-600/50 hover:bg-gray-600/70 text-white rounded-lg transition-colors text-sm sm:text-base"
               >
                 Réinitialiser
               </button>
@@ -384,17 +473,21 @@ const AuthorRequestsSection = () => {
 
                   {/* Contenu principal */}
                   <div className="space-y-3">
-                    {/* Roman */}
+                    {/* Contenu (Roman ou Chapitre) */}
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
-                        <BookOpen className="w-3 h-3 text-purple-400" />
+                      <div className={`w-8 h-10 ${request.contentType === 'novel' ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20' : 'bg-gradient-to-br from-green-500/20 to-blue-500/20'} rounded border border-white/10 flex items-center justify-center flex-shrink-0`}>
+                        {request.contentType === 'novel' ? (
+                          <BookOpen className="w-3 h-3 text-purple-400" />
+                        ) : (
+                          <FileEdit className="w-3 h-3 text-green-400" />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-white font-medium text-sm truncate">
-                          {request.novelTitle}
+                          {request.contentType === 'novel' ? request.novelTitle : request.chapterTitle}
                         </p>
                         <p className="text-gray-400 text-xs">
-                          ID: {request.novelId}
+                          {request.contentType === 'novel' ? `ID: ${request.novelId}` : `Roman: ${request.novelTitle}`}
                         </p>
                       </div>
                     </div>
@@ -455,7 +548,7 @@ const AuthorRequestsSection = () => {
             <thead className="bg-slate-700/50 border-b border-slate-600/50">
               <tr>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Type</th>
-                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Roman</th>
+                  <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Contenu</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Auteur</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Statut</th>
                   <th className="px-4 xl:px-6 py-4 text-left text-sm font-medium text-gray-300">Date</th>
@@ -479,19 +572,23 @@ const AuthorRequestsSection = () => {
                     </td>
                       <td className="px-4 xl:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-12 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                            <BookOpen className="w-4 h-4 text-purple-400" />
-                        </div>
-                        <div>
+                          <div className={`w-10 h-12 ${request.contentType === 'novel' ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20' : 'bg-gradient-to-br from-green-500/20 to-blue-500/20'} rounded border border-white/10 flex items-center justify-center`}>
+                            {request.contentType === 'novel' ? (
+                              <BookOpen className="w-4 h-4 text-purple-400" />
+                            ) : (
+                              <FileEdit className="w-4 h-4 text-green-400" />
+                            )}
+                          </div>
+                          <div>
                             <p className="text-white font-medium text-sm truncate max-w-48">
-                            {request.novelTitle}
-                          </p>
-                          <p className="text-gray-400 text-xs">
-                            ID: {request.novelId}
-                          </p>
+                              {request.contentType === 'novel' ? request.novelTitle : request.chapterTitle}
+                            </p>
+                            <p className="text-gray-400 text-xs">
+                              {request.contentType === 'novel' ? `ID: ${request.novelId}` : `Roman: ${request.novelTitle}`}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
                       <td className="px-4 xl:px-6 py-4">
                       <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
@@ -633,10 +730,27 @@ const AuthorRequestsSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Roman concerné</label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    {selectedRequest.contentType === 'novel' ? 'Roman concerné' : 'Chapitre concerné'}
+                  </label>
                   <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <h3 className="text-white font-medium">{selectedRequest.novelTitle}</h3>
-                    <p className="text-gray-400 text-sm">ID: {selectedRequest.novelId}</p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`w-10 h-12 ${selectedRequest.contentType === 'novel' ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20' : 'bg-gradient-to-br from-green-500/20 to-blue-500/20'} rounded border border-white/10 flex items-center justify-center`}>
+                        {selectedRequest.contentType === 'novel' ? (
+                          <BookOpen className="w-4 h-4 text-purple-400" />
+                        ) : (
+                          <FileEdit className="w-4 h-4 text-green-400" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="text-white font-medium">
+                          {selectedRequest.contentType === 'novel' ? selectedRequest.novelTitle : selectedRequest.chapterTitle}
+                        </h3>
+                        <p className="text-gray-400 text-sm">
+                          {selectedRequest.contentType === 'novel' ? `ID: ${selectedRequest.novelId}` : `Roman: ${selectedRequest.novelTitle}`}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

@@ -537,45 +537,45 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="w-full max-w-xs sm:max-w-md md:max-w-4xl lg:max-w-6xl bg-slate-900/95 border-slate-700/50 backdrop-blur-sm max-h-[95vh] flex flex-col mx-2 sm:mx-4 [&>button]:hidden">
-        <DialogHeader className="px-4 sm:px-6 border-b border-slate-700/50">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-2 sm:gap-3">
+      <DialogContent className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-4xl lg:max-w-6xl bg-slate-900/95 border-slate-700/50 backdrop-blur-sm max-h-[95vh] flex flex-col mx-2 sm:mx-4 [&>button]:hidden">
+        <DialogHeader className="px-3 sm:px-4 md:px-6 border-b border-slate-700/50">
+          <div className="flex items-center justify-between py-3 sm:py-4">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                 <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
               </div>
-              <div>
-                <DialogTitle className="text-red-400 text-lg sm:text-xl font-bold">
+              <div className="min-w-0 flex-1">
+                <DialogTitle className="text-red-400 text-base sm:text-lg md:text-xl font-bold truncate">
                   <span className="block sm:hidden">Historique Global</span>
                   <span className="hidden sm:block">Historique Global - Candidatures Refusées & Bloquées</span>
                 </DialogTitle>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               {/* Bouton Filtres */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 text-gray-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
                 title={showFilters ? "Masquer les filtres" : "Afficher les filtres"}
               >
-                <Filter className="w-5 h-5" />
+                <Filter className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               
               {/* Bouton Fermer */}
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 text-gray-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
                 title="Fermer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
         </DialogHeader>
 
         {/* Barre de recherche principale - Toujours visible */}
-        <div className="px-4 sm:px-6 py-4 border-b border-slate-700/30">
+        <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 border-b border-slate-700/30">
             <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
               <input
@@ -592,11 +592,11 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
         {/* Filtres collapsibles */}
         {showFilters && (
-          <div className="px-4 sm:px-6 py-4 bg-slate-800/30 border-b border-slate-700/30 animate-in slide-in-from-top-2 duration-200">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+          <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 bg-slate-800/30 border-b border-slate-700/30 animate-in slide-in-from-top-2 duration-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Filtre par statut */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Filtrer par statut</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Filtrer par statut</label>
             <StatusFilter 
               selectedStatus={statusFilter}
               onStatusChange={setStatusFilter}
@@ -605,7 +605,7 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
             {/* Tri */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Trier par</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Trier par</label>
             <SortFilter 
               selectedSort={sortBy}
               onSortChange={setSortBy}
@@ -616,15 +616,15 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
         )}
 
         {/* Compteurs - Toujours visibles */}
-        <div className="px-4 sm:px-6 py-3 bg-slate-700/20">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
-            <span className="bg-slate-700/50 px-2 py-1 rounded">Total: {filteredAndSortedApplications.length}</span>
-            <span className="hidden sm:inline text-gray-600">|</span>
-            <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded">
+        <div className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-slate-700/20">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-2 md:gap-4 text-xs text-gray-400">
+            <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Total: {filteredAndSortedApplications.length}</span>
+            <span className="hidden sm:inline text-gray-600 text-xs">|</span>
+            <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs">
                 Refusées: {filteredAndSortedApplications.filter(app => app.status === 'rejected').length}
               </span>
-            <span className="hidden sm:inline text-gray-600">|</span>
-            <span className="bg-gray-500/20 text-gray-400 px-2 py-1 rounded">
+            <span className="hidden sm:inline text-gray-600 text-xs">|</span>
+            <span className="bg-gray-500/20 text-gray-400 px-2 py-1 rounded text-xs">
                 Bloquées: {filteredAndSortedApplications.filter(app => app.status === 'blocked').length}
               </span>
           </div>
@@ -632,26 +632,22 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
         {/* Liste des candidatures */}
         <div 
-          className="px-4 sm:px-6 pb-8 overflow-y-scroll flex-1 space-y-3 sm:space-y-4 custom-scrollbar" 
-          style={{ 
-            maxHeight: showFilters ? 'calc(85vh - 300px)' : 'calc(85vh - 200px)', 
-            minHeight: '300px',
-            scrollBehavior: 'smooth'
-          }}
+          className="px-2 sm:px-4 md:px-6 pb-2 sm:pb-8 overflow-y-auto flex-1 space-y-2 sm:space-y-4 custom-scrollbar max-h-[60vh] sm:max-h-[70vh]"
+          style={{ scrollBehavior: 'smooth' }}
         >
           {currentApplications.map((application) => (
             <div key={application.id} 
-                 className="bg-slate-700/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-slate-600/30 hover:bg-slate-700/40 transition-colors">
+                 className="bg-slate-700/30 rounded-lg sm:rounded-xl p-2 sm:p-4 md:p-6 border border-slate-600/30 hover:bg-slate-700/40 transition-colors">
               {/* Header */}
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 mb-2 sm:mb-4">
+                <div className="flex items-start gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-base sm:text-lg">
                       {application.userName.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1">
                       <button
                         onClick={() => onUserClick && onUserClick({
                           id: application.userId || application.id,
@@ -660,7 +656,7 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                           pseudo: application.authorPseudo,
                           applicationId: application.id
                         })}
-                        className="text-white font-semibold hover:text-purple-300 transition-all duration-200 cursor-pointer hover:underline text-left group"
+                        className="text-white font-semibold hover:text-purple-300 transition-all duration-200 cursor-pointer hover:underline text-left group text-sm sm:text-base truncate"
                         title="Voir le profil de cet utilisateur"
                       >
                         {application.userName}
@@ -674,58 +670,56 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                         pseudo: application.authorPseudo,
                         applicationId: application.id
                       })}
-                      className="text-gray-400 hover:text-gray-300 text-sm transition-all duration-200 cursor-pointer hover:underline text-left"
+                      className="text-gray-400 hover:text-gray-300 text-xs sm:text-sm transition-all duration-200 cursor-pointer hover:underline text-left block truncate w-full"
                       title="Voir le profil de cet utilisateur"
                     >
                       {application.userEmail}
                     </button>
-                    <p className="text-gray-500 text-xs">
+                    <p className="text-gray-500 text-xs truncate">
                       Pseudo: <span className="text-purple-400">{application.authorPseudo}</span>
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {getStatusIcon(application.status)}
-                  <span className={`px-3 py-1 border rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
+                  <span className={`px-2 sm:px-3 py-1 border rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(application.status)}`}>
                     {getStatusDisplay(application.status)}
                   </span>
                 </div>
               </div>
 
               {/* Détails */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-2 sm:gap-6">
                 {/* Gauche */}
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-4">
                   <div>
-                    <p className="text-gray-400 text-xs mb-2">Dates</p>
-                    <div className="space-y-2">
+                    <p className="text-gray-400 text-xs mb-1 sm:mb-2">Dates</p>
+                    <div className="space-y-1 sm:space-y-2">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-3 h-3 text-gray-500" />
-                        <span className="text-gray-300 text-sm">
+                        <Calendar className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                        <span className="text-gray-300 text-xs sm:text-sm">
                           Soumise: {formatDate(application.submittedAt)}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-3 h-3 text-gray-500" />
-                        <span className="text-gray-300 text-sm">
+                        <Clock className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                        <span className="text-gray-300 text-xs sm:text-sm">
                           Traitée: {formatDate(application.processedAt)}
                         </span>
                       </div>
                     </div>
                   </div>
 
-
-
                   <div>
-                    <p className="text-gray-400 text-xs mb-2">Traité par</p>
+                    <p className="text-gray-400 text-xs mb-1 sm:mb-2">Traité par</p>
                     <button 
                       onClick={() => onUserClick && onUserClick({
                         name: application.processedBy,
                         role: 'admin',
                         type: 'admin'
                       })}
-                      className="text-blue-400 hover:text-blue-300 hover:underline text-sm transition-colors"
+                      className="text-blue-400 hover:text-blue-300 hover:underline text-xs sm:text-sm transition-colors text-left"
                     >
                       {application.processedBy}
                     </button>
@@ -733,24 +727,24 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                 </div>
 
                 {/* Droite */}
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-4">
                   <div>
-                    <p className="text-gray-400 text-xs mb-2">Motivation du candidat</p>
-                    <div className="bg-slate-800/50 p-3 rounded-lg">
-                      <p className="text-gray-200 text-sm line-clamp-3">{application.reasonToBeAuthor}</p>
+                    <p className="text-gray-400 text-xs mb-1 sm:mb-2">Motivation du candidat</p>
+                    <div className="bg-slate-800/50 p-2 sm:p-3 rounded-lg">
+                      <p className="text-gray-200 text-xs sm:text-sm line-clamp-2 sm:line-clamp-3">{application.reasonToBeAuthor}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className={`text-xs mb-2 ${application.status === 'rejected' ? 'text-red-400' : 'text-gray-400'}`}>
+                    <p className={`text-xs mb-1 sm:mb-2 ${application.status === 'rejected' ? 'text-red-400' : 'text-gray-400'}`}>
                       {application.status === 'rejected' ? 'Raison du refus' : 'Raison du blocage'}
                     </p>
-                    <div className={`p-3 rounded-lg border ${
+                    <div className={`p-2 sm:p-3 rounded-lg border ${
                       application.status === 'rejected' 
                         ? 'bg-red-500/10 border-red-500/20' 
                         : 'bg-gray-500/10 border-gray-500/20'
                     }`}>
-                      <p className={`text-sm ${
+                      <p className={`text-xs sm:text-sm ${
                         application.status === 'rejected' ? 'text-red-300' : 'text-gray-300'
                       }`}>
                         {application.rejectionReason || application.blockReason}
@@ -764,10 +758,10 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
           {/* Message si aucune candidature */}
           {filteredAndSortedApplications.length === 0 && (
-            <div className="text-center py-12">
-              <FileText className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-              <p className="text-gray-400 text-lg mb-2">Aucune candidature trouvée</p>
-              <p className="text-gray-500 text-sm">
+            <div className="text-center py-8 sm:py-12">
+              <FileText className="w-12 h-12 sm:w-16 sm:h-16 text-gray-500 mx-auto mb-3 sm:mb-4" />
+              <p className="text-gray-400 text-base sm:text-lg mb-2">Aucune candidature trouvée</p>
+              <p className="text-gray-500 text-sm px-4">
                 {searchTerm || statusFilter !== 'all' 
                   ? 'Essayez de modifier vos filtres de recherche'
                   : 'Il n\'y a pas encore de candidatures refusées ou bloquées'
@@ -779,23 +773,23 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-700/50">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3 sm:px-4 md:px-6 py-3 sm:py-4 border-t border-slate-700/50">
+            <div className="flex items-center gap-2 order-2 sm:order-1">
+              <span className="text-xs sm:text-sm text-gray-400 text-center">
                 Page {currentPage} sur {totalPages} - {filteredAndSortedApplications.length} résultat(s)
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 order-1 sm:order-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                className="border-slate-600 text-slate-300 hover:bg-slate-800 text-xs sm:text-sm px-2 sm:px-3"
               >
                 Précédent
               </Button>
-              <div className="flex items-center gap-1">
+              <div className="hidden sm:flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   const page = i + 1;
                   return (
@@ -804,7 +798,7 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                       variant={currentPage === page ? "default" : "outline"}
                       size="sm"
                       onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 p-0 ${
+                      className={`w-8 h-8 p-0 text-xs ${
                         currentPage === page 
                           ? 'bg-purple-600 hover:bg-purple-700' 
                           : 'border-slate-600 text-slate-300 hover:bg-slate-800'
@@ -820,7 +814,7 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                className="border-slate-600 text-slate-300 hover:bg-slate-800 text-xs sm:text-sm px-2 sm:px-3"
               >
                 Suivant
               </Button>

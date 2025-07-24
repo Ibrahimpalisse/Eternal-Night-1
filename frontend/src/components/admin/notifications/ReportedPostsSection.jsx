@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
 import { 
-  MessageSquare, 
   AlertTriangle, 
   Search,
   Eye,
@@ -10,138 +8,62 @@ import {
   Flag,
   User,
   Calendar,
-  BookOpen,
+  PenTool,
   Shield,
   Filter,
   Clock,
   CheckCircle,
   XCircle,
-  Slash,
-  Edit
+  Slash
 } from 'lucide-react';
 import DropdownFilter from '../../common/DropdownFilter';
+import PostDetailsModal from './PostDetailsModal';
 
-// Composant séparé pour le filtre de type de contenu
-// Ce filtre permet de séparer les commentaires signalés selon le type de contenu sur lequel ils ont été postés
-// - Romans : commentaires signalés spécifiquement sur des pages de romans
-// - Chapitres : commentaires signalés spécifiquement sur des chapitres
-const ContentTypeFilter = ({ value, onChange }) => {
-  const contentTypeOptions = [
-    {
-      value: 'novel',
-      label: 'Romans',
-      icon: BookOpen,
-      color: 'text-purple-400'
-    },
-    {
-      value: 'chapter',
-      label: 'Chapitres',
-      icon: Edit,
-      color: 'text-green-400'
-    }
-  ];
-
-  return (
-    <DropdownFilter
-      label="Type de contenu"
-      options={contentTypeOptions}
-      value={value}
-      onChange={onChange}
-    />
-  );
-};
-
-// Données mockées pour les COMMENTAIRES signalés sur des romans et des chapitres
-// Cette section gère UNIQUEMENT les commentaires signalés sur :
-// - Les commentaires signalés sur des pages de romans (contentType: 'novel')
-// - Les commentaires signalés sur des chapitres (contentType: 'chapter')
-// Ce ne sont PAS les romans ou chapitres eux-mêmes qui sont signalés
-export const mockReportedComments = [
-  // Commentaires signalés sur des ROMANS
+// Données mockées pour les POSTS signalés
+// Cette section gère les posts d'auteurs signalés directement
+export const mockReportedPosts = [
   {
     id: 1,
-    commentId: 'comment_1',
-    content: 'Ce roman est vraiment nul, l\'auteur devrait arrêter d\'écrire...',
+    postId: 'post_1',
+    postTitle: 'Mon expérience d\'écriture',
+    content: 'Contenu du post avec des propos inappropriés...',
     authorName: 'Marc Dupont',
     authorId: 'user_123',
-    novelTitle: 'Les Gardiens de l\'Ombre',
-    novelId: 1,
     reportedBy: 'Sophie Martin',
     reportedAt: '2024-01-20T14:30:00Z',
-    reason: 'harassment',
-    reasonText: 'Harcèlement / Insultes',
+    reason: 'inappropriate',
+    reasonText: 'Contenu inapproprié',
     status: 'pending',
-    severity: 'medium',
-    additionalInfo: 'Commentaire offensant envers l\'auteur',
-    contentType: 'novel'
+    severity: 'high',
+    additionalInfo: 'Post contenant des propos discriminatoires',
+    contentType: 'post'
   },
   {
     id: 2,
-    commentId: 'comment_2',
-    content: 'Spoiler: Le héros meurt à la fin du tome 3 et sa sœur prend la relève. Aussi, le méchant est en fait son père...',
+    postId: 'post_2',
+    postTitle: 'Conseils pour débutants',
+    content: 'Contenu du post avec du spam...',
     authorName: 'Julie Lemoine',
     authorId: 'user_456',
-    novelTitle: 'Chroniques Urbaines',
-    novelId: 2,
     reportedBy: 'Pierre Lambert',
     reportedAt: '2024-01-20T12:15:00Z',
-    reason: 'spoiler',
-    reasonText: 'Spoilers',
-    status: 'pending',
-    severity: 'high',
-    additionalInfo: 'Révèle des éléments majeurs de l\'intrigue',
-    contentType: 'novel'
-  },
-  // Commentaires signalés sur des CHAPITRES
-  {
-    id: 3,
-    commentId: 'comment_3',
-    content: 'Ce chapitre est vraiment nul, l\'auteur devrait arrêter d\'écrire...',
-    authorName: 'Thomas Bernard',
-    authorId: 'user_301',
-    novelTitle: 'Les Gardiens de l\'Ombre',
-    novelId: 1,
-    chapterTitle: 'Chapitre 5 - La révélation',
-    reportedBy: 'Marie Dubois',
-    reportedAt: '2024-01-20T14:30:00Z',
-    reason: 'harassment',
-    reasonText: 'Harcèlement / Insultes',
+    reason: 'spam',
+    reasonText: 'Spam',
     status: 'pending',
     severity: 'medium',
-    additionalInfo: 'Commentaire offensant envers l\'auteur',
-    contentType: 'chapter'
-  },
-  {
-    id: 4,
-    commentId: 'comment_4',
-    content: 'Spoiler: Le héros meurt à la fin du tome 3 et sa sœur prend la relève. Aussi, le méchant est en fait son père...',
-    authorName: 'Claire Martin',
-    authorId: 'user_302',
-    novelTitle: 'Chroniques Urbaines',
-    novelId: 2,
-    chapterTitle: 'Chapitre 1 - Les débuts',
-    reportedBy: 'Paul Lambert',
-    reportedAt: '2024-01-20T12:15:00Z',
-    reason: 'spoiler',
-    reasonText: 'Spoilers',
-    status: 'pending',
-    severity: 'high',
-    additionalInfo: 'Révèle des éléments majeurs de l\'intrigue',
-    contentType: 'chapter'
+    additionalInfo: 'Post promotionnel non autorisé',
+    contentType: 'post'
   }
 ];
 
-const ReportedCommentsSection = () => {
-  // Cette section gère UNIQUEMENT les COMMENTAIRES signalés sur des romans et des chapitres
-  // - Commentaires signalés sur des pages de romans (contentType: 'novel')
-  // - Commentaires signalés sur des chapitres (contentType: 'chapter')
-  // Ce ne sont PAS les romans ou chapitres eux-mêmes qui sont signalés
+const ReportedPostsSection = () => {
+  // Cette section gère les POSTS signalés directement
+  // Ce ne sont PAS les commentaires sur les posts, mais les posts eux-mêmes
   
-  const [reports, setReports] = useState(mockReportedComments);
+  const [reports, setReports] = useState(mockReportedPosts);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterReason, setFilterReason] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterContentType, setFilterContentType] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -151,15 +73,13 @@ const ReportedCommentsSection = () => {
   // Filtrage des signalements
   const filteredReports = reports.filter(report => {
     const matchesSearch = 
-      report.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.novelTitle.toLowerCase().includes(searchTerm.toLowerCase());
+      report.postTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.authorName.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesReason = filterReason === 'all' || report.reason === filterReason;
     const matchesStatus = filterStatus === 'all' || report.status === filterStatus;
-    const matchesContentType = !filterContentType || report.contentType === filterContentType;
     
-    return matchesSearch && matchesReason && matchesStatus && matchesContentType;
+    return matchesSearch && matchesReason && matchesStatus;
   });
 
   // Pagination
@@ -247,7 +167,7 @@ const ReportedCommentsSection = () => {
     {
       value: 'spam',
       label: 'Spam',
-      icon: MessageSquare,
+      icon: Flag,
       color: 'text-yellow-400'
     },
     {
@@ -259,14 +179,8 @@ const ReportedCommentsSection = () => {
     {
       value: 'mistake',
       label: 'Erreur',
-      icon: Slash,
+      icon: XCircle,
       color: 'text-gray-400'
-    },
-    {
-      value: 'post',
-      label: 'Posts',
-      icon: Edit,
-      color: 'text-orange-400'
     }
   ];
 
@@ -286,20 +200,17 @@ const ReportedCommentsSection = () => {
     },
     {
       value: 'resolved',
-      label: 'Résolus',
+      label: 'Résolu',
       icon: CheckCircle,
       color: 'text-green-400'
     },
     {
       value: 'dismissed',
-      label: 'Rejetés',
+      label: 'Rejeté',
       icon: XCircle,
-      color: 'text-red-400'
+      color: 'text-gray-400'
     }
   ];
-
-
-
 
   const handleViewDetails = (report) => {
     setSelectedReport(report);
@@ -307,18 +218,13 @@ const ReportedCommentsSection = () => {
   };
 
   const handleProcessReport = (reportId, action) => {
-    setReports(reports.map(report => {
-      if (report.id === reportId) {
-        return {
-          ...report,
-          status: action === 'resolve' ? 'resolved' : 'dismissed',
-          processedAt: new Date().toISOString(),
-          processedBy: 'Admin',
-          action: action === 'resolve' ? 'removed' : 'dismissed'
-        };
-      }
-      return report;
-    }));
+    setReports(prevReports => 
+      prevReports.map(report => 
+        report.id === reportId 
+          ? { ...report, status: action === 'resolve' ? 'resolved' : 'dismissed' }
+          : report
+      )
+    );
   };
 
   const formatDate = (dateString) => {
@@ -334,12 +240,9 @@ const ReportedCommentsSection = () => {
   const getTimeAgo = (dateString) => {
     const now = new Date();
     const date = new Date(dateString);
-    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Il y a moins d\'1h';
-    if (diffInHours < 24) return `Il y a ${diffInHours}h`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `Il y a ${diffInDays} jour${diffInDays > 1 ? 's' : ''}`;
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return `Il y a ${diffDays} jours`;
   };
 
   const truncateText = (text, maxLength = 80) => {
@@ -349,14 +252,14 @@ const ReportedCommentsSection = () => {
 
   return (
     <div className="space-y-3 sm:space-y-4 md:space-y-6 w-full min-w-0 overflow-hidden">
-      {/* En-tête de section */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        <div className="p-2 bg-red-500/20 rounded-lg border border-red-500/30">
-          <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+      {/* En-tête */}
+      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg border border-white/10 flex items-center justify-center">
+          <PenTool className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
         </div>
         <div>
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white">Signalements</h2>
-          <p className="text-xs sm:text-sm text-gray-400">Modération des contenus inappropriés</p>
+          <h2 className="text-lg sm:text-xl font-bold text-white">Posts Signalés</h2>
+          <p className="text-gray-400 text-xs sm:text-sm">Modération des posts d'auteurs inappropriés</p>
         </div>
       </div>
 
@@ -371,21 +274,7 @@ const ReportedCommentsSection = () => {
               </p>
             </div>
             <div className="p-2 bg-yellow-500/20 rounded-lg">
-              <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-slate-800/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-red-500/30">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-red-300 text-xs sm:text-sm font-medium">Rejetés</p>
-              <p className="text-base sm:text-lg md:text-xl font-bold text-white">
-                {reports.filter(r => r.status === 'dismissed').length}
-              </p>
-            </div>
-            <div className="p-2 bg-red-500/20 rounded-lg">
-              <X className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-red-400" />
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400" />
             </div>
           </div>
         </div>
@@ -413,12 +302,10 @@ const ReportedCommentsSection = () => {
               </p>
             </div>
             <div className="p-2 bg-blue-500/20 rounded-lg">
-              <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400" />
+              <PenTool className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400" />
             </div>
           </div>
         </div>
-
-
       </div>
 
       {/* Filtres et recherche */}
@@ -429,7 +316,7 @@ const ReportedCommentsSection = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Rechercher par contenu, auteur ou roman..."
+              placeholder="Rechercher par post ou auteur..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm sm:text-base"
@@ -437,7 +324,7 @@ const ReportedCommentsSection = () => {
           </div>
 
           {/* Filtres */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <DropdownFilter
               label="Raison"
               options={reasonOptions}
@@ -450,17 +337,12 @@ const ReportedCommentsSection = () => {
               value={filterStatus}
               onChange={setFilterStatus}
             />
-            <ContentTypeFilter
-              value={filterContentType}
-              onChange={setFilterContentType}
-            />
             <div className="flex items-end">
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setFilterReason('all');
                   setFilterStatus('all');
-                  setFilterContentType('');
                 }}
                 className="w-full px-3 sm:px-4 py-2 bg-gray-600/50 hover:bg-gray-600/70 text-white rounded-lg transition-colors text-sm sm:text-base"
               >
@@ -480,12 +362,6 @@ const ReportedCommentsSection = () => {
             {currentReports.map((report) => {
               const reasonConf = reasonConfig[report.reason];
               const statusConf = statusConfig[report.status];
-              const contentTypeConfig = {
-                comment: { icon: MessageSquare, label: 'Commentaire', color: 'text-blue-400' },
-                novel: { icon: BookOpen, label: 'Roman', color: 'text-purple-400' },
-                chapter: { icon: Edit, label: 'Chapitre', color: 'text-green-400' },
-                post: { icon: Edit, label: 'Post', color: 'text-orange-400' }
-              };
 
               return (
                 <div key={report.id} className="p-4 hover:bg-slate-700/30 transition-colors">
@@ -499,21 +375,11 @@ const ReportedCommentsSection = () => {
                     </span>
                   </div>
 
-                  {/* Comment content */}
-                  <div className="mb-3">
-                    <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                      <p className="text-white text-sm leading-relaxed mb-2">
-                        "{truncateText(report.content, 120)}"
-                      </p>
-                      <p className="text-gray-400 text-xs">ID: {report.commentId}</p>
-                    </div>
-                  </div>
-
-                  {/* Author and Novel info */}
+                  {/* Post info */}
                   <div className="space-y-3">
                     {/* Author */}
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-10 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
                         <User className="w-4 h-4 text-white" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -522,28 +388,14 @@ const ReportedCommentsSection = () => {
                       </div>
                     </div>
 
-                    {/* Content */}
+                    {/* Post */}
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
-                        {filterContentType === 'chapter' ? (
-                          <Edit className="w-4 h-4 text-green-400" />
-                        ) : (
-                          <BookOpen className="w-4 h-4 text-purple-400" />
-                        )}
+                      <div className="w-8 h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded border border-white/10 flex items-center justify-center flex-shrink-0">
+                        <PenTool className="w-4 h-4 text-orange-400" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-white text-sm font-medium truncate">
-                          {filterContentType === 'chapter' ? report.chapterTitle : report.novelTitle}
-                        </p>
-                        {filterContentType === 'chapter' && (
-                          <p className="text-gray-400 text-xs truncate">Roman: {report.novelTitle}</p>
-                        )}
-                        {!filterContentType && report.contentType === 'chapter' && (
-                          <p className="text-gray-400 text-xs truncate">Chapitre: {report.chapterTitle}</p>
-                        )}
-                        {!filterContentType && report.contentType === 'novel' && (
-                          <p className="text-gray-400 text-xs truncate">Roman</p>
-                        )}
+                        <p className="text-white text-sm font-medium truncate">{report.postTitle}</p>
+                        <p className="text-gray-400 text-xs truncate">Post d'auteur</p>
                       </div>
                     </div>
 
@@ -579,7 +431,7 @@ const ReportedCommentsSection = () => {
                           className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded text-sm transition-colors flex-1 justify-center"
                         >
                           <Check className="w-4 h-4" />
-                          Supprimer
+                          Approuver
                         </button>
                         <button
                           onClick={() => handleProcessReport(report.id, 'dismiss')}
@@ -604,9 +456,7 @@ const ReportedCommentsSection = () => {
             <thead className="bg-slate-700/50 border-b border-slate-600/50">
               <tr>
                 <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Auteur</th>
-                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">
-                  {filterContentType === 'chapter' ? 'Chapitre' : filterContentType === 'novel' ? 'Roman' : 'Type de contenu'}
-                </th>
+                <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Post</th>
                 <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Raison</th>
                 <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Statut</th>
                 <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-gray-300">Date</th>
@@ -633,32 +483,16 @@ const ReportedCommentsSection = () => {
                     </td>
                     <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                          {filterContentType === 'chapter' ? (
-                            <Edit className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
-                          ) : (
-                            <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />
-                          )}
+                        <div className="w-6 h-8 sm:w-8 sm:h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded border border-white/10 flex items-center justify-center">
+                          <PenTool className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400" />
                         </div>
                         <div>
                           <p className="text-white text-xs sm:text-sm font-medium truncate max-w-32">
-                            {filterContentType === 'chapter' ? report.chapterTitle : report.novelTitle}
+                            {report.postTitle}
                           </p>
-                          {filterContentType === 'chapter' && (
-                            <p className="text-gray-400 text-xs truncate max-w-32">
-                              Roman: {report.novelTitle}
-                            </p>
-                          )}
-                          {!filterContentType && report.contentType === 'chapter' && (
-                            <p className="text-gray-400 text-xs truncate max-w-32">
-                              Chapitre: {report.chapterTitle}
-                            </p>
-                          )}
-                          {!filterContentType && report.contentType === 'novel' && (
-                            <p className="text-gray-400 text-xs truncate max-w-32">
-                              Roman
-                            </p>
-                          )}
+                          <p className="text-gray-400 text-xs truncate max-w-32">
+                            Post d'auteur
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -692,7 +526,7 @@ const ReportedCommentsSection = () => {
                             <button
                               onClick={() => handleProcessReport(report.id, 'resolve')}
                               className="p-1 sm:p-2 text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded transition-colors"
-                              title="Résoudre (supprimer)"
+                              title="Approuver"
                             >
                               <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                             </button>
@@ -750,181 +584,28 @@ const ReportedCommentsSection = () => {
       {/* Message si aucun signalement */}
       {filteredReports.length === 0 && (
         <div className="text-center py-8 sm:py-12">
-          <MessageSquare className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
-          <h3 className="text-lg sm:text-xl font-medium text-white mb-2">Aucun signalement trouvé</h3>
-                      <p className="text-gray-400 text-sm sm:text-base">
-              {searchTerm || filterReason !== 'all' || filterStatus !== 'all' || filterContentType
-                ? 'Essayez de modifier vos filtres de recherche.'
-                : 'Aucun commentaire signalé pour le moment.'}
-            </p>
+          <PenTool className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
+          <h3 className="text-lg sm:text-xl font-medium text-white mb-2">Aucun post signalé</h3>
+          <p className="text-gray-400 text-sm sm:text-base">
+            {searchTerm || filterReason !== 'all' || filterStatus !== 'all'
+              ? 'Essayez de modifier vos filtres de recherche.'
+              : 'Aucun post signalé pour le moment.'}
+          </p>
         </div>
       )}
 
       {/* Modal de détails */}
-      {showDetailsModal && selectedReport && createPortal(
-        <div 
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]" 
-          onClick={() => setShowDetailsModal(false)}
-        >
-          <div 
-            className="bg-gray-900 border border-white/10 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 sm:p-6">
-              <div className="flex justify-between items-start mb-4 sm:mb-6">
-                <h2 className="text-lg sm:text-xl font-bold text-white">Détails du signalement</h2>
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-400" />
-                </button>
-              </div>
-
-              <div className="space-y-4 sm:space-y-6">
-                {/* Commentaire signalé */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Commentaire signalé</label>
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <p className="text-white leading-relaxed">"{selectedReport.content}"</p>
-                    <p className="text-gray-400 text-sm mt-2">ID: {selectedReport.commentId}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  {/* Raison et gravité */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Raison du signalement</label>
-                    <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border ${reasonConfig[selectedReport.reason].bg} ${reasonConfig[selectedReport.reason].border}`}>
-                      <span className={reasonConfig[selectedReport.reason].color}>
-                        {reasonConfig[selectedReport.reason].label}
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-sm mt-2">{selectedReport.additionalInfo}</p>
-                  </div>
-
-
-                </div>
-
-                {/* Informations sur l'auteur du commentaire */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Auteur du commentaire</label>
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                        <User className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-white font-medium">{selectedReport.authorName}</p>
-                        <p className="text-gray-400 text-sm">ID: {selectedReport.authorId}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Roman et chapitre */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Roman et chapitre</label>
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-12 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded border border-white/10 flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-purple-400" />
-                      </div>
-                      <div>
-                        <p className="text-white font-medium">{selectedReport.novelTitle}</p>
-                        <p className="text-gray-400 text-sm">{selectedReport.chapterTitle}</p>
-                        <p className="text-gray-500 text-xs">ID Roman: {selectedReport.novelId}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Informations de signalement */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Signalé par</label>
-                    <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                      <div className="flex items-center gap-2">
-                        <Shield className="w-4 h-4 text-gray-400" />
-                        <span className="text-white text-sm">{selectedReport.reportedBy}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Date de signalement</label>
-                    <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-white text-sm">{formatDate(selectedReport.reportedAt)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Statut */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Statut</label>
-                  <div className={`inline-flex items-center px-3 py-2 rounded-lg border ${statusConfig[selectedReport.status].bg} ${statusConfig[selectedReport.status].border}`}>
-                    <span className={statusConfig[selectedReport.status].color}>
-                      {statusConfig[selectedReport.status].label}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Informations de traitement */}
-                {selectedReport.processedAt && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Informations de traitement</label>
-                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-white text-sm">Traité le {formatDate(selectedReport.processedAt)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-400" />
-                        <span className="text-white text-sm">Par {selectedReport.processedBy}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-gray-400" />
-                        <span className="text-white text-sm">
-                          Action: {selectedReport.action === 'removed' ? 'Commentaire supprimé' : 'Signalement rejeté'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {selectedReport.status === 'pending' && (
-                <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-white/10">
-                  <button
-                    onClick={() => {
-                      handleProcessReport(selectedReport.id, 'dismiss');
-                      setShowDetailsModal(false);
-                    }}
-                    className="w-full sm:w-auto px-4 py-2 border border-gray-500/50 text-gray-400 rounded-lg hover:bg-gray-500/10 transition-colors text-sm sm:text-base"
-                  >
-                    Rejeter
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleProcessReport(selectedReport.id, 'resolve');
-                      setShowDetailsModal(false);
-                    }}
-                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-lg transition-colors text-sm sm:text-base"
-                  >
-                    Supprimer le commentaire
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      <PostDetailsModal
+        isOpen={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        report={selectedReport}
+        reasonConfig={reasonConfig}
+        statusConfig={statusConfig}
+        onProcessReport={handleProcessReport}
+        formatDate={formatDate}
+      />
     </div>
   );
 };
 
-export default ReportedCommentsSection;
+export default ReportedPostsSection; 
