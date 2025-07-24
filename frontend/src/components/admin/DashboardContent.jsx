@@ -86,7 +86,7 @@ const DashboardContent = () => {
       {/* Statistiques rapides */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         {quickStats.map((stat, index) => (
-          <div key={index} className={`bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 md:p-6 border ${stat.borderColor} hover:bg-slate-800/90 transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer`}>
+          <div key={index} className={`bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-4 md:p-6 border ${stat.borderColor} hover:bg-slate-800/40 transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer`}>
           <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ const DashboardContent = () => {
                   </div>
                 )}
               </div>
-              <div className={`p-3 ${stat.bgColor} rounded-xl border ${stat.borderColor} group-hover:scale-110 transition-transform duration-300`}>
+              <div className={`p-3 ${stat.bgColor} rounded-lg sm:rounded-xl border ${stat.borderColor} group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.iconColor}`} />
             </div>
             </div>
@@ -119,7 +119,7 @@ const DashboardContent = () => {
       {/* Actions rapides et alertes importantes */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Actions rapides */}
-        <div className="lg:col-span-2 bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+        <div className="lg:col-span-2 bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-6 border border-slate-700/50">
           <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-3">
             <div className="p-2 bg-purple-500/20 rounded-lg border border-purple-500/30">
               <Settings className="w-5 h-5 text-purple-400" />
@@ -210,7 +210,7 @@ const DashboardContent = () => {
         </div>
 
         {/* Alertes importantes */}
-        <div className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+        <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-6 border border-slate-700/50">
           <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-3">
             <div className="p-2 bg-red-500/20 rounded-lg border border-red-500/30">
               <AlertTriangle className="w-5 h-5 text-red-400" />
@@ -253,7 +253,7 @@ const DashboardContent = () => {
 
       {/* Métriques de performance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+        <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-6 border border-slate-700/50">
           <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-3">
             <div className="p-2 bg-green-500/20 rounded-lg border border-green-500/30">
               <Eye className="w-5 h-5 text-green-400" />
@@ -261,22 +261,22 @@ const DashboardContent = () => {
             Performances du site
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-700/30 backdrop-blur-sm rounded-lg border border-slate-600/50">
               <span className="text-gray-300">Vues totales</span>
               <span className="text-white font-semibold">125,478</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-700/30 backdrop-blur-sm rounded-lg border border-slate-600/50">
               <span className="text-gray-300">Engagement moyen</span>
               <span className="text-green-400 font-semibold">+12.5%</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-700/30 backdrop-blur-sm rounded-lg border border-slate-600/50">
               <span className="text-gray-300">Temps de lecture</span>
               <span className="text-white font-semibold">8.2 min</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+        <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-6 border border-slate-700/50">
           <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-3">
             <div className="p-2 bg-purple-500/20 rounded-lg border border-purple-500/30">
               <MessageSquare className="w-5 h-5 text-purple-400" />
@@ -284,7 +284,7 @@ const DashboardContent = () => {
             Activité récente
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 backdrop-blur-sm border border-slate-600/50 transition-all duration-200">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <div className="flex-1">
                 <div className="text-gray-300 text-sm">Nouvelle candidature d'auteur</div>
@@ -292,7 +292,7 @@ const DashboardContent = () => {
               </div>
               <span className="text-gray-500 text-xs">Il y a 5 min</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 backdrop-blur-sm border border-slate-600/50 transition-all duration-200">
               <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
               <div className="flex-1">
                 <div className="text-gray-300 text-sm">3 nouveaux utilisateurs inscrits</div>
@@ -300,7 +300,7 @@ const DashboardContent = () => {
               </div>
               <span className="text-gray-500 text-xs">Il y a 12 min</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 backdrop-blur-sm border border-slate-600/50 transition-all duration-200">
               <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
               <div className="flex-1">
                 <div className="text-gray-300 text-sm">Nouveau chapitre publié</div>
@@ -308,7 +308,7 @@ const DashboardContent = () => {
               </div>
               <span className="text-gray-500 text-xs">Il y a 1h</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 backdrop-blur-sm border border-slate-600/50 transition-all duration-200">
               <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
               <div className="flex-1">
                 <div className="text-gray-300 text-sm">Nouvelle demande d'auteur</div>
@@ -316,7 +316,7 @@ const DashboardContent = () => {
               </div>
               <span className="text-gray-500 text-xs">Il y a 2h</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 backdrop-blur-sm border border-slate-600/50 transition-all duration-200">
               <div className="w-2 h-2 bg-red-400 rounded-full"></div>
               <div className="flex-1">
                 <div className="text-gray-300 text-sm">Utilisateur bloqué</div>

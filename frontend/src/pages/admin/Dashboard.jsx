@@ -7,6 +7,7 @@ import ChapterContent from './ChapterContent';
 import AuthorApplications from './AuthorApplications';
 import Stats from './Stats';
 import Notifications from './Notifications';
+import Settings from './Settings';
 import { ToastProvider } from '../../contexts/ToastContext';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { 
@@ -155,6 +156,7 @@ const Dashboard = () => {
           <Route path="/chapters" element={<ChapterContent />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/author-posts" element={<AdminAuthorPostsSection />} />
         </Routes>
       </div>
