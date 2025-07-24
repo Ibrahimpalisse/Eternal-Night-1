@@ -138,18 +138,18 @@ const CompletedBooks = () => {
 
         {/* Container avec scroll horizontal */}
         <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-          {/* Bouton scroll gauche */}
+          {/* Bouton scroll gauche - caché en mobile */}
           <button
             onClick={scrollLeft}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-sm border border-slate-600/50 rounded-full p-2 text-white transition-all duration-300 hover:scale-110 shadow-lg"
+            className="hidden sm:block absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-sm border border-slate-600/50 rounded-full p-2 text-white transition-all duration-300 hover:scale-110 shadow-lg"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          {/* Bouton scroll droite */}
+          {/* Bouton scroll droite - caché en mobile */}
           <button
             onClick={scrollRight}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-sm border border-slate-600/50 rounded-full p-2 text-white transition-all duration-300 hover:scale-110 shadow-lg"
+            className="hidden sm:block absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-sm border border-slate-600/50 rounded-full p-2 text-white transition-all duration-300 hover:scale-110 shadow-lg"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -158,11 +158,11 @@ const CompletedBooks = () => {
             {completedBooks.map((book) => (
               <div 
                 key={book.id}
-                className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer w-full min-w-full flex-shrink-0 sm:w-[12rem] sm:min-w-[12rem] sm:gap-6"
+                className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer w-64 min-w-64 flex-shrink-0 sm:w-[12rem] sm:min-w-[12rem] sm:gap-6"
                 onClick={() => handleBookClick(book)}
               >
                 {/* Image du livre */}
-                <div className="relative h-80 overflow-hidden">
+                <div className="relative h-64 sm:h-80 overflow-hidden">
                   <img 
                     src={book.image}
                     alt={book.title}
@@ -194,7 +194,7 @@ const CompletedBooks = () => {
                 </div>
 
                 {/* Contenu */}
-                <div className="p-5">
+                <div className="p-4 sm:p-5">
                   {/* Titre et auteur */}
                   <div className="mb-4">
                     <h3 className="text-white font-bold text-lg mb-1 line-clamp-2 group-hover:text-green-300 transition-colors">

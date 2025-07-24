@@ -9,12 +9,12 @@ import {
   MessageCircle, 
   Star,
   Share,
-  Bookmark,
-  Play
+  Bookmark
 } from 'lucide-react';
 import { ResponsiveStatusBadge } from '../ui';
+import ReportButton from '../ReportButton';
 
-const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onStartReading }) => {
+const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked }) => {
   const { goBack } = useNavigation();
   const location = useLocation();
 
@@ -147,18 +147,7 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
               </div>
             </div>
 
-            {/* Bouton principal de lecture */}
-            <div className="mb-4 sm:mb-6">
-              <button
-                onClick={onStartReading}
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl text-white font-bold text-base sm:text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/25"
-              >
-                <Play className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="text-sm sm:text-base">
-                  {novel.lastReadChapter ? `Continuer la lecture (Ch. ${novel.lastReadChapter + 1})` : 'Commencer à lire'}
-                </span>
-              </button>
-            </div>
+
 
             {/* Boutons d'action secondaires */}
             <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6 justify-center md:justify-start">
@@ -194,32 +183,36 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
                 <Share className="w-4 h-4" />
                 <span className="hidden sm:inline">Partager</span>
               </button>
+
+              {/* Bouton de signalement */}
+              <ReportButton 
+                contentType="novel" 
+                contentId={novel.id}
+                size="md"
+              />
             </div>
 
             {/* Description */}
             <div className="mb-4">
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">Description</h3>
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+              <h3 className="text-white font-semibold text-sm sm:text-base mb-2">Description</h3>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed line-clamp-3">
                 {novel.description}
               </p>
             </div>
 
             {/* Tags */}
             {novel.tags && novel.tags.length > 0 && (
-              <div>
-                <div className="flex flex-wrap gap-2">
-                  {novel.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-slate-700/50 text-gray-300 border border-slate-600/50 rounded-md text-xs sm:text-sm"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {novel.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-full text-xs font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
             )}
-
           </div>
         </div>
       </div>
