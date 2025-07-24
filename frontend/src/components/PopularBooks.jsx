@@ -187,6 +187,7 @@ const PopularBooks = () => {
                     <ResponsiveStatusBadge 
                       status={book.status} 
                       size="small"
+                      showText={false}
                       className="backdrop-blur-sm"
                     />
                   </div>

@@ -9,6 +9,8 @@ import ForgotPassword from './pages/user/ForgotPassword';
 import Profil from './pages/user/Profil';
 import JoinAuthors from './pages/user/JoinAuthors';
 import Library from './pages/user/Library';
+import Bookmarks from './pages/user/Bookmarks';
+import Members from './pages/user/Members';
 import NovelDetails from './pages/user/NovelDetails';
 import ChapterReader from './pages/user/ChapterReader';
 import AdminDashboard from './pages/admin/Dashboard';
@@ -78,6 +80,10 @@ const AppContent = () => {
                 <Route path="/join-authors" element={<JoinAuthors />} />
                 {/* Route for Library page */}
                 <Route path="/library" element={<Library />} />
+                {/* Route for Bookmarks page */}
+                <Route path="/bookmarks" element={<Bookmarks />} />
+                {/* Route for Members page */}
+                <Route path="/members" element={<Members />} />
                 {/* Route for Novel Details page */}
                 <Route path="/novel/:id" element={<NovelDetails />} />
                 {/* Route for Chapter Reading page */}

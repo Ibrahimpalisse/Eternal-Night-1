@@ -8,6 +8,7 @@ import {
   ChapterList,
   CommentsSection
 } from '../../components/novel';
+import UserNovelsModal from '../../components/members/UserNovelsModal';
 
 // Données mockées - à remplacer par des vraies données API
 const mockNovel = {
@@ -256,6 +257,71 @@ const mockComments = [
   }
 ];
 
+const mockNovelsByAuthor = {
+  1: [
+    {
+      id: 101,
+      title: "Les Chroniques d'Aether",
+      author: "Emma Laurent",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=center",
+      description: "Une épopée fantastique dans un monde où la magie et la technologie s'affrontent.",
+      chapters: 25,
+      views: 12500,
+      likes: 1247,
+      comments: 423,
+      status: "in_progress"
+    },
+    {
+      id: 102,
+      title: "Le Souffle du Nord",
+      author: "Emma Laurent",
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=400&fit=crop&crop=center",
+      description: "Un voyage initiatique à travers des terres gelées et hostiles.",
+      chapters: 18,
+      views: 8200,
+      likes: 900,
+      comments: 120,
+      status: "completed"
+    },
+    {
+      id: 103,
+      title: "L'Éveil des Ombres",
+      author: "Emma Laurent",
+      image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=400&fit=crop&crop=center",
+      description: "Un roman sombre où les secrets de famille refont surface.",
+      chapters: 20,
+      views: 9500,
+      likes: 1100,
+      comments: 210,
+      status: "in_progress"
+    },
+    {
+      id: 104,
+      title: "La Légende du Phénix",
+      author: "Emma Laurent",
+      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=300&h=400&fit=crop&crop=center",
+      description: "Une aventure épique à travers des terres en feu.",
+      chapters: 22,
+      views: 10400,
+      likes: 980,
+      comments: 180,
+      status: "completed"
+    },
+    {
+      id: 105,
+      title: "Les Jardins du Temps",
+      author: "Emma Laurent",
+      image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=300&h=400&fit=crop&crop=center",
+      description: "Un voyage poétique entre passé et futur.",
+      chapters: 16,
+      views: 6700,
+      likes: 800,
+      comments: 90,
+      status: "in_progress"
+    }
+  ]
+};
+
 const NovelDetails = () => {
   const { id } = useParams();
   const { navigateToChapter } = useNavigation();
@@ -292,6 +358,9 @@ const NovelDetails = () => {
   // États pour les interactions
   const [isFavorited, setIsFavorited] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedNovels, setSelectedNovels] = useState([]);
 
   // Filtrage et tri des chapitres
   const filteredAndSortedChapters = useMemo(() => {
@@ -437,18 +506,28 @@ const NovelDetails = () => {
     );
   };
 
+  // Handler pour ouvrir la popup sur le nom de l'auteur
+  const handleAuthorClick = () => {
+    setSelectedUser({ name: mockNovel.author, role: 'author' });
+    setSelectedNovels(mockNovelsByAuthor[1] || []);
+    setOpenModal(true);
+  };
+
   return (
     <div className="min-h-screen">
       
       {/* Header du roman */}
-      <NovelHeader
-        novel={mockNovel}
-        isFavorited={isFavorited}
-        setIsFavorited={setIsFavorited}
-        isBookmarked={isBookmarked}
-        setIsBookmarked={setIsBookmarked}
-        onStartReading={handleStartReading}
-      />
+      <div className="relative">
+        <NovelHeader
+          novel={mockNovel}
+          isFavorited={isFavorited}
+          setIsFavorited={setIsFavorited}
+          isBookmarked={isBookmarked}
+          setIsBookmarked={setIsBookmarked}
+          onStartReading={handleStartReading}
+          onAuthorClick={handleAuthorClick}
+        />
+      </div>
 
       {/* Section Derniers chapitres ajoutés */}
       <LatestChapters
@@ -504,6 +583,8 @@ const NovelDetails = () => {
         formatDate={formatDate}
         getAvatarInitials={getAvatarInitials}
       />
+      {/* Popup romans de l'auteur */}
+      <UserNovelsModal open={openModal} onClose={() => setOpenModal(false)} user={selectedUser} novels={selectedNovels} />
 
     </div>
   );

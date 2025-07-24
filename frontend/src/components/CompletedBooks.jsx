@@ -188,6 +188,7 @@ const CompletedBooks = () => {
                     <ResponsiveStatusBadge 
                       status="terminé" 
                       size="small"
+                      showText={false}
                       className="backdrop-blur-sm"
                     />
                   </div>

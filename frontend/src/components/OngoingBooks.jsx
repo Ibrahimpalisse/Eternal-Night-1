@@ -188,6 +188,7 @@ const OngoingBooks = () => {
                     <ResponsiveStatusBadge 
                       status="en_cours" 
                       size="small"
+                      showText={false}
                       className="backdrop-blur-sm"
                     />
                   </div>

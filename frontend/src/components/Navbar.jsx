@@ -110,7 +110,7 @@ const Navbar = () => {
         { to: "/", icon: <Home className="w-5 h-5" />, label: "Home" },
         { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
         { to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" },
-        { to: "/readers", icon: <List className="w-5 h-5" />, label: "Best Readers" },
+        { to: "/members", icon: <User className="w-5 h-5" />, label: "Membre" },
     ];
 
     return (
@@ -524,14 +524,14 @@ const Navbar = () => {
                                     </Link>
 
                                     <Link 
-                                        to="/readers" 
-                                        className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/readers') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
+                                        to="/members" 
+                                        className={`flex items-center space-x-3 px-3 py-3 rounded-lg ${isActive('/members') ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white hover:bg-white/5'} transition-all group touch-manipulation`}
                                         onClick={() => setIsMenuOpen(false)}
                                     >
-                                        <div className={`p-2 rounded-lg ${isActive('/readers') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
-                                            <List className="w-4 h-4" />
+                                        <div className={`p-2 rounded-lg ${isActive('/members') ? 'bg-purple-500/20 border-purple-500/50' : 'bg-white/5 border-white/10 group-hover:border-purple-500/50'} border transition-colors`}>
+                                            <User className="w-4 h-4" />
                                         </div>
-                                        <span>Meilleurs lecteurs</span>
+                                        <span>Membre</span>
                                     </Link>
 
                                     <Link 

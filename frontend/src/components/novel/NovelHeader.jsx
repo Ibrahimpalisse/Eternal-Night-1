@@ -14,7 +14,7 @@ import {
 import { ResponsiveStatusBadge } from '../ui';
 import ReportButton from '../ReportButton';
 
-const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked }) => {
+const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onAuthorClick }) => {
   const { goBack } = useNavigation();
   const location = useLocation();
 
@@ -48,7 +48,7 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
           <div className="relative w-full md:w-80 lg:w-96 flex-shrink-0">
             {/* Badges à droite de l'image en mode responsive */}
             <div className="absolute top-4 right-4 md:hidden flex items-center gap-2 z-10">
-              <ResponsiveStatusBadge status={novel.status} />
+              <ResponsiveStatusBadge status={novel.status} showText={false} />
               {novel.isNew && (
                 <span className="px-2 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs font-bold">
                   NOUVEAU
@@ -86,7 +86,14 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
                   {novel.title}
                 </h1>
                 <p className="text-sm text-purple-300 opacity-90">
-                  Par {novel.author}
+                  Par {onAuthorClick ? (
+                    <span
+                      className="text-purple-400 font-semibold cursor-pointer hover:underline hover:text-purple-300 transition-colors"
+                      onClick={onAuthorClick}
+                    >
+                      {novel.author}
+                    </span>
+                  ) : novel.author}
                 </p>
               </div>
             </div>
@@ -111,7 +118,14 @@ const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBo
                 </div>
               </div>
               <p className="text-lg text-purple-300 mb-4">
-                Par {novel.author}
+                Par {onAuthorClick ? (
+                  <span
+                    className="text-purple-400 font-semibold cursor-pointer hover:underline hover:text-purple-300 transition-colors"
+                    onClick={onAuthorClick}
+                  >
+                    {novel.author}
+                  </span>
+                ) : novel.author}
               </p>
             </div>
 
