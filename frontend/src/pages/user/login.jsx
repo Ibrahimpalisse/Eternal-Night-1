@@ -5,8 +5,8 @@ import User from '../../services/User';
 import { FormValidation } from '../../utils/validation';
 import { useToast } from '../../contexts/ToastContext';
 import { useAuth } from '../../contexts/AuthContext';
-import EmailVerificationDialog from '../../components/EmailVerificationDialog';
-import CodeVerificationDialog from '../../components/CodeVerificationDialog';
+import { EmailVerificationDialog } from "../../components";
+import { CodeVerificationDialog } from "../../components";
 import { useScrollToTop } from '../../hooks';
 
 

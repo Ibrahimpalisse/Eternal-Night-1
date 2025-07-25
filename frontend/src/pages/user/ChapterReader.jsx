@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useNavigation } from '../../components/NavigationManager';
+import { useNavigation } from "../../components";
 import { useScrollToTopOnChange } from '../../hooks';
 import {
   ChapterHeader,

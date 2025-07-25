@@ -43,6 +43,7 @@ const DeleteDialog = ({ isOpen, onClose, application, onConfirm, isLoading }) =>
             <Trash2 className="h-5 w-5" />
             Supprimer définitivement
           </DialogTitle>
+          <DialogDescription>Confirmez la suppression de cet élément.</DialogDescription>
           <Button
             variant="ghost"
             size="sm"

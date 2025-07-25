@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import ProfileSettings from '../../components/ProfileSettings';
+import { ProfileSettings } from "../../components";
 import ProfileHeader from '../../components/profile/ProfileHeader';
 import ProfileTabs from '../../components/profile/ProfileTabs';
 import { Button } from '../../components/ui/button';

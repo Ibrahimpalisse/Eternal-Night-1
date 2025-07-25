@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { useToast } from '../../contexts/ToastContext';
@@ -53,6 +53,7 @@ const CategoryModal = ({ isOpen, onClose, onSubmit }) => {
             <Tag className="w-5 h-5 text-purple-400" />
             Créer une catégorie
           </DialogTitle>
+          <DialogDescription>Remplissez les informations pour créer ou modifier une catégorie.</DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">

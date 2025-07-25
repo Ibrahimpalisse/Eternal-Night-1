@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -217,9 +218,8 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit }) => {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-gray-900/90 backdrop-blur-xl border-white/10 text-white w-full max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl font-semibold text-white">
-            {step === 1 ? 'Vérification du mot de passe' : 'Modification du mot de passe'}
-          </DialogTitle>
+          <DialogTitle>Changer le mot de passe</DialogTitle>
+          <DialogDescription>Veuillez saisir votre ancien et nouveau mot de passe.</DialogDescription>
         </DialogHeader>
         
         <div className="p-4 sm:p-5 bg-gray-900/50 rounded-lg mb-4">

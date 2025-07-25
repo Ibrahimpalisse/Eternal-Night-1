@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { useToast } from '../contexts/ToastContext';
-import User from '../services/User';
-import { securityStorage } from '../utils/securityStorage';
-import FormField from './profile/FormField';
+import { useToast } from '../../contexts/ToastContext';
+import UserService from '../../services/user/index';
+const userServiceInstance = new UserService();
+import { securityStorage } from '../../utils/securityStorage';
+import FormField from './FormField';
 
 // Fonction pour obtenir l'avatar de l'utilisateur
 const getUserAvatar = (user) => {
@@ -48,7 +49,7 @@ const ProfileSettings = ({ user, setUser }) => {
   // Fonction pour gérer la mise à jour du nom d'utilisateur
   const handleNameUpdate = async (newName) => {
     try {
-      const result = await User.updateName(newName);
+      const result = await userServiceInstance.updateName(newName);
 
       if (result.success) {
         // Mise à jour directe de l'utilisateur
@@ -81,7 +82,7 @@ const ProfileSettings = ({ user, setUser }) => {
       console.log('Updating avatar with file:', file);
       
       // Appel API réel pour mettre à jour l'avatar
-      const result = await User.updateAvatar(file);
+      const result = await userServiceInstance.updateAvatar(file);
       
       if (result.success) {
         // Mettre à jour l'utilisateur avec la nouvelle URL d'avatar

@@ -7,11 +7,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { Button } from './ui/button';
-import User from '../services/User';
-import { useToast } from '../contexts/ToastContext';
-import EmailVerification from './EmailVerification';
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import UserService from '../../services/user/index';
+import { useToast } from '../../contexts/ToastContext';
+import EmailVerification from "../verification/EmailVerification";
 
 const EmailVerificationDialog = ({ 
   isOpen, 
@@ -23,6 +23,9 @@ const EmailVerificationDialog = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const toast = useToast();
+  
+  // Instancier UserService
+  const userService = new UserService();
 
   // Réinitialiser l'état quand le dialog se ferme/s'ouvre
   useEffect(() => {
@@ -38,7 +41,7 @@ const EmailVerificationDialog = ({
     setIsLoading(true);
     
     try {
-      const result = await User.resendVerification(email);
+      const result = await userService.resendVerification(email);
       
       if (result && result.success) {
         toast.success("Code de vérification envoyé avec succès !");

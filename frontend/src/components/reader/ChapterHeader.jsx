@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import ReportButton from '../ReportButton';
+import { ReportButton } from "../..//components";
 import { 
   ArrowLeft, 
   Settings, 

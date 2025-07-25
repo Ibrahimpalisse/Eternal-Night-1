@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { X } from 'lucide-react';
 
@@ -43,6 +43,7 @@ const UnblockDialog = ({ isOpen, onClose, application, onConfirm, isLoading }) =
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             Débloquer le candidat
           </DialogTitle>
+          <DialogDescription>Confirmez le déblocage de cet utilisateur ou contenu.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 pt-4">

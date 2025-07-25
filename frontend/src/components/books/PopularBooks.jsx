@@ -1,94 +1,94 @@
 import React, { useRef } from 'react';
-import { BookOpen, Heart, MessageCircle, Clock, ArrowRight, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { useNavigation } from './NavigationManager';
+import { BookOpen, Heart, MessageCircle, Star, ArrowRight, Clock, CheckCircle, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { useNavigation } from "../..//components";
 
-import ResponsiveStatusBadge from './ui/ResponsiveStatusBadge';
+import ResponsiveStatusBadge from "../ui/ResponsiveStatusBadge";
 
-// Données mockées pour les romans en cours
-const ongoingBooks = [
+// Données mockées pour les livres populaires
+const popularBooks = [
   {
     id: 1,
-    title: "Les Secrets de l'Académie",
-    author: "Camille Rousseau",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop",
+    title: "Les Chroniques d'Aether",
+    author: "Emma Laurent",
+    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=400&fit=crop&crop=center",
+    chapters: 25,
+    views: 12500,
+    favorites: 1247,
+    comments: 423,
     category: "Fantasy",
-    chapters: 12,
-    views: 8900,
-    favorites: 1834,
-    comments: 456,
     status: "en_cours"
   },
   {
     id: 2,
-    title: "Cœurs en Péril",
-    author: "Antoine Moreau",
-    image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop",
-    category: "Romance",
-    chapters: 8,
-    views: 12300,
-    favorites: 2456,
-    comments: 789,
-    status: "en_cours"
+    title: "L'Empire des Ombres",
+    author: "Marc Dubois",
+    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop&crop=center",
+    chapters: 18,
+    views: 9800,
+    favorites: 892,
+    comments: 256,
+    category: "Science-Fiction",
+    status: "terminé"
   },
   {
     id: 3,
-    title: "La Quête du Dragon",
-    author: "Marie Lefevre",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop",
-    category: "Aventure",
+    title: "La Prophétie Oubliée",
+    author: "Sarah Moreau",
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop&crop=center",
     chapters: 15,
-    views: 10500,
-    favorites: 1567,
-    comments: 334,
+    views: 7650,
+    favorites: 756,
+    comments: 189,
+    category: "Aventure",
     status: "en_cours"
   },
   {
     id: 4,
-    title: "Mystères de la Ville",
-    author: "Paul Bernard",
-    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop",
-    category: "Thriller",
-    chapters: 20,
-    views: 7800,
-    favorites: 1123,
-    comments: 267,
-    status: "en_cours"
+    title: "Secrets de Minuit",
+    author: "Lucas Martin",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=center",
+    chapters: 22,
+    views: 5400,
+    favorites: 645,
+    comments: 167,
+    category: "Mystère",
+    status: "terminé"
   },
   {
     id: 5,
-    title: "Étoiles Naissantes",
-    author: "Sophie Dubois",
-    image: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=300&h=400&fit=crop",
-    category: "Science-Fiction",
-    chapters: 10,
-    views: 15600,
-    favorites: 2789,
-    comments: 612,
+    title: "Les Gardiens du Temps",
+    author: "Julie Rousseau",
+    image: "https://images.unsplash.com/photo-1576872381149-7847515ce5d5?w=300&h=400&fit=crop&crop=center",
+    chapters: 30,
+    views: 8200,
+    favorites: 534,
+    comments: 143,
+    category: "Fantasy",
     status: "en_cours"
   },
   {
     id: 6,
-    title: "L'Héritage Maudit",
-    author: "Lucas Petit",
-    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=400&fit=crop",
-    category: "Horreur",
-    chapters: 6,
-    views: 6200,
-    favorites: 945,
-    comments: 178,
-    status: "en_cours"
+    title: "Étoiles Perdues",
+    author: "Antoine Bernard",
+    image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=300&h=400&fit=crop&crop=center",
+    chapters: 12,
+    views: 4300,
+    favorites: 423,
+    comments: 98,
+    category: "Science-Fiction",
+    status: "terminé"
   }
 ];
 
-const OngoingBooks = () => {
-  console.log('OngoingBooks component is rendering'); // Debug log
+const PopularBooks = () => {
+  console.log('PopularBooks component is rendering'); // Debug log
   const { navigateToNovel } = useNavigation();
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
-    console.log('Voir plus de romans en cours...');
-    // Redirection vers la page des romans en cours
-    navigate('/ongoing-novels'); // Redirection vers la page des romans en cours
+    console.log('Voir plus de romans populaires...');
+    // Redirection vers la page des romans populaires
+    navigate('/popular-novels'); // Redirection vers la page des romans populaires
   };
 
   const handleBookClick = (book) => {
@@ -118,21 +118,21 @@ const OngoingBooks = () => {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-2xl font-bold text-white text-left">
-              Romans en cours
+              Les 10 romans les plus populaires
             </h2>
             <button 
               onClick={handleViewMore}
-              className="flex items-center gap-2 text-orange-400 hover:text-orange-300 transition-colors duration-300 group cursor-pointer"
+              className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors duration-300 group cursor-pointer"
             >
               <span className="text-sm font-medium">Plus</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </div>
           <div className="flex items-center">
-            <div className="mr-4 text-orange-400">
-              <Clock className="w-5 h-5" />
+            <div className="mr-4 text-purple-400">
+              <Star className="w-5 h-5" />
             </div>
-            <div className="h-px bg-orange-400/30 flex-1"></div>
+            <div className="h-px bg-purple-400/30 flex-1"></div>
           </div>
         </div>
 
@@ -155,7 +155,7 @@ const OngoingBooks = () => {
           </button>
 
           <div ref={scrollRef} className="flex gap-0 sm:gap-6 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {ongoingBooks.map((book) => (
+            {popularBooks.map((book) => (
               <div 
                 key={book.id}
                 className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 group cursor-pointer w-64 min-w-64 flex-shrink-0 sm:w-[12rem] sm:min-w-[12rem] sm:gap-6"
@@ -179,14 +179,13 @@ const OngoingBooks = () => {
                   >
                     {book.title.slice(0, 2).toUpperCase()}
                   </div>
-
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
-
-                  {/* Badge statut en cours */}
+                  
+                  {/* Badge statut */}
                   <div className="absolute top-3 right-3">
                     <ResponsiveStatusBadge 
-                      status="en_cours" 
+                      status={book.status} 
                       size="small"
                       showText={false}
                       className="backdrop-blur-sm"
@@ -198,7 +197,7 @@ const OngoingBooks = () => {
                 <div className="p-4 sm:p-5">
                   {/* Titre et auteur */}
                   <div className="mb-4">
-                    <h3 className="text-white font-bold text-lg mb-1 line-clamp-2 group-hover:text-orange-300 transition-colors">
+                    <h3 className="text-white font-bold text-lg mb-1 line-clamp-2 group-hover:text-purple-300 transition-colors">
                       {book.title}
                     </h3>
                     <p className="text-gray-400 text-sm">par {book.author}</p>
@@ -218,7 +217,7 @@ const OngoingBooks = () => {
                       <Heart className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span className="font-medium truncate">{book.favorites?.toLocaleString() || 0}</span>
                     </div>
-                    <div className="flex items-center justify-start gap-2 text-orange-400 hover:text-orange-300 transition-colors duration-200 min-w-0">
+                    <div className="flex items-center justify-start gap-2 text-green-400 hover:text-green-300 transition-colors duration-200 min-w-0">
                       <MessageCircle className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span className="font-medium truncate">{book.comments}</span>
                     </div>
@@ -253,4 +252,4 @@ const OngoingBooks = () => {
   );
 };
 
-export default OngoingBooks; 
+export default PopularBooks; 

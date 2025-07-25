@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigation } from '../../components/NavigationManager';
+import { useNavigation } from '../../components';
 import { useScrollToTop } from '../../hooks';
 import { FilterBar, BookGrid, BookList, ViewToggle, Pagination } from '../../components/library';
 import { useViewMode } from '../../hooks/useLocalStorage';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useScrollToTop } from '../../hooks';
-import HeroSection from '../../components/HeroSection';
-import PopularBooks from '../../components/PopularBooks';
-import OngoingBooks from '../../components/OngoingBooks';
-import CompletedBooks from '../../components/CompletedBooks';
-import SearchDialog from '../../components/SearchDialog';
-import NewChapters from '../../components/NewChapters';
+import { HeroSection } from "../../components";
+import { PopularBooks } from "../../components";
+import { OngoingBooks } from "../../components";
+import { CompletedBooks } from "../../components";
+import { SearchDialog } from "../../components";
+import { NewChapters } from "../../components";
 
 function Home() {
   useScrollToTop();

@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { BookOpen, Heart, MessageCircle, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { useNavigation } from './NavigationManager';
+import { useNavigation } from "../..//components";
 
-import ResponsiveStatusBadge from './ui/ResponsiveStatusBadge';
+import ResponsiveStatusBadge from "../ui/ResponsiveStatusBadge";
 
 // Données mockées pour les romans terminés
 const completedBooks = [

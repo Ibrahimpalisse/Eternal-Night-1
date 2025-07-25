@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { AlertTriangle, Lock, Eye, EyeOff, X } from 'lucide-react';
 import { FormValidation } from '../../../utils/validation';
@@ -65,6 +65,7 @@ const DeleteUserDialog = ({ isOpen, onClose, user, onConfirm }) => {
               <AlertTriangle className="w-6 h-6 text-red-400" />
               Supprimer l'utilisateur
             </DialogTitle>
+            <DialogDescription>Confirmez la suppression de cet utilisateur. Cette action est irréversible.</DialogDescription>
             <button
               onClick={handleClose}
               className="p-2 hover:bg-slate-700 rounded-lg transition-colors"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Flag } from 'lucide-react';
-import ReportModal from './ReportModal';
+import ReportModal from '../dialogs/ReportModal.jsx';
 
 const ReportButton = ({ contentType = 'comment', contentId, className = '', size = 'sm' }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

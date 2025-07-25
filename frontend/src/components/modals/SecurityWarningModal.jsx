@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '../ui/dialog';
 
 const SecurityWarningModal = ({ isOpen, onCountdownComplete, remainingTime = 10 }) => {
@@ -37,6 +38,7 @@ const SecurityWarningModal = ({ isOpen, onCountdownComplete, remainingTime = 10 
           <DialogTitle className="text-lg sm:text-xl font-bold text-red-100 text-center">
             ⚠️ Avertissement de Sécurité
           </DialogTitle>
+          <DialogDescription>Cette action est sensible et nécessite votre attention.</DialogDescription>
         </DialogHeader>
         
         <div className="p-4 sm:p-6 text-center space-y-3 sm:space-y-4">

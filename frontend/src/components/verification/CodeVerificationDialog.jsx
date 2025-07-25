@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '../ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import EmailVerification from './EmailVerification';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { X, Clock, CheckCircle, XCircle, Badge, User, Calendar, Eye, FileText, AlertTriangle } from 'lucide-react';
 
@@ -115,6 +115,7 @@ const ApplicationHistoryModal = ({ isOpen, onClose, user, onUserClick }) => {
             </div>
             Historique des candidatures - {user.name}
           </DialogTitle>
+          <DialogDescription>Consultez l’historique des candidatures pour cet utilisateur.</DialogDescription>
           <Button
             variant="ghost"
             size="sm"

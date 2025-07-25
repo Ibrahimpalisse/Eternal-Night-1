@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -132,9 +133,9 @@ const AvatarChangeModal = ({ isOpen, onClose, currentAvatar, onSubmit }) => {
               <DialogTitle className="text-xl font-bold text-white">
                 {currentAvatar ? 'Modifier votre avatar' : 'Ajouter un avatar'}
               </DialogTitle>
-              <p className="text-sm text-gray-400">
+              <DialogDescription>
                 {currentAvatar ? 'Changez votre photo de profil' : 'Ajoutez une photo de profil'}
-              </p>
+              </DialogDescription>
             </div>
           </div>
         </DialogHeader>

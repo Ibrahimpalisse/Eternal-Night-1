@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { useScrollToTop } from '../../hooks';
-import { useNavigation } from '../../components/NavigationManager';
+import { useNavigation } from "../../components";
 import Pagination from '../../components/library/Pagination';
 import {
   NovelCard,
@@ -158,6 +160,15 @@ const mockBookmarkedChapters = [
 const Bookmarks = () => {
   useScrollToTop();
   const { navigateToNovel, navigateToChapter } = useNavigation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Protection d'authentification
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth/login');
+    }
+  }, [user, navigate]);
 
   // États pour les filtres et l'affichage
   const [activeTab, setActiveTab] = useState('novels'); // 'novels' ou 'chapters'

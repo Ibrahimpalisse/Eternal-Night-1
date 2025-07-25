@@ -12,7 +12,7 @@ import {
   Clock,
   ThumbsUp
 } from 'lucide-react';
-import ReportButton from '../ReportButton';
+import { ReportButton } from "../..//components";
 
 const CommentsSection = ({ 
   comments,

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { X, Clock, CheckCircle, XCircle, Badge, User, Calendar, FileText, AlertTriangle, Search, Filter, ChevronDown, Check, ChevronUp } from 'lucide-react';
 
@@ -549,6 +549,7 @@ const GlobalApplicationHistoryModal = ({ isOpen, onClose, onUserClick }) => {
                   <span className="block sm:hidden">Historique Global</span>
                   <span className="hidden sm:block">Historique Global - Candidatures Refusées & Bloquées</span>
                 </DialogTitle>
+                <DialogDescription>Consultez l’historique des candidatures refusées et bloquées.</DialogDescription>
               </div>
             </div>
             

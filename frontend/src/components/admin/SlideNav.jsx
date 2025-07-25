@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import LogoutConfirmDialog from '../LogoutConfirmDialog';
+import LogoutConfirmDialog from "../dialogs/LogoutConfirmDialog.jsx";
 import openBookLogo from '../../assets/open-book.svg';
 import { 
   LayoutDashboard, 

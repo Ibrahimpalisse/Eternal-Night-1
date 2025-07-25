@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { TOAST_TYPES } from '../components/Toast';
+import { TOAST_TYPES } from "../components";
 import CloseButton from '../components/ui/CloseButton';
 
 // Créer le contexte

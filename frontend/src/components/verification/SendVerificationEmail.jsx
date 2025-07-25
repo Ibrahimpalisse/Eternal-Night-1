@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FormValidation } from '../utils/validation';
-import User from '../services/User';
-import { useToast } from '../contexts/ToastContext';
+import { FormValidation } from '../../utils/validation';
+import UserService from "../../services/user/index";
+import { useToast } from "../../contexts/ToastContext";
 
 const SendVerificationEmail = ({ initialEmail = '', onEmailSent }) => {
   const [email, setEmail] = useState(initialEmail);
@@ -12,6 +12,9 @@ const SendVerificationEmail = ({ initialEmail = '', onEmailSent }) => {
   const [resendCountdown, setResendCountdown] = useState(0);
   const emailInputRef = useRef(null);
   const toast = useToast();
+  
+  // Instancier UserService
+  const userService = new UserService();
 
   useEffect(() => {
     if (initialEmail) {
@@ -40,7 +43,7 @@ const SendVerificationEmail = ({ initialEmail = '', onEmailSent }) => {
 
     try {
       // Appel à l'API pour envoyer le code de vérification
-      const result = await User.resendVerification(email);
+      const result = await userService.resendVerification(email);
       
       setSuccessMessage('Un code de vérification a été envoyé à votre email.');
       toast.success('Un code de vérification a été envoyé à votre email.');

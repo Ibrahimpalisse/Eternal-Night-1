@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import CloseButton from './ui/CloseButton';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import CloseButton from '../ui/CloseButton';
 import { Search, Book, History, Clock, TrendingUp, X, Trash2 } from 'lucide-react';
-import { FormValidation } from '../utils/validation';
+import { FormValidation } from '../../utils/validation';
 
 const SearchDialog = ({ trigger, isOpen, onClose, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -115,6 +115,7 @@ const SearchDialog = ({ trigger, isOpen, onClose, onSearch }) => {
             </div>
             <p className="text-xs sm:text-sm text-gray-400 font-normal text-center">Découvrez votre prochaine lecture préférée</p>
           </DialogTitle>
+          <DialogDescription>Recherchez un livre, un auteur ou un utilisateur.</DialogDescription>
         </DialogHeader>
         <form onSubmit={(e) => {
           e.preventDefault();

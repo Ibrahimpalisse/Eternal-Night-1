@@ -2,10 +2,12 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { LogOut, AlertTriangle } from 'lucide-react';
 
-const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
+const LogoutConfirmDialog = ({ isOpen, setIsOpen, onClose, onConfirm }) => {
+    // Compatibilité : utiliser onClose si fourni, sinon setIsOpen
+    const close = onClose || (setIsOpen ? () => setIsOpen(false) : () => {});
     const handleLogout = async () => {
         await onConfirm();
-        setIsOpen(false);
+        close();
     };
 
   return (
@@ -13,7 +15,7 @@ const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
             <Dialog 
                 as="div" 
                 className="relative z-50" 
-                onClose={() => setIsOpen(false)}
+                onClose={close}
             >
                 <Transition.Child
                     as={Fragment}
@@ -72,7 +74,7 @@ const LogoutConfirmDialog = ({ isOpen, setIsOpen, onConfirm }) => {
             <button
                                         type="button"
                                         className="group inline-flex justify-center items-center rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 hover:border-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all duration-300"
-              onClick={() => setIsOpen(false)}
+              onClick={close}
             >
               Annuler
             </button>

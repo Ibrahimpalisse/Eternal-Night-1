@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SendVerificationEmail from './SendVerificationEmail';
 import VerificationCode from './VerificationCode';
-import User from '../services/User';
-import { useToast } from '../contexts/ToastContext';
-import CloseButton from './ui/CloseButton';
+import UserService from '../../services/user/index';
+import { useToast } from '../../contexts/ToastContext';
+import CloseButton from '../ui/CloseButton';
 
 const EmailVerification = ({ 
   email = '', 
@@ -19,6 +19,9 @@ const EmailVerification = ({
   const [isSubmittingCode, setIsSubmittingCode] = useState(false);
   const [codeError, setCodeError] = useState('');
   const toast = useToast();
+  
+  // Instancier UserService
+  const userService = new UserService();
   
   // Ref pour vérifier si le composant est monté
   const isMountedRef = useRef(true);
@@ -80,7 +83,7 @@ const EmailVerification = ({
     
     try {
       console.log('handleSubmitCode - Calling User.verifyEmail with:', currentEmail, codeString);
-      const result = await User.verifyEmail(currentEmail, codeString);
+      const result = await userService.verifyEmail(currentEmail, codeString);
       
       console.log('handleSubmitCode - API result:', result);
       
@@ -142,7 +145,7 @@ const EmailVerification = ({
       } else {
         console.log('handleResendCode - Using default User.resendVerification');
         // Sinon, utiliser le comportement par défaut
-        const result = await User.resendVerification(currentEmail);
+        const result = await userService.resendVerification(currentEmail);
         console.log('handleResendCode - Default resend result:', result);
         // Ne pas traiter les erreurs silencieuses
         if (result && result.silent) {

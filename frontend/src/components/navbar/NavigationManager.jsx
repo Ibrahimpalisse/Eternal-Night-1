@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { saveScrollPosition, getNovelChapterHistory } from '../hooks/useScrollToTop';
+import { saveScrollPosition, getNovelChapterHistory } from '../../hooks/useScrollToTop';
 
 // Contexte pour partager les fonctions de navigation
 const NavigationContext = createContext();

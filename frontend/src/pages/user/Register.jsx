@@ -6,7 +6,7 @@ import { FormValidation } from '../../utils/validation';
 import User from '../../services/User';
 import { useToast } from '../../contexts/ToastContext';
 import openBookLogo from '../../assets/open-book.svg';
-import EmailVerification from '../../components/EmailVerification';
+import { EmailVerification } from '../../components';
 import { useScrollToTop } from '../../hooks';
 
 // Composants pour les icônes d'œil
