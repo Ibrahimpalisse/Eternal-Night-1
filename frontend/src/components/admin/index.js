@@ -5,4 +5,7 @@ export { default as UsersContent } from './UsersContent';
 export { default as AuthorsContent } from './AuthorsContent';
 export { default as ChaptersContent } from './ChaptersContent';
 export { default as AuthorApplicationsContent } from './AuthorApplicationsContent';
-export { default as UserEditModal } from './UserEditModal'; 
+export { default as UserEditModal } from './UserEditModal';
+
+// Export des modals
+export * from './modals'; 

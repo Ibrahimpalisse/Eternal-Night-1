@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useNavigation } from '../..//components';
+import { useNavigation } from '../../components';
 import { 
   ArrowLeft, 
   BookOpen, 
@@ -12,7 +12,7 @@ import {
   Bookmark
 } from 'lucide-react';
 import { ResponsiveStatusBadge } from '../ui';
-import { ReportButton } from "../..//components";
+import { ReportButton } from "../../components";
 
 const NovelHeader = ({ novel, isFavorited, setIsFavorited, isBookmarked, setIsBookmarked, onAuthorClick, onLikeClick, currentChapterId }) => {
   const { goBack } = useNavigation();
