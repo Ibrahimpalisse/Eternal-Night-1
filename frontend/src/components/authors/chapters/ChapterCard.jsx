@@ -23,10 +23,12 @@ const ChapterCard = ({ chapter, onChapterClick, formatWordCount }) => {
           <div className="flex flex-col gap-1.5 sm:gap-2 w-full">
             {/* Titre et statut */}
             <div className="flex items-start sm:items-center gap-2 flex-wrap sm:flex-nowrap">
-              <h3 className="text-sm sm:text-lg font-semibold text-white truncate max-w-[180px] sm:max-w-[300px] group-hover:text-purple-300 transition-colors duration-200">
+              <h3 className="text-sm sm:text-lg font-semibold text-white truncate max-w-[180px] sm:max-w-[300px] group-hover:text-purple-300 transition-colors duration-200 flex-1 min-w-0">
                 {chapter.title}
               </h3>
-              <StatusBadge status={chapter.status} />
+              <div className="flex-shrink-0">
+                <StatusBadge status={chapter.status} />
+              </div>
           </div>
 
           {/* Roman parent */}

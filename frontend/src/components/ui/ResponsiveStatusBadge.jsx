@@ -80,28 +80,28 @@ const ResponsiveStatusBadge = ({
     }
   };
 
-  // Configuration des tailles
+  // Configuration des tailles responsive
   const sizeConfig = {
     small: {
-      padding: 'px-2 py-1',
-      text: 'text-xs',
-      icon: 'w-3 h-3',
-      minHeight: 'min-h-[24px]',
-      gap: 'gap-1'
+      padding: 'px-1.5 py-0.5 sm:px-2 sm:py-1',
+      text: 'text-xs sm:text-sm',
+      icon: 'w-2.5 h-2.5 sm:w-3 sm:h-3',
+      minHeight: 'min-h-[20px] sm:min-h-[24px]',
+      gap: 'gap-0.5 sm:gap-1'
     },
     default: {
-      padding: 'px-3 py-1.5',
-      text: 'text-sm',
-      icon: 'w-4 h-4',
-      minHeight: 'min-h-[32px]',
-      gap: 'gap-1.5'
+      padding: 'px-2 py-1 sm:px-3 sm:py-1.5',
+      text: 'text-xs sm:text-sm lg:text-base',
+      icon: 'w-3 h-3 sm:w-4 sm:h-4',
+      minHeight: 'min-h-[24px] sm:min-h-[28px] lg:min-h-[32px]',
+      gap: 'gap-1 sm:gap-1.5'
     },
     large: {
-      padding: 'px-4 py-2',
-      text: 'text-base',
-      icon: 'w-5 h-5',
-      minHeight: 'min-h-[44px]', // Minimum touch target
-      gap: 'gap-2'
+      padding: 'px-3 py-1.5 sm:px-4 sm:py-2',
+      text: 'text-sm sm:text-base lg:text-lg',
+      icon: 'w-4 h-4 sm:w-5 sm:h-5',
+      minHeight: 'min-h-[32px] sm:min-h-[36px] lg:min-h-[44px]',
+      gap: 'gap-1.5 sm:gap-2'
     }
   };
 
@@ -117,7 +117,7 @@ const ResponsiveStatusBadge = ({
           <Icon className={`${sizes.icon} ${config.iconColor} flex-shrink-0 transition-transform duration-200 group-hover:scale-110`} />
         )}
         {showText && (
-          <span className={`${sizes.text} font-medium select-none`}>
+          <span className={`${sizes.text} font-medium select-none whitespace-nowrap`}>
             {config.label}
           </span>
         )}

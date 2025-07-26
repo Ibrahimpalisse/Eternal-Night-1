@@ -23,7 +23,7 @@ const StatusBadge = ({ status }) => {
   const config = statusConfig[status] || statusConfig.draft;
 
   return (
-    <span className={`inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium border ${config.className} transition-colors duration-200`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 rounded-full text-xs sm:text-sm font-medium border ${config.className} transition-colors duration-200 whitespace-nowrap`}>
       {config.label}
     </span>
   );

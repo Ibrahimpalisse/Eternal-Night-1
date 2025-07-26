@@ -40,7 +40,8 @@ const AuthorPosts = () => {
       likes: 32,
       comments: 8,
       image: null,
-      imagePreview: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=400&fit=crop&crop=center'
+      imagePreview: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=400&fit=crop&crop=center',
+      authorName: 'Marie Dubois'
     },
     {
       id: 2,
@@ -53,7 +54,8 @@ const AuthorPosts = () => {
       likes: 28,
       comments: 15,
       image: null,
-      imagePreview: null
+      imagePreview: null,
+      authorName: 'Marie Dubois'
     },
     {
       id: 3,
@@ -66,7 +68,8 @@ const AuthorPosts = () => {
       likes: 0,
       comments: 0,
       image: null,
-      imagePreview: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=400&fit=crop&crop=center'
+      imagePreview: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=400&fit=crop&crop=center',
+      authorName: 'Marie Dubois'
     }
   ];
 
@@ -93,7 +96,8 @@ const AuthorPosts = () => {
       createdAt: new Date().toISOString().split('T')[0],
       views: 0,
       likes: 0,
-      comments: 0
+      comments: 0,
+      authorName: 'Marie Dubois'
     };
     setPosts([post, ...posts]);
   };

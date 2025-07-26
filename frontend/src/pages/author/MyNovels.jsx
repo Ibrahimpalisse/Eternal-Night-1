@@ -149,7 +149,7 @@ const StatusBadge = ({ status }) => {
   const config = statusConfig[status] || statusConfig.draft;
 
   return (
-    <span className={`inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium border ${config.className} transition-colors duration-200`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 rounded-full text-xs sm:text-sm font-medium border ${config.className} transition-colors duration-200 whitespace-nowrap`}>
       {config.label}
     </span>
   );
@@ -423,11 +423,13 @@ function MyNovels() {
                     {/* Informations du roman */}
                     <div className="flex-1 min-w-0 p-3 sm:p-5 flex flex-col">
                       <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1 min-w-0">
                           <h3 className="text-base sm:text-lg font-semibold text-white truncate group-hover:text-purple-300 transition-colors duration-200">
                             {novel.title}
                           </h3>
-                          <StatusBadge status={novel.status} />
+                          <div className="flex-shrink-0">
+                            <StatusBadge status={novel.status} />
+                          </div>
                         </div>
                       </div>
 
@@ -440,14 +442,14 @@ function MyNovels() {
                           novel.categories.map((category, index) => (
                             <span
                               key={index}
-                              className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap"
+                              className="px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap"
                             >
                               {category}
                             </span>
                           ))
                         ) : (
                           novel.category && (
-                            <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap">
+                            <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 bg-purple-500/10 text-purple-300 border border-purple-500/20 rounded-full text-xs font-medium whitespace-nowrap">
                               {novel.category}
                             </span>
                           )

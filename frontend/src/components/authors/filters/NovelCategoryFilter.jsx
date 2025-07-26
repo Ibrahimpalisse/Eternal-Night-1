@@ -1,17 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, Tag, Check, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, Tag, Check, Search } from 'lucide-react';
 
 const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = [], className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const searchInputRef = useRef(null);
-
-  const ITEMS_PER_PAGE = 5;
 
   const categoryOptions = [
     { 
@@ -38,17 +35,6 @@ const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = 
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Calculer les pages
-  const totalPages = Math.ceil(filteredOptions.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentOptions = filteredOptions.slice(startIndex, endIndex);
-
-  // Reset pagination when search changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
   const selectedOption = categoryOptions.find(option => option.value === selectedCategory) || categoryOptions[0];
 
   // Focus sur la barre de recherche à l'ouverture
@@ -64,7 +50,6 @@ const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = 
           buttonRef.current && !buttonRef.current.contains(event.target)) {
         setIsOpen(false);
         setSearchTerm('');
-        setCurrentPage(1);
       }
     };
 
@@ -133,13 +118,6 @@ const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = 
     onCategoryChange(value);
     setIsOpen(false);
     setSearchTerm('');
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
   };
 
   const dropdownContent = isOpen ? (
@@ -171,7 +149,7 @@ const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = 
 
         {/* Liste des catégories */}
         <div className="space-y-1">
-          {currentOptions.map(option => (
+          {filteredOptions.map(option => (
             <button
               key={option.value}
               type="button"
@@ -196,51 +174,6 @@ const NovelCategoryFilter = ({ selectedCategory, onCategoryChange, categories = 
             </div>
           )}
         </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-2 mt-2 border-t border-slate-700/50">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`p-1 rounded-lg transition-colors ${
-                currentPage === 1
-                  ? 'text-gray-500 cursor-not-allowed'
-                  : 'text-gray-400 hover:bg-slate-700/50 hover:text-white'
-              }`}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === page
-                      ? 'bg-purple-500/20 text-purple-400'
-                      : 'text-gray-400 hover:bg-slate-700/50 hover:text-white'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`p-1 rounded-lg transition-colors ${
-                currentPage === totalPages
-                  ? 'text-gray-500 cursor-not-allowed'
-                  : 'text-gray-400 hover:bg-slate-700/50 hover:text-white'
-              }`}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        )}
       </div>
     </div>
   ) : null;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit, Trash2, Eye, Heart, MessageCircle, Calendar } from 'lucide-react';
+import { Edit, Trash2, Eye, Heart, MessageCircle, Calendar, User } from 'lucide-react';
 
 const PostCard = ({ post, onEdit, onDelete }) => {
   const [imageSize, setImageSize] = useState(null);
@@ -101,13 +101,26 @@ const PostCard = ({ post, onEdit, onDelete }) => {
               <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                 {post.title}
               </h3>
-              <div className="flex flex-wrap gap-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(post.status)}`}>
+              
+              {/* Nom de l'auteur */}
+              {post.authorName && (
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/50 backdrop-blur-sm border border-slate-600/50 rounded-full">
+                    <User className="w-4 h-4 text-blue-400" />
+                    <span className="text-sm font-medium text-blue-300">
+                      {post.authorName}
+                    </span>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                <span className={`px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 rounded-full text-xs sm:text-sm font-medium border ${getStatusColor(post.status)} whitespace-nowrap`}>
                   {post.status === 'published' ? 'Publié' : 
                    post.status === 'draft' ? 'Brouillon' : 
                    post.status === 'scheduled' ? 'Programmé' : post.status}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getTypeColor(post.type)}`}>
+                <span className={`px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-2.5 lg:py-1 rounded-full text-xs sm:text-sm font-medium border ${getTypeColor(post.type)} whitespace-nowrap`}>
                   {post.type === 'announcement' ? 'Annonce' :
                    post.type === 'general' ? 'Général' :
                    post.type === 'update' ? 'Mise à jour' : post.type}
@@ -153,6 +166,10 @@ const PostCard = ({ post, onEdit, onDelete }) => {
           <div className="flex items-center gap-1 text-gray-400">
             <Heart size={16} />
             <span className="text-sm">{post.likes || 0}</span>
+          </div>
+          <div className="flex items-center gap-1 text-gray-400">
+            <MessageCircle size={16} />
+            <span className="text-sm">{post.comments || 0}</span>
           </div>
         </div>
         

@@ -428,21 +428,12 @@ export default function AdminAuthorPostsSection() {
       <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => (
-            <div key={post.id} className="relative">
-              {/* Badge auteur */}
-              <div className="absolute top-2 right-2 z-10">
-                <div className="flex items-center gap-1 px-2 py-1 bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 rounded-full text-xs">
-                  <User className="w-3 h-3 text-gray-400" />
-                  <span className="text-gray-300">{post.authorName}</span>
-                </div>
-              </div>
-              
-              <PostCard
-                post={post}
-                onEdit={handleEditPost}
-                onDelete={handleDeletePost}
-              />
-            </div>
+            <PostCard
+              key={post.id}
+              post={post}
+              onEdit={handleEditPost}
+              onDelete={handleDeletePost}
+            />
           ))
         ) : (
           <div className="text-center py-8 sm:py-12">
