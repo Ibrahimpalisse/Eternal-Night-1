@@ -3,8 +3,8 @@ import React from 'react';
 export default function MembersSearch({ searchTerm, setSearchTerm, resultsCount }) {
   return (
     <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 mb-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="relative">
+      <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="relative flex-1 max-w-10xl">
           <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
           <input
             type="text"

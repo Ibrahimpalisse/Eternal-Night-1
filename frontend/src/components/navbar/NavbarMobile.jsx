@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { 
   Search, Bell, Menu, X, Home, BookOpen, Bookmark, User, Settings,
-  Shield, LogOut, LogIn, UserPlus
+  Shield, LogOut, LogIn, UserPlus, Heart
 } from 'lucide-react';
 import { SearchDialog } from "../..//components";
 import { getUserAvatar, getUserDisplayName, formatUserRole, getRoleColors } from '../../utils/userUtils';
@@ -21,6 +21,7 @@ const NavbarMobile = ({
   const navItems = [
     { to: "/", icon: <Home className="w-5 h-5" />, label: "Home" },
     { to: "/library", icon: <BookOpen className="w-5 h-5" />, label: "Library" },
+    { to: "/best-novels", icon: <Heart className="w-5 h-5" />, label: "Meilleurs" },
     ...(user ? [{ to: "/bookmarks", icon: <Bookmark className="w-5 h-5" />, label: "Bookmarks" }] : []),
     { to: "/members", icon: <User className="w-5 h-5" />, label: "Membres" },
   ];
@@ -38,14 +39,17 @@ const NavbarMobile = ({
         />
 
         {user && (
-          <button className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95 touch-manipulation">
+          <Link
+            to="/notifications"
+            className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95 touch-manipulation"
+          >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium shadow-lg animate-pulse">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
-          </button>
+          </Link>
         )}
 
         <button
@@ -134,6 +138,22 @@ const NavbarMobile = ({
                         <User className="w-5 h-5" />
                       </div>
                       <span className="font-medium text-base sm:text-lg">Mon Profil</span>
+                    </Link>
+
+                    <Link
+                      to="/notifications"
+                      onClick={handleMenuItemClick}
+                      className="flex items-center space-x-3 p-3 sm:p-4 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 active:scale-95"
+                    >
+                      <div className="text-yellow-400">
+                        <Bell className="w-5 h-5" />
+                      </div>
+                      <span className="font-medium text-base sm:text-lg">Notifications</span>
+                      {unreadCount > 0 && (
+                        <span className="ml-auto bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-medium">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
                     </Link>
 
                     <Link

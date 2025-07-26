@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import { Tag } from 'lucide-react';
 
 const CategoryModal = ({ isOpen, onClose, onSubmit }) => {

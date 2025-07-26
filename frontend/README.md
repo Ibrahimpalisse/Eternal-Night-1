@@ -11,7 +11,66 @@ Currently, two official plugins are available:
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-# Frontend - Eternal Night
+# Frontend - Night Novels
+
+## Description
+Interface utilisateur de Night Novels, une plateforme de lecture de romans en ligne.
+
+## Technologies utilisées
+- React 18
+- Vite
+- Tailwind CSS
+- Lucide React (icônes)
+- React Router DOM
+- Socket.io Client
+
+## Installation
+
+```bash
+npm install
+```
+
+## Développement
+
+```bash
+npm run dev
+```
+
+## Build pour production
+
+```bash
+npm run build
+```
+
+## Prévisualisation du build
+
+```bash
+npm run preview
+```
+
+## Structure des composants
+
+### Pages
+- `pages/user/` - Pages utilisateur (Home, Library, etc.)
+- `pages/author/` - Pages auteur
+- `pages/admin/` - Pages administrateur
+
+### Composants
+- `components/common/` - Composants réutilisables
+- `components/navbar/` - Navigation
+- `components/ui/` - Composants UI de base
+- `components/books/` - Composants liés aux livres
+- `components/authors/` - Composants liés aux auteurs
+- `components/admin/` - Composants administrateur
+
+### Contextes
+- `contexts/AuthContext.jsx` - Gestion de l'authentification
+- `contexts/ToastContext.jsx` - Gestion des notifications toast
+
+### Hooks personnalisés
+- `hooks/useLocalStorage.js` - Gestion du localStorage
+- `hooks/useScrollToTop.js` - Scroll vers le haut
+- `hooks/useSocket.js` - Connexion Socket.io
 
 ## Améliorations récentes - Validation Zod
 

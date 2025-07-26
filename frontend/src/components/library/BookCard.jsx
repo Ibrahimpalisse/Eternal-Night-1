@@ -1,8 +1,9 @@
 import React from 'react';
 import { BookOpen, Heart, MessageCircle, Clock, CheckCircle, Eye, Calendar, User } from 'lucide-react';
 import ResponsiveStatusBadge from '../ui/ResponsiveStatusBadge';
+import RankingBadge from '../ui/RankingBadge';
 
-const BookCard = ({ book, onClick }) => {
+const BookCard = ({ book, onClick, ranking }) => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'terminé':
@@ -61,6 +62,11 @@ const BookCard = ({ book, onClick }) => {
             showText={false}
             className="backdrop-blur-sm"
           />
+        </div>
+
+        {/* Badge de classement */}
+        <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3">
+          <RankingBadge ranking={ranking} size="default" />
         </div>
 
 

@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import UserService from '../../services/user/index';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import EmailVerification from "../verification/EmailVerification";
 
 const EmailVerificationDialog = ({ 

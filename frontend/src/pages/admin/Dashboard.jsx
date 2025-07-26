@@ -8,7 +8,7 @@ import AuthorApplications from './AuthorApplications';
 import Stats from './Stats';
 import Notifications from './Notifications';
 import Settings from './Settings';
-import { ToastProvider } from '../../contexts/ToastContext';
+import { ToastProvider } from '../../components/common/Toast';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { 
   Menu

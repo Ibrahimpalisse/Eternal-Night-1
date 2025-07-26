@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BookOpen, Heart, MessageCircle, Clock, ArrowRight, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigation } from "../../components";
+import { useNavigate } from 'react-router-dom';
 
 import ResponsiveStatusBadge from "../ui/ResponsiveStatusBadge";
 
@@ -83,12 +84,13 @@ const ongoingBooks = [
 const OngoingBooks = () => {
   console.log('OngoingBooks component is rendering'); // Debug log
   const { navigateToNovel } = useNavigation();
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
     console.log('Voir plus de romans en cours...');
-    // Redirection vers la page des romans en cours
-    navigate('/ongoing-novels'); // Redirection vers la page des romans en cours
+    // Redirection vers la page Library avec le filtre "En cours" activé
+    navigate('/library?status=en_cours');
   };
 
   const handleBookClick = (book) => {

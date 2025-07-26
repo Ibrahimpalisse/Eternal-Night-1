@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+// Créer le contexte
+const ToastContext = createContext(null);
 
 // Types de toasts
 export const TOAST_TYPES = {
@@ -175,13 +178,24 @@ const ToastContainer = ({ toasts, position = 'bottom-right', onRemoveToast }) =>
   );
 };
 
-// Hook personnalisé pour gérer les toasts
+// Hook personnalisé pour utiliser le contexte de toast
 export const useToast = () => {
+  const context = useContext(ToastContext);
+  
+  if (!context) {
+    throw new Error('useToast must be used within a ToastProvider');
+  }
+  
+  return context;
+};
+
+// Fournisseur de contexte pour les toasts
+export const ToastProvider = ({ children, position = 'bottom-right' }) => {
   const [toasts, setToasts] = useState([]);
 
   // Ajouter un nouveau toast
   const addToast = (message, type = TOAST_TYPES.INFO, duration = DEFAULT_DURATION) => {
-    const id = Date.now();
+    const id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     setToasts((prevToasts) => [...prevToasts, { id, message, type, duration }]);
     return id;
   };
@@ -200,30 +214,23 @@ export const useToast = () => {
   // Supprimer tous les toasts
   const clearToasts = () => setToasts([]);
 
-  return {
-    toasts,
+  // Valeur du contexte
+  const contextValue = {
     addToast,
     removeToast,
     success,
     error,
     info,
     warning,
-    clearToasts,
-  };
-};
-
-// Composant Toast principal qui utilise le ToastContainer
-const Toast = ({ position = 'bottom-right' }) => {
-  // Ce composant est censé être utilisé avec un contexte global
-  // Mais pour simplifier, nous allons utiliser un état local ici
-  const [toasts, setToasts] = useState([]);
-
-  // Méthode pour supprimer un toast
-  const handleRemoveToast = (id) => {
-    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+    clearToasts
   };
 
-  return <ToastContainer toasts={toasts} position={position} onRemoveToast={handleRemoveToast} />;
+  return (
+    <ToastContext.Provider value={contextValue}>
+      {children}
+      <ToastContainer toasts={toasts} position={position} onRemoveToast={removeToast} />
+    </ToastContext.Provider>
+  );
 };
 
-export default Toast; 
+export default ToastContext; 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import openBookLogo from '../../assets/open-book.svg';
 import User from '../../services/User';
 import { FormValidation } from '../../utils/validation';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import { useAuth } from '../../contexts/AuthContext';
 import { EmailVerificationDialog } from "../../components";
 import { CodeVerificationDialog } from "../../components";

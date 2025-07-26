@@ -46,7 +46,7 @@ const Footer = () => {
 
         {/* Copyright Section */}
         <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-          <p>© {currentYear} Eternal Night. Tous droits réservés.</p>
+          <p>© {currentYear} Night Novels. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Search, Bell, Settings, User, BookOpen, Shield, LogOut, LogIn, UserPlus 
+  Search, Bell, Settings, User, BookOpen, Shield, LogOut, LogIn, UserPlus, Star
 } from 'lucide-react';
 import { SearchDialog } from "../..//components";
 import { getUserAvatar } from '../../utils/userUtils';
@@ -54,14 +54,17 @@ const NavbarUserMenu = ({
       />
 
       {/* Notifications with badge */}
-      <button className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+      <Link
+        to="/notifications"
+        className="relative p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+      >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium shadow-lg animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
-      </button>
+      </Link>
 
       {/* User menu */}
       <div className="relative">
@@ -163,6 +166,24 @@ const NavbarUserMenu = ({
                   <User className="w-4 h-4 text-blue-400" />
                 </div>
                 <span>Mon Profil</span>
+              </Link>
+
+              <Link 
+                to="/notifications" 
+                className="flex items-center space-x-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-all"
+                onClick={() => {
+                  setIsMoreMenuOpen(false);
+                }}
+              >
+                <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 group-hover:border-yellow-500/50 transition-colors">
+                  <Bell className="w-4 h-4 text-yellow-400" />
+                </div>
+                <span>Notifications</span>
+                {unreadCount > 0 && (
+                  <span className="ml-auto bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full px-2 py-0.5 font-medium">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </Link>
 
               {/* Dashboards links */}

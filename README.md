@@ -1,34 +1,40 @@
-# Eternal Night - Setup
+# Night Novels - Setup
 
-## Lancer les services MySQL, phpMyAdmin et Mailhog avec Docker
+## Description
+Night Novels est une plateforme de lecture de romans en ligne avec un système d'auteurs et de lecteurs.
 
-```sh
-docker-compose up -d
-```
+## Structure du projet
+- `frontend/` - Application React avec Vite
+- `backend/` - API Node.js avec Express
+- `database-structure.sql` - Structure de la base de données
 
-- MySQL : port 3307 (user: user, password: password, database: eternal-night)
-- phpMyAdmin : http://localhost:8081 (user: root, password: root)
-- Mailhog : http://localhost:8025 (SMTP: localhost:1025)
+## Installation
 
-## Lancer le projet
+### Prérequis
+- Node.js (version 18 ou supérieure)
+- MySQL/MariaDB
+- XAMPP (optionnel, pour le développement local)
 
-```sh
+### Backend
+```bash
+cd backend
+npm install
 npm run dev
 ```
 
-## Configurer le backend pour MySQL
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Host : `localhost`
-- Port : `3307`
-- User : `user`
-- Password : `password`
-- Database : `eternal-night`
+## Configuration
+1. Copiez `.env.example` vers `.env` dans le dossier backend
+2. Configurez les variables d'environnement (base de données, JWT, etc.)
+3. Importez `database-structure.sql` dans votre base de données MySQL
 
-## Configurer le backend pour Mailhog
-
-- SMTP Host : `localhost`
-- SMTP Port : `1025`
-
-## créé les tables de la basse de donné
-   - aller sur :`cd backend`
-   - taper :`node setup-db.js`
+## Technologies utilisées
+- **Frontend**: React, Vite, Tailwind CSS, Lucide React
+- **Backend**: Node.js, Express, MySQL, JWT
+- **Base de données**: MySQL/MariaDB

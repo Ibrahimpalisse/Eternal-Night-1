@@ -5,11 +5,11 @@ export default function MembersStats({ members }) {
   return (
     <div className="mb-8">
       <div className="flex items-center space-x-3 mb-4">
-        <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-          <Users className="w-8 h-8 text-purple-400" />
-        </div>
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">Membres</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+            <Users className="w-8 h-8 text-purple-400" />
+            Membres
+          </h1>
           <p className="text-gray-400 text-sm sm:text-base">Gestion de la communauté</p>
         </div>
       </div>

@@ -7,7 +7,7 @@ import ProfileTabs from '../../components/profile/ProfileTabs';
 import { Button } from '../../components/ui/button';
 import User from '../../services/User';
 import Profile from '../../services/Profile';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import { securityStorage } from '../../utils/securityStorage';
 import { useScrollToTop } from '../../hooks';
 

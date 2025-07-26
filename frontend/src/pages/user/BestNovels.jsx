@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { BookOpen } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useNavigation } from '../../components';
 import { useScrollToTop } from '../../hooks';
 import { FilterBar, BookGrid, BookList, ViewToggle, Pagination } from '../../components/library';
 import { useViewMode } from '../../hooks/useLocalStorage';
 
-// Données mockées pour la bibliothèque
-const libraryBooks = [
+// Données mockées pour les meilleurs romans
+const bestNovels = [
   {
     id: 1,
     title: "Les Chroniques d'Aether",
@@ -15,9 +15,10 @@ const libraryBooks = [
     category: "Fantasy",
     status: "en_cours",
     chapters: 25,
-    views: 12500,
-    favorites: 1247,
-    comments: 423,
+    views: 125000,
+    favorites: 12470,
+    comments: 4230,
+    rating: 4.8,
     description: "Une épopée fantastique dans un monde où la magie et la technologie coexistent..."
   },
   {
@@ -28,9 +29,10 @@ const libraryBooks = [
     category: "Science-Fiction",
     status: "terminé",
     chapters: 18,
-    views: 9800,
-    favorites: 892,
-    comments: 256,
+    views: 98000,
+    favorites: 8920,
+    comments: 2560,
+    rating: 4.7,
     description: "Dans un futur dystopique, un jeune hacker découvre les secrets de l'Empire..."
   },
   {
@@ -41,9 +43,10 @@ const libraryBooks = [
     category: "Aventure",
     status: "en_cours",
     chapters: 15,
-    views: 7650,
-    favorites: 756,
-    comments: 189,
+    views: 76500,
+    favorites: 7560,
+    comments: 1890,
+    rating: 4.6,
     description: "Une quête épique pour retrouver une prophétie perdue depuis des siècles..."
   },
   {
@@ -54,9 +57,10 @@ const libraryBooks = [
     category: "Mystère",
     status: "terminé",
     chapters: 22,
-    views: 5400,
-    favorites: 645,
-    comments: 167,
+    views: 54000,
+    favorites: 6450,
+    comments: 1670,
+    rating: 4.5,
     description: "Un détective privé enquête sur des disparitions mystérieuses dans une petite ville..."
   },
   {
@@ -67,9 +71,10 @@ const libraryBooks = [
     category: "Fantasy",
     status: "en_cours",
     chapters: 30,
-    views: 8200,
-    favorites: 534,
-    comments: 143,
+    views: 82000,
+    favorites: 5340,
+    comments: 1430,
+    rating: 4.4,
     description: "Des gardiens protègent l'équilibre temporel de l'univers..."
   },
   {
@@ -80,9 +85,10 @@ const libraryBooks = [
     category: "Science-Fiction",
     status: "terminé",
     chapters: 12,
-    views: 4300,
-    favorites: 423,
-    comments: 98,
+    views: 43000,
+    favorites: 4230,
+    comments: 980,
+    rating: 4.3,
     description: "Une odyssée spatiale pour retrouver des étoiles disparues..."
   },
   {
@@ -93,9 +99,10 @@ const libraryBooks = [
     category: "Romance",
     status: "en_cours",
     chapters: 28,
-    views: 15600,
-    favorites: 1456,
-    comments: 432,
+    views: 156000,
+    favorites: 14560,
+    comments: 4320,
+    rating: 4.9,
     description: "Une histoire d'amour déchirante dans le Paris des années 20..."
   },
   {
@@ -106,105 +113,71 @@ const libraryBooks = [
     category: "Dark Fantasy",
     status: "terminé",
     chapters: 19,
-    views: 11200,
-    favorites: 1456,
-    comments: 367,
+    views: 112000,
+    favorites: 14560,
+    comments: 3670,
+    rating: 4.8,
     description: "Un royaume plongé dans les ténèbres où la lumière est rare..."
   },
   {
     id: 9,
-    title: "Le Dernier Voyage",
-    author: "Claire Dubois",
-    image: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=300&h=400&fit=crop",
-    category: "Aventure",
-    status: "arrete",
-    chapters: 8,
-    views: 3200,
-    favorites: 234,
-    comments: 67,
-    description: "Un voyage en mer qui tourne mal, laissant les survivants sur une île mystérieuse..."
+    title: "Le Chant des Sirènes",
+    author: "Isabelle Mer",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop&crop=center",
+    category: "Fantasy",
+    status: "en_cours",
+    chapters: 35,
+    views: 89000,
+    favorites: 9870,
+    comments: 2340,
+    rating: 4.7,
+    description: "Une jeune femme découvre qu'elle est la dernière sirène de son espèce..."
   },
   {
     id: 10,
-    title: "Mémoires d'Outre-Tombe",
-    author: "Victor Noir",
-    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop",
-    category: "Horreur",
-    status: "arrete",
-    chapters: 12,
-    views: 5400,
-    favorites: 456,
-    comments: 123,
-    description: "Des mémoires troublantes d'un homme qui prétend avoir vécu plusieurs vies..."
+    title: "Code Rouge",
+    author: "Thomas Cyber",
+    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop&crop=center",
+    category: "Thriller",
+    status: "terminé",
+    chapters: 16,
+    views: 67000,
+    favorites: 7230,
+    comments: 1890,
+    rating: 4.6,
+    description: "Un hacker doit arrêter une IA qui menace de prendre le contrôle du monde..."
   },
   {
     id: 11,
-    title: "Les Échos du Passé",
-    author: "Sophie Laurent",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop",
-    category: "Mystère",
-    status: "arrete",
-    chapters: 15,
-    views: 4100,
-    favorites: 345,
-    comments: 89,
-    description: "Une jeune femme découvre qu'elle peut entendre les échos du passé..."
+    title: "Les Mémoires du Futur",
+    author: "Sophie Temps",
+    image: "https://images.unsplash.com/photo-1576872381149-7847515ce5d5?w=300&h=400&fit=crop&crop=center",
+    category: "Science-Fiction",
+    status: "en_cours",
+    chapters: 24,
+    views: 78000,
+    favorites: 8560,
+    comments: 2130,
+    rating: 4.5,
+    description: "Un voyageur temporel doit corriger les erreurs du passé pour sauver l'avenir..."
   },
   {
     id: 12,
-    title: "Ciel Brisé",
-    author: "Alexandre Ciel",
-    image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=300&h=400&fit=crop",
-    category: "Science-Fiction",
-    status: "arrete",
-    chapters: 6,
-    views: 2800,
-    favorites: 178,
-    comments: 45,
-    description: "Un monde où le ciel s'est littéralement brisé, révélant l'espace infini..."
-  },
-  {
-    id: 13,
-    title: "L'Amour Interdit",
-    author: "Camille Rose",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop",
-    category: "Romance",
-    status: "arrete",
-    chapters: 10,
-    views: 6700,
-    favorites: 567,
-    comments: 156,
-    description: "Une histoire d'amour impossible entre deux familles rivales..."
-  },
-  {
-    id: 14,
-    title: "Les Gardiens de la Nuit",
-    author: "Luna Nocturne",
-    image: "https://images.unsplash.com/photo-1576872381149-7847515ce5d5?w=300&h=400&fit=crop",
+    title: "L'Éveil des Dragons",
+    author: "Alexandre Feu",
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop&crop=center",
     category: "Fantasy",
-    status: "arrete",
-    chapters: 9,
-    views: 3800,
-    favorites: 289,
-    comments: 78,
-    description: "Des gardiens mystérieux protègent les secrets de la nuit..."
-  },
-  {
-    id: 15,
-    title: "Le Code Secret",
-    author: "Hackerman",
-    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop",
-    category: "Thriller",
-    status: "arrete",
-    chapters: 7,
-    views: 2900,
-    favorites: 198,
-    comments: 52,
-    description: "Un hacker découvre un code secret qui pourrait changer le monde..."
+    status: "en_cours",
+    chapters: 42,
+    views: 134000,
+    favorites: 15670,
+    comments: 3890,
+    rating: 4.9,
+    description: "Les dragons se réveillent après des millénaires de sommeil..."
   }
 ];
 
-const Library = () => {
+const BestNovels = () => {
   const { navigateToNovel } = useNavigation();
   useScrollToTop();
   
@@ -214,7 +187,7 @@ const Library = () => {
   const [selectedLikes, setSelectedLikes] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useViewMode(); // Utiliser le hook personnalisé
+  const [viewMode, setViewMode] = useViewMode();
   
   // Pagination
   const booksPerPage = 12;
@@ -233,9 +206,9 @@ const Library = () => {
     { value: 'Drame', label: 'Drame' }
   ];
 
-  // Filtrage des livres
+  // Filtrage et tri des livres
   const filteredBooks = useMemo(() => {
-    return libraryBooks.filter(book => {
+    const filtered = bestNovels.filter(book => {
       const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            book.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -248,7 +221,10 @@ const Library = () => {
       
       return matchesSearch && matchesGenre && matchesLikes && matchesStatus;
     });
-  }, [libraryBooks, searchTerm, selectedGenres, selectedLikes, selectedStatus]);
+
+    // Trier par nombre de likes décroissant
+    return filtered.sort((a, b) => b.favorites - a.favorites);
+  }, [bestNovels, searchTerm, selectedGenres, selectedLikes, selectedStatus]);
 
   // Pagination
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
@@ -263,7 +239,7 @@ const Library = () => {
 
   const handleBookClick = (book) => {
     console.log('Livre cliqué:', book);
-    navigateToNovel(book.id, 'library');
+    navigateToNovel(book.id, 'best-novels');
   };
 
   return (
@@ -274,16 +250,16 @@ const Library = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 flex items-center gap-3">
-                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-purple-400" />
-                Bibliothèque
+                <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-400" />
+                Meilleurs Romans
               </h1>
               <p className="text-gray-400 text-sm sm:text-base">
-                Explorez notre collection de romans et découvrez de nouvelles histoires
+                Découvrez les romans les plus populaires et les mieux notés de notre communauté
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-              <span>Collection mise à jour régulièrement</span>
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              <span>Mis à jour quotidiennement</span>
             </div>
           </div>
         </div>
@@ -302,8 +278,6 @@ const Library = () => {
           resultsCount={filteredBooks.length}
         />
 
-
-
         {/* Contrôles d'affichage */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
           <div className="text-xs sm:text-sm text-gray-400">
@@ -315,27 +289,48 @@ const Library = () => {
           />
         </div>
 
-        {/* Affichage des livres selon le mode */}
-        {viewMode === 'grid' ? (
-          <BookGrid
-            books={currentBooks}
-            onBookClick={handleBookClick}
-          />
+        {/* Contenu principal */}
+        {filteredBooks.length > 0 ? (
+          <>
+            {viewMode === 'grid' ? (
+              <BookGrid books={currentBooks} onBookClick={handleBookClick} />
+            ) : (
+              <BookList books={currentBooks} onBookClick={handleBookClick} />
+            )}
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+          </>
         ) : (
-          <BookList
-            books={currentBooks}
-            onBookClick={handleBookClick}
-          />
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-8 sm:mt-12">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+          <div className="text-center py-12">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-white mb-2">Aucun roman trouvé</h3>
+            <p className="text-gray-400 mb-4">
+              Essayez de modifier vos critères de recherche ou de filtres
+            </p>
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedGenres([]);
+                setSelectedLikes('');
+                setSelectedStatus('');
+              }}
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors"
+            >
+              Effacer les filtres
+            </button>
           </div>
         )}
       </div>
@@ -343,4 +338,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default BestNovels; 

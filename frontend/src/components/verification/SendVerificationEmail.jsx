@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FormValidation } from '../../utils/validation';
 import UserService from "../../services/user/index";
-import { useToast } from "../../contexts/ToastContext";
+import { useToast } from "../../components/common/Toast";
 
 const SendVerificationEmail = ({ initialEmail = '', onEmailSent }) => {
   const [email, setEmail] = useState(initialEmail);

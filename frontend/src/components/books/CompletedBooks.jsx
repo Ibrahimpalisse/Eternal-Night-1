@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BookOpen, Heart, MessageCircle, CheckCircle, ArrowRight, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigation } from "../../components";
+import { useNavigate } from 'react-router-dom';
 
 import ResponsiveStatusBadge from "../ui/ResponsiveStatusBadge";
 
@@ -83,12 +84,13 @@ const completedBooks = [
 const CompletedBooks = () => {
   console.log('CompletedBooks component is rendering'); // Debug log
   const { navigateToNovel } = useNavigation();
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
     console.log('Voir plus de romans terminés...');
-    // Redirection vers la page des romans terminés
-    navigate('/completed-novels'); // Redirection vers la page des romans terminés
+    // Redirection vers la page Library avec le filtre "Fini" activé
+    navigate('/library?status=terminé');
   };
 
   const handleBookClick = (book) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import UserService from '../../services/user/index';
 const userServiceInstance = new UserService();
 import { securityStorage } from '../../utils/securityStorage';

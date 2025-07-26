@@ -398,7 +398,7 @@ const Members = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-3 sm:py-4 lg:py-6 xl:py-8">
         <MembersStats members={mockMembers} />
         <MembersSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} resultsCount={filteredMembers.length} />

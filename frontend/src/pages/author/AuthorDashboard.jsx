@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useScrollToTop } from '../../hooks';
 import AuthorSlideNav from '../../components/authors/AuthorSlideNav';
-import { ToastProvider } from '../../contexts/ToastContext';
+import { ToastProvider } from '../../components/common/Toast';
 import TokenRefreshNotification from '../../components/ui/TokenRefreshNotification';
 import { useNavigate } from 'react-router-dom';
 import { 

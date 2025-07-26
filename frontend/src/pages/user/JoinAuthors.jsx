@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import AuthorApplicationForm from '../../components/authors/AuthorApplicationForm';
 import AuthorInfo from '../../components/authors/AuthorInfo';
 import { Button } from '../../components/ui/button';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FormValidation } from '../../utils/validation';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import User from '../../services/User';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';

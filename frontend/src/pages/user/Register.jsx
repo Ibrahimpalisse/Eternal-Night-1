@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormValidation } from '../../utils/validation';
 import User from '../../services/User';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import openBookLogo from '../../assets/open-book.svg';
 import { EmailVerification } from '../../components';
 import { useScrollToTop } from '../../hooks';

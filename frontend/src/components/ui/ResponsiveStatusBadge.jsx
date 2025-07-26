@@ -34,6 +34,17 @@ const ResponsiveStatusBadge = ({
       hoverColor: 'hover:bg-green-600/90',
       glowColor: 'hover:shadow-green-500/25'
     },
+    'arrete': {
+      label: 'Arrêté',
+      shortLabel: '⏹️',
+      icon: PauseCircle,
+      bgColor: 'bg-red-500/90',
+      borderColor: 'border-red-500/30',
+      textColor: 'text-white',
+      iconColor: 'text-red-100',
+      hoverColor: 'hover:bg-red-600/90',
+      glowColor: 'hover:shadow-red-500/25'
+    },
     'published': {
       label: 'Publié',
       shortLabel: '✓',

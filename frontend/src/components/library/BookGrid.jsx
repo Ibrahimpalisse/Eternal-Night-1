@@ -19,11 +19,12 @@ const BookGrid = ({ books, onBookClick }) => {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
-      {books.map((book) => (
+      {books.map((book, index) => (
         <BookCard
           key={book.id}
           book={book}
           onClick={onBookClick}
+          ranking={index + 1}
         />
       ))}
     </div>

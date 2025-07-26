@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BookOpen, Heart, MessageCircle, Star, ArrowRight, Clock, CheckCircle, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigation } from "../../components";
+import { useNavigate } from 'react-router-dom';
 
 import ResponsiveStatusBadge from "../ui/ResponsiveStatusBadge";
 
@@ -83,12 +84,13 @@ const popularBooks = [
 const PopularBooks = () => {
   console.log('PopularBooks component is rendering'); // Debug log
   const { navigateToNovel } = useNavigation();
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
 
   const handleViewMore = () => {
     console.log('Voir plus de romans populaires...');
-    // Redirection vers la page des romans populaires
-    navigate('/popular-novels'); // Redirection vers la page des romans populaires
+    // Redirection vers la page des meilleurs romans
+    navigate('/best-novels');
   };
 
   const handleBookClick = (book) => {

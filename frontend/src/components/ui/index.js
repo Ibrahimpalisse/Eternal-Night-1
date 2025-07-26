@@ -1,7 +1,8 @@
 export { default as ResponsiveStatusBadge } from './ResponsiveStatusBadge';
 export { default as LikeButton } from './LikeButton';
 export { default as CloseButton } from './CloseButton';
-export { default as TokenRefreshNotification } from './TokenRefreshNotification'; 
+export { default as TokenRefreshNotification } from './TokenRefreshNotification';
+export { default as RankingBadge } from './RankingBadge'; 
 
 // Components UI exports
 export { Button } from './button';

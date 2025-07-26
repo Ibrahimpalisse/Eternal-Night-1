@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import User from '../../services/User';
 import {
   Dialog,

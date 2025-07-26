@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SendVerificationEmail from './SendVerificationEmail';
 import VerificationCode from './VerificationCode';
 import UserService from '../../services/user/index';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import CloseButton from '../ui/CloseButton';
 
 const EmailVerification = ({ 

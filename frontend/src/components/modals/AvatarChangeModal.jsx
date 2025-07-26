@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useToast } from '../../contexts/ToastContext';
+import { useToast } from '../../components/common/Toast';
 import {
   Dialog,
   DialogContent,
